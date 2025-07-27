@@ -1,1 +1,110 @@
-<h1>Githud pages test</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NKD PEREIRA 🔥</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #ff4500;
+    }
+
+    form {
+      margin-bottom: 1.5rem;
+    }
+
+    input, button {
+      padding: 8px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #ff4500;
+      color: white;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: #222;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #444;
+    }
+
+    th {
+      background-color: #333;
+      color: #ff4500;
+    }
+  </style>
+</head>
+<body>
+  <h1>NKD PEREIRA 🔥</h1>
+
+  <form id="personaForm">
+    <input type="text" id="cedula" placeholder="Cédula" required />
+    <input type="text" id="nombre" placeholder="Nombre" required />
+    <input type="text" id="apellido" placeholder="Apellido" required />
+    <input type="text" id="telefono" placeholder="Teléfono" required />
+    <input type="text" id="ciudad" placeholder="Ciudad" required />
+    <button type="submit">Registrar</button>
+  </form>
+
+  <table id="tablaPersonas">
+    <thead>
+      <tr>
+        <th>Cédula</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Teléfono</th>
+        <th>Ciudad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Nuevas filas se agregarán aquí -->
+    </tbody>
+  </table>
+
+  <script>
+    document.getElementById("personaForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      
+      const cedula = document.getElementById("cedula").value;
+      const nombre = document.getElementById("nombre").value;
+      const apellido = document.getElementById("apellido").value;
+      const telefono = document.getElementById("telefono").value;
+      const ciudad = document.getElementById("ciudad").value;
+
+      const tabla = document.getElementById("tablaPersonas").querySelector("tbody");
+
+      const nuevaFila = document.createElement("tr");
+      nuevaFila.innerHTML = `
+        <td>${cedula}</td>
+        <td>${nombre}</td>
+        <td>${apellido}</td>
+        <td>${telefono}</td>
+        <td>${ciudad}</td>
+      `;
+
+      tabla.appendChild(nuevaFila);
+
+      document.getElementById("personaForm").reset();
+    });
+  </script>
+</body>
+</html>
