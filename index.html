@@ -16,9 +16,36 @@
       padding: 0;
       height: 100%;
       font-family: 'Orbitron', sans-serif;
-      background-color: black;
       color: #ff0000;
       overflow-x: hidden;
+    }
+
+    /* Fondo degradado animado */
+    body {
+      background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
+      background-size: 800% 800%;
+      animation: fondoAnimado 16s ease infinite;
+    }
+
+    @keyframes fondoAnimado {
+      0% {background-position:0% 50%}
+      50% {background-position:100% 50%}
+      100% {background-position:0% 50%}
+    }
+
+    /* Efecto de resplandor en los botones */
+    .boton, .boton-modal {
+      box-shadow: 0 0 25px #ff0000, 0 0 40px #00cfff;
+      animation: glowBoton 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowBoton {
+      from {
+        box-shadow: 0 0 10px #ff0000, 0 0 20px #00cfff;
+      }
+      to {
+        box-shadow: 0 0 40px #ff0000, 0 0 60px #00cfff;
+      }
     }
 
     #tsparticles {
@@ -34,10 +61,12 @@
     }
 
     header h1 {
-      font-size: 2.8em;
-      color: #ff2a2a;
-      text-shadow: 0 0 15px #ff2a2a, 0 0 30px #ff0000;
-      animation: glow 2s ease-in-out infinite alternate;
+      font-size: 3em;
+      color: #00cfff;
+      text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
+      animation: glow-celeste 2s ease-in-out infinite alternate;
+      letter-spacing: 2px;
+      margin-bottom: 0.2em;
     }
 
     @keyframes glow {
@@ -46,6 +75,15 @@
       }
       to {
         text-shadow: 0 0 20px #ff5555, 0 0 40px #ff8888;
+      }
+    }
+
+    @keyframes glow-celeste {
+      from {
+        text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff;
+      }
+      to {
+        text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff;
       }
     }
 
@@ -66,9 +104,19 @@
       transition: all 0.3s ease-in-out;
     }
 
-    .boton:hover, .boton-modal:hover {
-      background-color: rgba(255, 0, 0, 0.1);
-      box-shadow: 0 0 25px #ff0000;
+    /* Efecto de resplandor en los botones */
+    .boton, .boton-modal {
+      box-shadow: 0 0 25px #ff0000, 0 0 40px #00cfff;
+      animation: glowBoton 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowBoton {
+      from {
+        box-shadow: 0 0 10px #ff0000, 0 0 20px #00cfff;
+      }
+      to {
+        box-shadow: 0 0 40px #ff0000, 0 0 60px #00cfff;
+      }
     }
 
     main#contenido-principal {
@@ -222,7 +270,16 @@
   <div id="tsparticles"></div>
 
   <header>
-    <h1>🚀 Bienvenido a <span style="color: white;">NKD PEREIRA</span> 🔥</h1>
+    <h1 style="
+      font-size: 3em;
+      color: #00cfff;
+      text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
+      animation: glow-celeste 2s ease-in-out infinite alternate;
+      letter-spacing: 2px;
+      margin-bottom: 0.2em;
+    ">
+      💙💙 Celeste 💙💙
+    </h1>
   </header>
 
   <main id="contenido-principal">
@@ -378,7 +435,7 @@
 
     function verificarPassword() {
       const pass = document.getElementById("password").value;
-      if (pass === "9080") {
+      if (pass === "1234") {
         cerrarModal();
         document.getElementById("contenido-principal").style.display = "none";
         document.getElementById("seccion-secreta").style.display = "block";
@@ -664,21 +721,21 @@
       fpsLimit: 120,
       background: { color: "#000000" },
       particles: {
-        number: { value: 60, density: { enable: true, area: 800 } },
-        color: { value: "#ff0000" },
-        shape: { type: "circle" },
-        opacity: { value: 0.5, random: true },
-        size: { value: 3, random: true },
+        number: { value: 120, density: { enable: true, area: 800 } }, // Más partículas
+        color: { value: ["#ff0000", "#00cfff", "#ffffff"] }, // Colores variados
+        shape: { type: ["circle", "star"] }, // Formas variadas
+        opacity: { value: 0.7, random: true },
+        size: { value: 4, random: true },
         links: {
           enable: true,
           distance: 120,
-          color: "#ff0000",
-          opacity: 0.4,
-          width: 1
+          color: "#00cfff",
+          opacity: 0.5,
+          width: 2
         },
         move: {
           enable: true,
-          speed: 1,
+          speed: 2,
           direction: "none",
           outModes: { default: "bounce" }
         }
