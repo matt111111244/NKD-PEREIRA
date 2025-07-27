@@ -185,6 +185,37 @@
       background: red;
       color: black;
     }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5em;
+      }
+      main#contenido-principal {
+        min-height: auto;
+        padding: 10px;
+      }
+      .boton, .boton-modal {
+        padding: 10px 15px;
+        font-size: 1em;
+        margin: 10px;
+      }
+      table, th, td {
+        font-size: 0.9em;
+        padding: 5px;
+      }
+      #formulario-registro input,
+      #formulario-moto input,
+      #formulario-edicion input,
+      #formulario-edicion-moto input {
+        width: 95%;
+        font-size: 1em;
+        margin: 5px 0;
+      }
+      .modal-content {
+        width: 98%;
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -307,7 +338,19 @@
     </div>
   </section>
 
+  <audio id="sonido-click" src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b6c_1.mp3"></audio>
   <script>
+    // Reproduce sonido al hacer click en cualquier botón
+    document.addEventListener("DOMContentLoaded", function() {
+      const sonido = document.getElementById("sonido-click");
+      document.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          sonido.currentTime = 0;
+          sonido.play();
+        });
+      });
+    });
+
     // 1. Cargar personas desde localStorage al iniciar
     let personas = JSON.parse(localStorage.getItem("personas")) || [
       { id: 1, nombre: "Carlos", apellido: "Perez", cedula: "1000123456", telefono: "3210001111", ciudad: "Pereira" },
