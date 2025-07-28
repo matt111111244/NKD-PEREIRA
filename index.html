@@ -272,18 +272,6 @@
   </style>
 </head>
 <body>
-  <script>
-    // Detectar iPhone y mostrar mensaje de prohibido
-    if (/iPhone/i.test(navigator.userAgent)) {
-      document.body.innerHTML = `
-        <div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;background:black;color:red;font-size:2em;">
-          🚫 Prohibido iPhone 🚫<br>
-          Acceso denegado desde dispositivos iPhone.
-        </div>
-      `;
-      throw new Error("Prohibido iPhone");
-    }
-  </script>
   <div id="tsparticles"></div>
 
   <header>
