@@ -272,6 +272,160 @@
   </style>
 </head>
 <body>
+  <script>
+    // Mostrar recuadro de selección de edad al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+      // Si ya aceptó edad, no mostrar el recuadro de nuevo
+      if (localStorage.getItem("accesoEdad") === "ok") return;
+
+      // Oculta todo el contenido de la página hasta que elija edad
+      document.body.innerHTML = `
+        <div id="acceso-edad" style="
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff);
+          background-size: 800% 800%;
+          animation: fondoAnimado 16s ease infinite;
+          z-index: 99999;
+        ">
+          <div style="
+            background: rgba(0,0,0,0.85);
+            border: 2px solid #00cfff;
+            border-radius: 18px;
+            box-shadow: 0 0 30px #00cfff, 0 0 60px #00eaff;
+            padding: 40px 30px;
+            text-align: center;
+            min-width: 270px;
+            max-width: 90vw;
+          ">
+            <h1 style="
+              color: #00cfff;
+              font-size: 2.2em;
+              margin-bottom: 0.5em;
+              text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
+              animation: glow-celeste 2s ease-in-out infinite alternate;
+              font-family: 'Orbitron', sans-serif;
+            ">
+              Selecciona tu rango de edad
+            </h1>
+            <button id="btn-18-25" style="
+              margin: 18px 0 10px 0;
+              padding: 15px 40px;
+              font-size: 1.3em;
+              border-radius: 10px;
+              border: 2px solid #00cfff;
+              background: #000;
+              color: #00eaff;
+              box-shadow: 0 0 20px #00cfff;
+              cursor: pointer;
+              font-family: 'Orbitron', sans-serif;
+              transition: background 0.2s;
+              animation: glow-celeste 2s ease-in-out infinite alternate;
+              display: block;
+              width: 100%;
+            ">18 - 25 años</button>
+            <button id="btn-10-17" style="
+              margin: 10px 0 0 0;
+              padding: 15px 40px;
+              font-size: 1.3em;
+              border-radius: 10px;
+              border: 2px solid #00cfff;
+              background: #000;
+              color: #00eaff;
+              box-shadow: 0 0 20px #00cfff;
+              cursor: pointer;
+              font-family: 'Orbitron', sans-serif;
+              transition: background 0.2s;
+              animation: glow-celeste 2s ease-in-out infinite alternate;
+              display: block;
+              width: 100%;
+            ">10 - 17 años</button>
+          </div>
+        </div>
+        <style>
+          @keyframes fondoAnimado {
+            0% {background-position:0% 50%}
+            50% {background-position:100% 50%}
+            100% {background-position:0% 50%}
+          }
+          @keyframes glow-celeste {
+            from {
+              text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff;
+            }
+            to {
+              text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff;
+            }
+          }
+        </style>
+      `;
+
+      // Botón para mayores de edad: deja entrar
+      document.getElementById("btn-18-25").onclick = function() {
+        localStorage.setItem("accesoEdad", "ok");
+        location.reload();
+      };
+
+      // Botón para menores: muestra acceso denegado
+      document.getElementById("btn-10-17").onclick = function() {
+        localStorage.removeItem("accesoEdad");
+        document.body.innerHTML = `
+          <div style="
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff);
+            background-size: 800% 800%;
+            animation: fondoAnimado 16s ease infinite;
+            color: #00cfff;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            z-index: 99999;
+          ">
+            <h1 style="
+              font-size: 2.5em;
+              color: #00cfff;
+              text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
+              animation: glow-celeste 2s ease-in-out infinite alternate;
+              letter-spacing: 2px;
+              margin-bottom: 0.5em;
+            ">
+              🚫 Acceso Denegado 🚫
+            </h1>
+            <p style="font-size:1.5em; color:#fff; text-shadow:0 0 10px #00cfff;">
+              Esta página es solo para mayores de 18 años.<br>
+              ¡Vuelve cuando seas mayor!
+            </p>
+          </div>
+          <style>
+            @keyframes fondoAnimado {
+              0% {background-position:0% 50%}
+              50% {background-position:100% 50%}
+              100% {background-position:0% 50%}
+            }
+            @keyframes glow-celeste {
+              from {
+                text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff;
+              }
+              to {
+                text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff;
+              }
+            }
+          </style>
+        `;
+      };
+    });
+  </script>
   <div id="tsparticles"></div>
 
   <header>
