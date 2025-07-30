@@ -1,3 +1,10 @@
+<?php
+// filepath: c:\xampp\htdocs\NKDPEREIRA\index.php
+$ip_permitida = 'TU_IP_AQUI'; // Cambia esto por tu IP real
+if ($_SERVER['REMOTE_ADDR'] !== $ip_permitida) {
+    die('🚫 Acceso solo permitido desde una PC autorizada.');
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1025,5 +1032,59 @@ document.addEventListener("DOMContentLoaded", function() {
       detectRetina: true
     });
   </script>
-</body>
-</html>
+
+  <!-- Agrega este código antes de </body> -->
+<div id="bot-ayuda" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
+  <button id="abrir-bot" style="background:#00cfff;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:2em;box-shadow:0 0 15px #00cfff;cursor:pointer;">🤖</button>
+  <div id="ventana-bot" style="display:none;position:absolute;bottom:70px;right:0;width:320px;max-width:90vw;background:#111;border:2px solid #00cfff;border-radius:12px;box-shadow:0 0 25px #00cfff;padding:15px;">
+    <div style="text-align:right;">
+      <button id="cerrar-bot" style="background:none;border:none;color:#00cfff;font-size:1.5em;cursor:pointer;">✖</button>
+    </div>
+    <div id="chat-bot" style="height:180px;overflow-y:auto;background:#222;border-radius:8px;padding:8px;color:#fff;font-size:1em;margin-bottom:10px;">
+      <div>🤖 Hola, soy el bot de ayuda de NKD PEREIRA.<br>¿En qué puedo ayudarte?</div>
+    </div>
+    <input id="input-bot" type="text" placeholder="Escribe tu pregunta..." style="width:75%;padding:7px;border-radius:6px;border:1px solid #00cfff;background:#222;color:#fff;">
+    <button id="enviar-bot" style="background:#00cfff;color:#fff;border:none;border-radius:6px;padding:7px 12px;cursor:pointer;">Enviar</button>
+  </div>
+</div>
+<script>
+  // Mostrar/ocultar ventana del bot
+  document.getElementById("abrir-bot").onclick = function() {
+    document.getElementById("ventana-bot").style.display = "block";
+  };
+  document.getElementById("cerrar-bot").onclick = function() {
+    document.getElementById("ventana-bot").style.display = "none";
+  };
+  // Bot de ayuda básico
+  document.getElementById("enviar-bot").onclick = enviarPreguntaBot;
+  document.getElementById("input-bot").addEventListener("keydown", function(e){
+    if(e.key === "Enter") enviarPreguntaBot();
+  });
+  function enviarPreguntaBot() {
+    var chat = document.getElementById("chat-bot");
+    var pregunta = document.getElementById("input-bot").value.trim();
+    if(!pregunta) return;
+    chat.innerHTML += `<div style="color:#00cfff;text-align:right;">Tú: ${pregunta}</div>`;
+    document.getElementById("input-bot").value = "";
+    setTimeout(function(){
+      chat.innerHTML += `<div>${respuestaBot(pregunta)}</div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }, 500);
+  }
+  // Respuestas simples del bot
+  function respuestaBot(pregunta) {
+    pregunta = pregunta.toLowerCase();
+    if(pregunta.includes("error") || pregunta.includes("problema")) {
+      return "¿Puedes describir el error? Intenta recargar la página o revisa los datos ingresados. Si el problema persiste, verifica tu conexión o contacta al administrador.";
+    }
+    if(pregunta.includes("contraseña")) {
+      return "La contraseña de acceso es: <b>1234</b> (por defecto).";
+    }
+    if(pregunta.includes("no puedo entrar") || pregunta.includes("acceso")) {
+      return "Asegúrate de seleccionar la edad correcta y escribir la contraseña. Si eres menor de edad o usas iPhone, el acceso está restringido.";
+    }
+    if(pregunta.includes("registrar") || pregunta.includes("agregar persona")) {
+      return "Para registrar una persona, completa todos los campos y haz clic en 'Registrar'.";
+    }
+    if(pregunta.includes("moto")) {
+      return "Para registrar una moto, llena los datos y haz clic en 'Registrar Moto'.";
