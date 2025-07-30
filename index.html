@@ -1,1090 +1,139 @@
-<?php
-// filepath: c:\xampp\htdocs\NKDPEREIRA\index.php
-$ip_permitida = 'TU_IP_AQUI'; // Cambia esto por tu IP real
-if ($_SERVER['REMOTE_ADDR'] !== $ip_permitida) {
-    die('🚫 Acceso solo permitido desde una PC autorizada.');
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NKD PEREIRA 🔥</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <title>Descarga tu archivo</title>
+  <link rel="icon" type="image/png" href="tu-icono.png">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      overflow: hidden;
+      background-color: #0d0d0d;
       font-family: 'Orbitron', sans-serif;
-      color: #ff0000;
-      overflow-x: hidden;
+      color: #fff;
     }
 
-    /* Fondo degradado animado */
-    body {
-      background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
-      background-size: 800% 800%;
-      animation: fondoAnimado 16s ease infinite;
-    }
-
-    @keyframes fondoAnimado {
-      0% {background-position:0% 50%}
-      50% {background-position:100% 50%}
-      100% {background-position:0% 50%}
-    }
-
-    /* Efecto de resplandor en los botones */
-    .boton, .boton-modal {
-      box-shadow: 0 0 25px #ff0000, 0 0 40px #00cfff;
-      animation: glowBoton 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes glowBoton {
-      from {
-        box-shadow: 0 0 10px #ff0000, 0 0 20px #00cfff;
-      }
-      to {
-        box-shadow: 0 0 40px #ff0000, 0 0 60px #00cfff;
-      }
-    }
-
-    #tsparticles {
+    #particles-js {
       position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       z-index: -1;
     }
 
-    header {
-      padding: 20px 10px 10px; /* Menos espacio arriba y abajo */
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 3em;
-      color: #00cfff;
-      text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
-      animation: glow-celeste 2s ease-in-out infinite alternate;
-      letter-spacing: 2px;
-      margin-bottom: 0.2em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 10px #ff2a2a, 0 0 20px #ff5555;
-      }
-      to {
-        text-shadow: 0 0 20px #ff5555, 0 0 40px #ff8888;
-      }
-    }
-
-    @keyframes glow-celeste {
-      from {
-        text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff;
-      }
-      to {
-        text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff;
-      }
-    }
-
-    button, input {
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    .boton, .boton-modal {
-      padding: 15px 30px;
-      font-size: 1.2em;
-      margin: 20px;
-      background: black;
-      color: #ff0000;
-      border: 2px solid #ff0000;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 0 15px #ff0000;
-      transition: all 0.3s ease-in-out;
-    }
-
-    /* Efecto de resplandor en los botones */
-    .boton, .boton-modal {
-      box-shadow: 0 0 25px #ff0000, 0 0 40px #00cfff;
-      animation: glowBoton 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes glowBoton {
-      from {
-        box-shadow: 0 0 10px #ff0000, 0 0 20px #00cfff;
-      }
-      to {
-        box-shadow: 0 0 40px #ff0000, 0 0 60px #00cfff;
-      }
-    }
-
-    main#contenido-principal {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: calc(100vh - 60px); /* Ajusta el alto restando el header */
-      flex-direction: column;
-      padding-top: 0;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 100;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-    }
-
-    .modal-content {
-      background-color: #111;
-      margin: 10% auto;
+    .contenido {
+      position: relative;
+      top: 20%;
+      margin: auto;
       padding: 30px;
-      border: 2px solid red;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 10px;
-      color: #ff0000;
-      box-shadow: 0 0 20px #ff0000;
+      max-width: 600px;
+      background-color: rgba(0, 0, 0, 0.6); /* Opacidad sobre partículas */
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 207, 255, 0.3);
       text-align: center;
+      z-index: 1;
     }
 
-    .modal-content input {
-      padding: 10px;
-      width: 90%;
-      margin-top: 15px;
-      background: black;
-      border: 1px solid red;
-      color: red;
-      font-size: 1.2em;
-    }
-
-    .cerrar {
-      float: right;
-      font-size: 20px;
-      cursor: pointer;
-      color: red;
-    }
-
-    .mensaje-error {
-      color: red;
-      margin-top: 10px;
-    }
-
-    table {
-      width: 90%;
-      margin: 0 auto 30px;
-      border-collapse: collapse;
-      color: #fff;
-    }
-
-    th, td {
-      border: 1px solid #ff0000;
-      padding: 10px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #330000;
-    }
-
-    .acciones button {
-      margin: 2px;
-      background-color: #ff0000;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 5px;
-    }
-
-    #formulario-registro {
-      text-align: center;
+    h1 {
+      font-size: 2.5em;
       margin-bottom: 20px;
     }
 
-    #formulario-registro input {
-      width: 200px;
-      margin: 5px;
-      padding: 8px;
-      background: black;
-      color: red;
-      border: 1px solid red;
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
     }
 
-    .paginacion {
-      text-align: center;
-      margin: 10px;
-    }
-
-    .paginacion button {
-      margin: 3px;
-      padding: 8px 12px;
-      background: black;
-      color: red;
-      border: 1px solid red;
+    .descarga-btn {
+      background: linear-gradient(45deg, #00cfff, #00ffaa);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 18px 40px;
+      font-size: 1.3em;
       cursor: pointer;
-      border-radius: 5px;
+      box-shadow: 0 0 25px #00cfff;
+      transition: all 0.3s ease-in-out;
     }
 
-    .paginacion button.activo {
-      background: red;
-      color: black;
+    .descarga-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px #00ffaa;
     }
 
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.5em;
-      }
-      main#contenido-principal {
-        min-height: auto;
-        padding: 10px;
-      }
-      .boton, .boton-modal {
-        padding: 10px 15px;
-        font-size: 1em;
-        margin: 10px;
-      }
-      table, th, td {
-        font-size: 0.9em;
-        padding: 5px;
-      }
-      #formulario-registro input,
-      #formulario-moto input,
-      #formulario-edicion input,
-      #formulario-edicion-moto input {
-        width: 95%;
-        font-size: 1em;
-        margin: 5px 0;
-      }
-      .modal-content {
-        width: 98%;
-        padding: 10px;
-      }
+    .info {
+      margin-top: 40px;
+      font-size: 0.95em;
+      color: #dddddd;
     }
   </style>
 </head>
 <body>
-  <script>
-    // Mostrar recuadro de selección de edad al cargar la página
-    document.addEventListener("DOMContentLoaded", function() {
-      // Si ya aceptó edad, no mostrar el recuadro de nuevo
-      if (localStorage.getItem("accesoEdad") === "ok") return;
+  <div id="particles-js"></div>
 
-      // Oculta todo el contenido de la página hasta que elija edad
-      document.body.innerHTML = `
-        <div id="acceso-edad" style="
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          width: 100vw;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff);
-          background-size: 800% 800%;
-          animation: fondoAnimado 16s ease infinite;
-          z-index: 99999;
-        ">
-          <div style="
-            background: rgba(0,0,0,0.85);
-            border: 2px solid #00cfff;
-            border-radius: 18px;
-            box-shadow: 0 0 30px #00cfff, 0 0 60px #00eaff;
-            padding: 40px 30px;
-            text-align: center;
-            min-width: 270px;
-            max-width: 90vw;
-          ">
-            <h1 style="
-              color: #00cfff;
-              font-size: 2.2em;
-              margin-bottom: 0.5em;
-              text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
-              animation: glow-celeste 2s ease-in-out infinite alternate;
-              font-family: 'Orbitron', sans-serif;
-            ">
-              Selecciona tu rango de edad
-            </h1>
-            <button id="btn-18-25" style="
-              margin: 18px 0 10px 0;
-              padding: 15px 40px;
-              font-size: 1.3em;
-              border-radius: 10px;
-              border: 2px solid #00cfff;
-              background: #000;
-              color: #00eaff;
-              box-shadow: 0 0 20px #00cfff;
-              cursor: pointer;
-              font-family: 'Orbitron', sans-serif;
-              transition: background 0.2s;
-              animation: glow-celeste 2s ease-in-out infinite alternate;
-              display: block;
-              width: 100%;
-            ">18 - 25 años</button>
-            <button id="btn-10-17" style="
-              margin: 10px 0 0 0;
-              padding: 15px 40px;
-              font-size: 1.3em;
-              border-radius: 10px;
-              border: 2px solid #00cfff;
-              background: #000;
-              color: #00eaff;
-              box-shadow: 0 0 20px #00cfff;
-              cursor: pointer;
-              font-family: 'Orbitron', sans-serif;
-              transition: background 0.2s;
-              animation: glow-celeste 2s ease-in-out infinite alternate;
-              display: block;
-              width: 100%;
-            ">10 - 17 años</button>
-          </div>
-        </div>
-        <style>
-          @keyframes fondoAnimado {
-            0% {background-position:0% 50%}
-            50% {background-position:100% 50%}
-            100% {background-position:0% 50%}
-          }
-          @keyframes glow-celeste {
-            from {
-              text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff;
-            }
-            to {
-              text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff;
-            }
-          }
-        </style>
-      `;
+  <div class="contenido">
+    <h1>Descarga tu archivo</h1>
+    <p>Haz clic en el botón para descargar directamente desde Mediafire.</p>
 
-      // Botón para mayores de edad: deja entrar
-      document.getElementById("btn-18-25").onclick = function() {
-        localStorage.setItem("accesoEdad", "ok");
-        location.reload();
-      };
+    <button class="descarga-btn" onclick="window.open('https://www.mediafire.com/file/kyooauzyoef10i7/cache_res.OdVY88vqa9NcdHWx8dKH1EWvhoo%257E3D/file', '_blank')">
+      Descargar desde Mediafire
+    </button>
 
-      // Botón para menores: muestra acceso denegado
-      document.getElementById("btn-10-17").onclick = function() {
-        localStorage.removeItem("accesoEdad");
-        document.body.innerHTML = `
-          <div style="
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff);
-            background-size: 800% 800%;
-            animation: fondoAnimado 16s ease infinite;
-            color: #00cfff;
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            z-index: 99999;
-          ">
-            <h1 style="
-              font-size: 2.5em;
-              color: #00cfff;
-              text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
-              animation: glow-celeste 2s ease-in-out infinite alternate;
-              letter-spacing: 2px;
-              margin-bottom: 0.5em;
-            ">
-              🚫 Acceso Denegado 🚫
-            </h1>
-            <p style="font-size:1.5em; color:#fff; text-shadow:0 0 10px #00cfff;">
-              Esta página es solo para mayores de 18 años.<br>
-              ¡Vuelve cuando seas mayor!
-            </p>
-          </div>
-          <style>
-            @keyframes fondoAnimado {
-              0% {background-position:0% 50%}
-              50% {background-position:100% 50%}
-              100% {background-position:0% 50%}
-            }
-            @keyframes glow-celeste {
-              from {
-                text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff;
-              }
-              to {
-                text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff;
-              }
-            }
-          </style>
-        `;
-      };
-    });
-  </script>
-  <script>
-// Bloquear acceso a iPhone
-document.addEventListener("DOMContentLoaded", function() {
-  var esIphone = /iPhone/i.test(navigator.userAgent);
-  if (esIphone) {
-    document.body.innerHTML = `
-      <div style="
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
-        background-size: 800% 800%;
-        animation: fondoAnimado 16s ease infinite;
-        z-index: 99999;
-      ">
-        <h1 style="color:#fff; font-size:2em; text-align:center;">
-          🚫 Acceso bloqueado 🚫<br>
-          No se permite el acceso desde iPhone.
-        </h1>
-      </div>
-      <style>
-        @keyframes fondoAnimado {
-          0% {background-position:0% 50%}
-          50% {background-position:100% 50%}
-          100% {background-position:0% 50%}
-        }
-      </style>
-    `;
-    return;
-  }
-
-  // Bloqueo si intentan inspeccionar o copiar el código
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    document.body.innerHTML = `
-      <div style="
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
-        background-size: 800% 800%;
-        animation: fondoAnimado 16s ease infinite;
-        z-index: 99999;
-      ">
-        <h1 style="color:#fff; font-size:2em; text-align:center;">
-          🚫 Acceso bloqueado 🚫<br>
-          No intentes copiar ni inspeccionar esta página.
-        </h1>
-      </div>
-      <style>
-        @keyframes fondoAnimado {
-          0% {background-position:0% 50%}
-          50% {background-position:100% 50%}
-          100% {background-position:0% 50%}
-        }
-      </style>
-    `;
-  });
-
-  document.addEventListener("keydown", function(e) {
-    // F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+C
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) ||
-      (e.ctrlKey && (e.key === "U" || e.key === "S" || e.key === "C"))
-    ) {
-      e.preventDefault();
-      document.body.innerHTML = `
-        <div style="
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          width: 100vw;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
-          background-size: 800% 800%;
-          animation: fondoAnimado 16s ease infinite;
-          z-index: 99999;
-        ">
-          <h1 style="color:#fff; font-size:2em; text-align:center;">
-            🚫 Acceso bloqueado 🚫<br>
-            No intentes copiar ni inspeccionar esta página.
-          </h1>
-        </div>
-        <style>
-          @keyframes fondoAnimado {
-            0% {background-position:0% 50%}
-            50% {background-position:100% 50%}
-            100% {background-position:0% 50%}
-          }
-        </style>
-      `;
-    }
-  });
-
-  // ...el resto de tu código existente para la edad...
-});
-</script>
-  <div id="tsparticles"></div>
-
-  <header>
-    <h1 style="
-      font-size: 3em;
-      color: #00cfff;
-      text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
-      animation: glow-celeste 2s ease-in-out infinite alternate;
-      letter-spacing: 2px;
-      margin-bottom: 0.2em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    ">
-      🔥🔥 NKD PEREIRA 🔥🔥
-    </h1>
-  </header>
-
-  <main id="contenido-principal">
-    <button class="boton" onclick="abrirModal()">ENTRADA DE CLIENTES 🔐</button>
-  </main>
-
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <span class="cerrar" onclick="cerrarModal()">✖</span>
-      <h2>🔑 Ingrese la contraseña</h2>
-      <input type="password" id="password" placeholder="********">
-      <div class="mensaje-error" id="mensaje-error"></div>
-      <button class="boton-modal" onclick="verificarPassword()">Entrar</button>
+    <div class="info">
+      <p>Este archivo está alojado en Mediafire. Asegúrate de seguir los pasos correctamente.</p>
     </div>
   </div>
 
-  <section id="seccion-secreta" style="display:none; text-align:center;">
-    <h2>✅ Acceso Autorizado</h2>
-    <button class="boton" onclick="mostrarPersonas()">👤 PERSONAS</button>
-    <button class="boton" onclick="mostrarMotosTaller()">🏍️ MOTOS/TALLER</button>
-    <button class="boton" onclick="volverAtras()">🔙 Volver atrás</button>
-  </section>
-
-  <section id="seccion-personas" style="display:none;">
-    <h2 style="text-align:center;">👤 Lista de Personas</h2>
-
-    <div id="formulario-registro">
-      <input type="text" id="nombre" placeholder="Nombre">
-      <input type="text" id="apellido" placeholder="Apellido">
-      <input type="text" id="cedula" placeholder="Cédula">
-      <input type="text" id="telefono" placeholder="Teléfono">
-      <input type="text" id="ciudad" placeholder="Ciudad">
-      <button class="boton" onclick="registrarPersona()">Registrar</button>
-    </div>
-
-    <!-- Formulario de edición oculto -->
-    <div id="formulario-edicion" style="display:none; text-align:center;">
-      <h3>Editar Persona</h3>
-      <input type="hidden" id="edit-id">
-      <input type="text" id="edit-nombre" placeholder="Nombre">
-      <input type="text" id="edit-apellido" placeholder="Apellido">
-      <input type="text" id="edit-cedula" placeholder="Cédula">
-      <input type="text" id="edit-telefono" placeholder="Teléfono">
-      <input type="text" id="edit-ciudad" placeholder="Ciudad">
-      <button class="boton" onclick="guardarEdicion()">Guardar</button>
-      <button class="boton" onclick="cancelarEdicion()">Cancelar</button>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Cédula</th>
-          <th>Teléfono</th>
-          <th>Ciudad</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-personas"></tbody>
-    </table>
-
-    <div class="paginacion" id="paginacion"></div>
-    <div style="text-align:center;">
-      <button class="boton" onclick="volverDesdePersonas()">🔙 Volver atrás</button>
-    </div>
-  </section>
-
-  <!-- Agrega una nueva sección para MOTOS/TALLER -->
-  <section id="seccion-motos-taller" style="display:none;">
-    <h2 style="text-align:center;">🏍️ Motos/Taller</h2>
-
-    <div id="formulario-moto" style="text-align:center; margin-bottom:20px;">
-      <input type="text" id="moto-nombre" placeholder="Nombre">
-      <input type="text" id="moto-apellido" placeholder="Apellido">
-      <input type="text" id="moto-cedula" placeholder="Cédula">
-      <input type="text" id="moto-telefono" placeholder="Teléfono">
-      <input type="text" id="moto-placa" placeholder="Placa">
-      <button class="boton" onclick="registrarMoto()">Registrar Moto</button>
-    </div>
-
-    <div id="formulario-edicion-moto" style="display:none; text-align:center;">
-      <h3>Editar Moto/Taller</h3>
-      <input type="hidden" id="edit-moto-id">
-      <input type="text" id="edit-moto-nombre" placeholder="Nombre">
-      <input type="text" id="edit-moto-apellido" placeholder="Apellido">
-      <input type="text" id="edit-moto-cedula" placeholder="Cédula">
-      <input type="text" id="edit-moto-telefono" placeholder="Teléfono">
-      <input type="text" id="edit-moto-placa" placeholder="Placa">
-      <button class="boton" onclick="guardarEdicionMoto()">Guardar</button>
-      <button class="boton" onclick="cancelarEdicionMoto()">Cancelar</button>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Cédula</th>
-          <th>Teléfono</th>
-          <th>Placa</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-motos"></tbody>
-    </table>
-
-    <div class="paginacion" id="paginacion-motos"></div>
-    <div style="text-align:center;">
-      <button class="boton" onclick="volverDesdeMotosTaller()">🔙 Volver atrás</button>
-    </div>
-  </section>
-
-  <audio id="sonido-click" src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b6c_1.mp3"></audio>
+  <!-- Script de partículas -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
-    // Reproduce sonido al hacer click en cualquier botón
-    document.addEventListener("DOMContentLoaded", function() {
-      const sonido = document.getElementById("sonido-click");
-      document.querySelectorAll("button").forEach(btn => {
-        btn.addEventListener("click", () => {
-          sonido.currentTime = 0;
-          sonido.play();
-        });
-      });
-    });
-
-    // 1. Cargar personas desde localStorage al iniciar
-    let personas = JSON.parse(localStorage.getItem("personas")) || [
-      { id: 1, nombre: "Carlos", apellido: "Perez", cedula: "1000123456", telefono: "3210001111", ciudad: "Pereira" },
-    ];
-
-    // Motos/Taller data
-    let motos = JSON.parse(localStorage.getItem("motos")) || [
-      { id: 1, nombre: "Juan", apellido: "Gomez", cedula: "1000111111", telefono: "3221112222", placa: "ABC123" },
-    ];
-    let currentPageMotos = 1;
-    const rowsPerPageMotos = 5;
-
-    let currentPage = 1;
-    const rowsPerPage = 5;
-
-    function abrirModal() {
-      document.getElementById("modal").style.display = "block";
-      document.getElementById("password").value = "";
-      document.getElementById("mensaje-error").textContent = "";
-    }
-
-    function cerrarModal() {
-      document.getElementById("modal").style.display = "none";
-    }
-
-    function verificarPassword() {
-      const pass = document.getElementById("password").value;
-      if (pass === "1234") {
-        cerrarModal();
-        document.getElementById("contenido-principal").style.display = "none";
-        document.getElementById("seccion-secreta").style.display = "block";
-      } else {
-        document.getElementById("mensaje-error").textContent = "❌ Contraseña incorrecta";
-      }
-    }
-
-    function volverAtras() {
-      document.getElementById("contenido-principal").style.display = "block";
-      document.getElementById("seccion-secreta").style.display = "none";
-    }
-
-    function mostrarPersonas() {
-      document.getElementById("seccion-secreta").style.display = "none";
-      document.getElementById("seccion-personas").style.display = "block";
-      renderTabla();
-    }
-
-    function volverDesdePersonas() {
-      document.getElementById("seccion-personas").style.display = "none";
-      document.getElementById("seccion-secreta").style.display = "block";
-    }
-
-    // Mostrar tabla de motos/taller al entrar en la sección
-    function mostrarMotosTaller() {
-      document.getElementById("seccion-secreta").style.display = "none";
-      document.getElementById("seccion-motos-taller").style.display = "block";
-      renderTablaMotos();
-    }
-
-    function volverDesdeMotosTaller() {
-      document.getElementById("seccion-motos-taller").style.display = "none";
-      document.getElementById("seccion-secreta").style.display = "block";
-    }
-
-    // 2. Guardar personas en localStorage cada vez que se modifica
-    function guardarPersonas() {
-      localStorage.setItem("personas", JSON.stringify(personas));
-    }
-
-    function registrarPersona() {
-      const nombre = document.getElementById("nombre").value;
-      const apellido = document.getElementById("apellido").value;
-      const cedula = document.getElementById("cedula").value;
-      const telefono = document.getElementById("telefono").value;
-      const ciudad = document.getElementById("ciudad").value;
-
-      if (nombre && apellido && cedula && telefono && ciudad) {
-        const nueva = {
-          id: personas.length ? personas[personas.length - 1].id + 1 : 1,
-          nombre, apellido, cedula, telefono, ciudad
-        };
-        personas.push(nueva);
-        guardarPersonas(); // <--- Guarda en localStorage
-        limpiarFormulario();
-        renderTabla();
-      } else {
-        alert("Por favor completa todos los campos.");
-      }
-    }
-
-    function limpiarFormulario() {
-      document.getElementById("nombre").value = "";
-      document.getElementById("apellido").value = "";
-      document.getElementById("cedula").value = "";
-      document.getElementById("telefono").value = "";
-      document.getElementById("ciudad").value = "";
-    }
-
-    function renderTabla() {
-      const inicio = (currentPage - 1) * rowsPerPage;
-      const fin = inicio + rowsPerPage;
-      const visibles = personas.slice(inicio, fin);
-
-      const cuerpo = visibles.map(p =>
-        `<tr>
-          <td>${p.id}</td>
-          <td>${p.nombre}</td>
-          <td>${p.apellido}</td>
-          <td>${p.cedula}</td>
-          <td>${p.telefono}</td>
-          <td>${p.ciudad}</td>
-          <td class="acciones">
-            <button onclick="editarPersona(${p.id})">Editar</button>
-            <button onclick="borrarPersona(${p.id})">Borrar</button>
-          </td>
-        </tr>`
-      ).join("");
-
-      document.getElementById("tabla-personas").innerHTML = cuerpo;
-      renderPaginacion();
-    }
-
-    function editarPersona(id) {
-      const persona = personas.find(p => p.id === id);
-      if (persona) {
-        document.getElementById("formulario-edicion").style.display = "block";
-        document.getElementById("formulario-registro").style.display = "none";
-        document.getElementById("edit-id").value = persona.id;
-        document.getElementById("edit-nombre").value = persona.nombre;
-        document.getElementById("edit-apellido").value = persona.apellido;
-        document.getElementById("edit-cedula").value = persona.cedula;
-        document.getElementById("edit-telefono").value = persona.telefono;
-        document.getElementById("edit-ciudad").value = persona.ciudad;
-      }
-    }
-
-    function guardarEdicion() {
-      const id = parseInt(document.getElementById("edit-id").value);
-      const nombre = document.getElementById("edit-nombre").value;
-      const apellido = document.getElementById("edit-apellido").value;
-      const cedula = document.getElementById("edit-cedula").value;
-      const telefono = document.getElementById("edit-telefono").value;
-      const ciudad = document.getElementById("edit-ciudad").value;
-
-      const persona = personas.find(p => p.id === id);
-      if (persona && nombre && apellido && cedula && telefono && ciudad) {
-        persona.nombre = nombre;
-        persona.apellido = apellido;
-        persona.cedula = cedula;
-        persona.telefono = telefono;
-        persona.ciudad = ciudad;
-        guardarPersonas(); // <--- Guarda en localStorage
-        document.getElementById("formulario-edicion").style.display = "none";
-        document.getElementById("formulario-registro").style.display = "block";
-        renderTabla();
-      } else {
-        alert("Por favor completa todos los campos.");
-      }
-    }
-
-    function cancelarEdicion() {
-      document.getElementById("formulario-edicion").style.display = "none";
-      document.getElementById("formulario-registro").style.display = "block";
-    }
-
-    function borrarPersona(id) {
-      if (confirm("¿Estás seguro de borrar esta persona?")) {
-        personas = personas.filter(p => p.id !== id);
-        guardarPersonas(); // <--- Guarda en localStorage
-        renderTabla();
-      }
-    }
-
-    function renderPaginacion() {
-      const total = Math.ceil(personas.length / rowsPerPage);
-      let botones = "";
-      for (let i = 1; i <= total; i++) {
-        botones += `<button class="${i === currentPage ? 'activo' : ''}" onclick="cambiarPagina(${i})">${i}</button>`;
-      }
-      document.getElementById("paginacion").innerHTML = botones;
-    }
-
-    function cambiarPagina(pag) {
-      currentPage = pag;
-      renderTabla();
-    }
-
-    function registrarMoto() {
-      const nombre = document.getElementById("moto-nombre").value;
-      const apellido = document.getElementById("moto-apellido").value;
-      const cedula = document.getElementById("moto-cedula").value;
-      const telefono = document.getElementById("moto-telefono").value;
-      const placa = document.getElementById("moto-placa").value;
-
-      if (nombre && apellido && cedula && telefono && placa) {
-        const nueva = {
-          id: motos.length ? motos[motos.length - 1].id + 1 : 1,
-          nombre, apellido, cedula, telefono, placa
-        };
-        motos.push(nueva);
-        guardarMotos();
-        limpiarFormularioMoto();
-        renderTablaMotos();
-      } else {
-        alert("Por favor completa todos los campos.");
-      }
-    }
-
-    function limpiarFormularioMoto() {
-      document.getElementById("moto-nombre").value = "";
-      document.getElementById("moto-apellido").value = "";
-      document.getElementById("moto-cedula").value = "";
-      document.getElementById("moto-telefono").value = "";
-      document.getElementById("moto-placa").value = "";
-    }
-
-    function guardarMotos() {
-      localStorage.setItem("motos", JSON.stringify(motos));
-    }
-
-    function renderTablaMotos() {
-      const inicio = (currentPageMotos - 1) * rowsPerPageMotos;
-      const fin = inicio + rowsPerPageMotos;
-      const visibles = motos.slice(inicio, fin);
-
-      const cuerpo = visibles.map(m =>
-        `<tr>
-          <td>${m.id}</td>
-          <td>${m.nombre}</td>
-          <td>${m.apellido}</td>
-          <td>${m.cedula}</td>
-          <td>${m.telefono}</td>
-          <td>${m.placa}</td>
-          <td class="acciones">
-            <button onclick="editarMoto(${m.id})">Editar</button>
-            <button onclick="borrarMoto(${m.id})">Borrar</button>
-          </td>
-        </tr>`
-      ).join("");
-
-      document.getElementById("tabla-motos").innerHTML = cuerpo;
-      renderPaginacionMotos();
-    }
-
-    function editarMoto(id) {
-      const moto = motos.find(m => m.id === id);
-      if (moto) {
-        document.getElementById("formulario-edicion-moto").style.display = "block";
-        document.getElementById("formulario-moto").style.display = "none";
-        document.getElementById("edit-moto-id").value = moto.id;
-        document.getElementById("edit-moto-nombre").value = moto.nombre;
-        document.getElementById("edit-moto-apellido").value = moto.apellido;
-        document.getElementById("edit-moto-cedula").value = moto.cedula;
-        document.getElementById("edit-moto-telefono").value = moto.telefono;
-        document.getElementById("edit-moto-placa").value = moto.placa;
-      }
-    }
-
-    function guardarEdicionMoto() {
-      const id = parseInt(document.getElementById("edit-moto-id").value);
-      const nombre = document.getElementById("edit-moto-nombre").value;
-      const apellido = document.getElementById("edit-moto-apellido").value;
-      const cedula = document.getElementById("edit-moto-cedula").value;
-      const telefono = document.getElementById("edit-moto-telefono").value;
-      const placa = document.getElementById("edit-moto-placa").value;
-
-      const moto = motos.find(m => m.id === id);
-      if (moto && nombre && apellido && cedula && telefono && placa) {
-        moto.nombre = nombre;
-        moto.apellido = apellido;
-        moto.cedula = cedula;
-        moto.telefono = telefono;
-        moto.placa = placa;
-        guardarMotos();
-        document.getElementById("formulario-edicion-moto").style.display = "none";
-        document.getElementById("formulario-moto").style.display = "block";
-        renderTablaMotos();
-      } else {
-        alert("Por favor completa todos los campos.");
-      }
-    }
-
-    function cancelarEdicionMoto() {
-      document.getElementById("formulario-edicion-moto").style.display = "none";
-      document.getElementById("formulario-moto").style.display = "block";
-    }
-
-    function borrarMoto(id) {
-      if (confirm("¿Estás seguro de borrar esta moto/taller?")) {
-        motos = motos.filter(m => m.id !== id);
-        guardarMotos();
-        renderTablaMotos();
-      }
-    }
-
-    function renderPaginacionMotos() {
-      const total = Math.ceil(motos.length / rowsPerPageMotos);
-      let botones = "";
-      for (let i = 1; i <= total; i++) {
-        botones += `<button class="${i === currentPageMotos ? 'activo' : ''}" onclick="cambiarPaginaMotos(${i})">${i}</button>`;
-      }
-      document.getElementById("paginacion-motos").innerHTML = botones;
-    }
-
-    function cambiarPaginaMotos(pag) {
-      currentPageMotos = pag;
-      renderTablaMotos();
-    }
-
-    tsParticles.load("tsparticles", {
-      fpsLimit: 120,
-      background: { color: "#000000" },
+    particlesJS("particles-js", {
+      fps_limit: 120,
       particles: {
-        number: { value: 120, density: { enable: true, area: 800 } }, // Más partículas
-        color: { value: ["#ff0000", "#00cfff", "#ffffff"] }, // Colores variados
-        shape: { type: ["circle", "star"] }, // Formas variadas
-        opacity: { value: 0.7, random: true },
-        size: { value: 4, random: true },
-        links: {
+        number: {
+          value: 100,
+          density: { enable: true, value_area: 800 }
+        },
+        color: { value: "#00cfff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5, random: false },
+        size: { value: 3, random: true },
+        line_linked: {
           enable: true,
-          distance: 120,
+          distance: 150,
           color: "#00cfff",
-          opacity: 0.5,
-          width: 2
+          opacity: 0.4,
+          width: 1
         },
         move: {
           enable: true,
-          speed: 2,
+          speed: 6,
           direction: "none",
-          outModes: { default: "bounce" }
+          random: false,
+          straight: false,
+          out_mode: "out"
         }
       },
       interactivity: {
+        detect_on: "canvas",
         events: {
-          onHover: { enable: true, mode: "repulse" },
-          resize: true
+          onhover: { enable: true, mode: "grab" },
+          onclick: { enable: true, mode: "push" }
         },
-        modes: { repulse: { distance: 100 } }
+        modes: {
+          grab: {
+            distance: 200,
+            line_linked: { opacity: 0.6 }
+          },
+          push: { particles_nb: 4 }
+        }
       },
-      detectRetina: true
+      retina_detect: true
     });
   </script>
-
-  <!-- Agrega este código antes de </body> -->
-<div id="bot-ayuda" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
-  <button id="abrir-bot" style="background:#00cfff;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:2em;box-shadow:0 0 15px #00cfff;cursor:pointer;">🤖</button>
-  <div id="ventana-bot" style="display:none;position:absolute;bottom:70px;right:0;width:320px;max-width:90vw;background:#111;border:2px solid #00cfff;border-radius:12px;box-shadow:0 0 25px #00cfff;padding:15px;">
-    <div style="text-align:right;">
-      <button id="cerrar-bot" style="background:none;border:none;color:#00cfff;font-size:1.5em;cursor:pointer;">✖</button>
-    </div>
-    <div id="chat-bot" style="height:180px;overflow-y:auto;background:#222;border-radius:8px;padding:8px;color:#fff;font-size:1em;margin-bottom:10px;">
-      <div>🤖 Hola, soy el bot de ayuda de NKD PEREIRA.<br>¿En qué puedo ayudarte?</div>
-    </div>
-    <input id="input-bot" type="text" placeholder="Escribe tu pregunta..." style="width:75%;padding:7px;border-radius:6px;border:1px solid #00cfff;background:#222;color:#fff;">
-    <button id="enviar-bot" style="background:#00cfff;color:#fff;border:none;border-radius:6px;padding:7px 12px;cursor:pointer;">Enviar</button>
-  </div>
-</div>
-<script>
-  // Mostrar/ocultar ventana del bot
-  document.getElementById("abrir-bot").onclick = function() {
-    document.getElementById("ventana-bot").style.display = "block";
-  };
-  document.getElementById("cerrar-bot").onclick = function() {
-    document.getElementById("ventana-bot").style.display = "none";
-  };
-  // Bot de ayuda básico
-  document.getElementById("enviar-bot").onclick = enviarPreguntaBot;
-  document.getElementById("input-bot").addEventListener("keydown", function(e){
-    if(e.key === "Enter") enviarPreguntaBot();
-  });
-  function enviarPreguntaBot() {
-    var chat = document.getElementById("chat-bot");
-    var pregunta = document.getElementById("input-bot").value.trim();
-    if(!pregunta) return;
-    chat.innerHTML += `<div style="color:#00cfff;text-align:right;">Tú: ${pregunta}</div>`;
-    document.getElementById("input-bot").value = "";
-    setTimeout(function(){
-      chat.innerHTML += `<div>${respuestaBot(pregunta)}</div>`;
-      chat.scrollTop = chat.scrollHeight;
-    }, 500);
-  }
-  // Respuestas simples del bot
-  function respuestaBot(pregunta) {
-    pregunta = pregunta.toLowerCase();
-    if(pregunta.includes("error") || pregunta.includes("problema")) {
-      return "¿Puedes describir el error? Intenta recargar la página o revisa los datos ingresados. Si el problema persiste, verifica tu conexión o contacta al administrador.";
-    }
-    if(pregunta.includes("contraseña")) {
-      return "La contraseña de acceso es: <b>1234</b> (por defecto).";
-    }
-    if(pregunta.includes("no puedo entrar") || pregunta.includes("acceso")) {
-      return "Asegúrate de seleccionar la edad correcta y escribir la contraseña. Si eres menor de edad o usas iPhone, el acceso está restringido.";
-    }
-    if(pregunta.includes("registrar") || pregunta.includes("agregar persona")) {
-      return "Para registrar una persona, completa todos los campos y haz clic en 'Registrar'.";
-    }
-    if(pregunta.includes("moto")) {
-      return "Para registrar una moto, llena los datos y haz clic en 'Registrar Moto'.";
+</body>
+</html>
