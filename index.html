@@ -992,7 +992,293 @@
     });
   </script>
 
-  <!-- Agrega este código antes de </body> -->
+  <!-- Agrega este código antes de 
+<!-- NKD BOT — Widget nuevo desde cero -->
+<style>
+  :root {
+    --nkd-cyan: #00cfff;
+    --nkd-cyan-2: #00eaff;
+    --nkd-red: #ff0000;
+    --nkd-bg: rgba(0,0,0,0.86);
+    --nkd-border: rgba(0,207,255,0.8);
+    --nkd-shadow: 0 0 25px var(--nkd-cyan), 0 0 40px var(--nkd-cyan-2);
+  }
+  #nkdbot-toggle {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    border: 2px solid var(--nkd-cyan);
+    background: #000;
+    color: #fff;
+    font-size: 2rem;
+    box-shadow: var(--nkd-shadow);
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform .15s ease;
+  }
+  #nkdbot-toggle:active { transform: scale(.96); }
+
+  #nkdbot-panel {
+    position: fixed;
+    bottom: 90px; right: 20px;
+    width: 360px; max-width: 96vw; max-height: 70vh;
+    background: var(--nkd-bg);
+    border: 2px solid var(--nkd-border);
+    border-radius: 14px;
+    box-shadow: var(--nkd-shadow);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 10000;
+    transform: translateY(12px);
+    opacity: 0;
+    transition: all .25s ease;
+  }
+  #nkdbot-panel.open {
+    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+  }
+  #nkdbot-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px;
+    background: linear-gradient(90deg, rgba(0,0,0,.6), rgba(0,207,255,.18));
+    border-bottom: 1px solid var(--nkd-border);
+  }
+  #nkdbot-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1rem; color: var(--nkd-cyan);
+    text-shadow: 0 0 12px var(--nkd-cyan);
+  }
+  #nkdbot-actions button {
+    background: transparent; border: none; color: var(--nkd-cyan);
+    font-size: 1.25rem; cursor: pointer; padding: 6px;
+  }
+  #nkdbot-messages {
+    padding: 12px; overflow-y: auto; flex: 1; color: #fff;
+    background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6));
+  }
+  .nkdbot-msg {
+    margin: 8px 0; max-width: 85%; line-height: 1.35;
+    padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 0 10px rgba(0, 207, 255, .15);
+    word-break: break-word;
+  }
+  .nkdbot-user { margin-left: auto; background: #111; color: var(--nkd-cyan); }
+  .nkdbot-bot  { margin-right: auto; background: #151515; color: #fff; }
+  .nkdbot-time { display:block; font-size:.72rem; opacity:.7; margin-top:4px; }
+  #nkdbot-suggestions {
+    display:flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; border-top: 1px solid rgba(255,255,255,.08);
+  }
+  .nkd-chip {
+    background: #0e0e0e; color: var(--nkd-cyan);
+    border: 1px solid var(--nkd-border);
+    padding: 4px 8px; border-radius: 999px; cursor:pointer; font-size: .85rem;
+  }
+  #nkdbot-inputbar {
+    display:flex; gap:8px; padding: 10px; border-top: 1px solid var(--nkd-border);
+    background: rgba(0,0,0,.55);
+  }
+  #nkdbot-input {
+    flex:1; background:#0b0b0b; color:#fff; border:1px solid var(--nkd-border);
+    border-radius: 8px; padding: 10px; font-size: 1rem; outline:none;
+  }
+  #nkdbot-send {
+    background: #000; color: var(--nkd-cyan);
+    border: 1px solid var(--nkd-cyan); border-radius: 8px;
+    padding: 10px 12px; font-weight: 700; cursor:pointer;
+    box-shadow: 0 0 12px var(--nkd-cyan);
+  }
+  @media (max-width: 480px) {
+    #nkdbot-panel { right: 10px; bottom: 80px; width: 94vw; max-height: 70vh; }
+    #nkdbot-toggle { bottom: 12px; right: 12px; }
+  }
+</style>
+
+<button id="nkdbot-toggle" aria-label="Abrir chat de ayuda" title="Ayuda 🤖">🤖</button>
+
+<div id="nkdbot-panel" role="dialog" aria-label="Chat de ayuda NKD">
+  <div id="nkdbot-header">
+    <div id="nkdbot-title">🤖 <strong>NKD BOT</strong> <span style="font-size:.85em;color:#bbb;">offline</span></div>
+    <div id="nkdbot-actions">
+      <button id="nkdbot-min" title="Minimizar">▁</button>
+      <button id="nkdbot-close" title="Cerrar">✖</button>
+    </div>
+  </div>
+  <div id="nkdbot-messages"></div>
+  <div id="nkdbot-suggestions"></div>
+  <div id="nkdbot-inputbar">
+    <input id="nkdbot-input" type="text" placeholder="Escribe tu pregunta..." autocomplete="off" />
+    <button id="nkdbot-send">Enviar</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = (q) => document.querySelector(q);
+  const toggle = $("#nkdbot-toggle");
+  const panel  = $("#nkdbot-panel");
+  const btnMin = $("#nkdbot-min");
+  const btnCls = $("#nkdbot-close");
+  const msgBox = $("#nkdbot-messages");
+  const input  = $("#nkdbot-input");
+  const send   = $("#nkdbot-send");
+  const suggs  = $("#nkdbot-suggestions");
+
+  // Abrir / cerrar
+  function openPanel(){ panel.classList.add("open"); panel.style.display = "flex"; setTimeout(()=>input.focus(), 50); }
+  function closePanel(){ panel.classList.remove("open"); setTimeout(()=>{ panel.style.display="none"; }, 200); }
+  toggle.addEventListener("click", openPanel);
+  btnMin.addEventListener("click", ()=> panel.classList.toggle("open"));
+  btnCls.addEventListener("click", closePanel);
+
+  // Mensajes
+  function addMsg(text, who="bot"){
+    const el = document.createElement("div");
+    el.className = "nkdbot-msg " + (who === "user" ? "nkdbot-user" : "nkdbot-bot");
+    const time = new Date();
+    const hh = String(time.getHours()).padStart(2,"0");
+    const mm = String(time.getMinutes()).padStart(2,"0");
+    el.innerHTML = text + '<span class="nkdbot-time">'+hh+':'+mm+'</span>';
+    msgBox.appendChild(el);
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }
+
+  // Sugerencias rápidas
+  const chips = [
+    "¿Cuál es la contraseña?",
+    "¿Cómo registro una persona?",
+    "¿Dónde están las motos/taller?",
+    "¿Por qué pide edad al entrar?",
+    "¿Cómo edito o borro registros?",
+    "¿Dónde se guardan los datos?"
+  ];
+  function renderChips(){
+    suggs.innerHTML = "";
+    chips.forEach(txt => {
+      const c = document.createElement("button");
+      c.className = "nkd-chip";
+      c.textContent = txt;
+      c.addEventListener("click", ()=> {
+        input.value = txt;
+        handleSend();
+      });
+      suggs.appendChild(c);
+    });
+  }
+
+  // Normalizar texto (minúsculas + sin tildes)
+  function norm(s){
+    return s.toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"");
+  }
+
+  // Base de conocimientos (offline)
+  function answer(q){
+    const t = norm(q);
+
+    // Comandos
+    if (t === "/limpiar" || t === "limpiar chat") {
+      msgBox.innerHTML = "";
+      return "✔️ Chat limpiado.";
+    }
+    if (t === "/ayuda" || t.includes("ayuda") || t.includes("que puedes hacer")) {
+      return "Puedo ayudarte con: <b>contraseña</b>, <b>acceso por edad</b>, <b>registrar/editar/borrar personas</b>, <b>registrar motos</b>, ubicación de secciones y dónde se guardan los datos (<code>localStorage</code>).";
+    }
+    if (t.includes("iphone") || t.includes("ios")) {
+      return "📱 Sí, ahora el sitio funciona en iPhone/iOS. Se eliminó el bloqueo para dispositivos Apple.";
+    }
+
+    // Contraseña / acceso
+    if (t.includes("contrase") || t.includes("password") || t.includes("clave")) {
+      return "🔑 La contraseña por defecto es <b>1234</b>. Puedes cambiarla en el código dentro de <code>verificarPassword()</code>.";
+    }
+    if (t.includes("entrar") || t.includes("acceso") || t.includes("login") || t.includes("clientes")) {
+      return "Para entrar: pulsa <b>ENTRADA DE CLIENTES</b>, escribe la contraseña y verás la sección con <b>PERSONAS</b> y <b>MOTOS/TALLER</b>.";
+    }
+
+    // Edad
+    if (t.includes("edad") || t.includes("mayor") || t.includes("menor")) {
+      return "🔞 Al cargar la página, se muestra un selector de edad. Si eliges <b>18-25</b> (o mayor de edad) se habilita el acceso. 10-17 muestra acceso denegado.";
+    }
+
+    // Personas
+    if ((t.includes("persona") || t.includes("personas")) && (t.includes("registr") || t.includes("agregar"))) {
+      return "👤 Para registrar una persona: completa <b>Nombre, Apellido, Cédula, Teléfono y Ciudad</b> y pulsa <b>Registrar</b>. Se guarda en <code>localStorage</code>.";
+    }
+    if ((t.includes("persona") || t.includes("personas")) && (t.includes("editar") || t.includes("modificar"))) {
+      return "✏️ Para editar: usa el botón <b>Editar</b> junto al registro, cambia los campos y confirma <b>Guardar</b>.";
+    }
+    if ((t.includes("persona") || t.includes("personas")) && (t.includes("borrar") || t.includes("eliminar"))) {
+      return "🗑️ Para borrar: pulsa <b>Eliminar</b> junto al registro. Se pedirá confirmación antes de quitarlo.";
+    }
+    if ((t.includes("lista") || t.includes("ver") || t.includes("buscar")) && (t.includes("personas"))) {
+      return "📋 La lista de personas muestra paginación y búsqueda por nombre/cédula (según tu implementación).";
+    }
+
+    // Motos / Taller
+    if (t.includes("moto") || t.includes("taller")) {
+      if (t.includes("registr")) {
+        return "🏍️ Para registrar una moto: ve a <b>Motos/Taller</b>, llena los datos de la moto y pulsa <b>Registrar Moto</b>.";
+      }
+      if (t.includes("editar")) {
+        return "🔧 Para editar una moto: usa el botón <b>Editar</b> en la tabla de Motos/Taller y guarda los cambios.";
+      }
+      if (t.includes("borrar") || t.includes("eliminar")) {
+        return "🗑️ Para borrar una moto: pulsa <b>Eliminar</b> junto al registro y confirma.";
+      }
+      return "En <b>Motos/Taller</b> puedes registrar, editar y eliminar motos.";
+    }
+
+    // Datos / almacenamiento
+    if (t.includes("dato") || t.includes("guardar") || t.includes("localstorage") || t.includes("se guardan")) {
+      return "💾 Los datos se guardan en el navegador usando <code>localStorage</code>. Si borras el caché del navegador, se perderán. Se recomienda exportar periódicamente si agregas una opción de respaldo.";
+    }
+
+    // Partículas / estilo / sonido
+    if (t.includes("particula") || t.includes("tsparticles")) {
+      return "✨ El fondo usa <b>tsParticles</b>. Puedes ajustar la densidad, forma y velocidad en el bloque de configuración correspondiente del script.";
+    }
+    if (t.includes("sonido") || t.includes("click")) {
+      return "🔊 Los botones reproducen un sonido de clic (si está habilitado en tu script global).";
+    }
+
+    // Fallback
+    return "🤔 No tengo esa respuesta aún. Prueba con: <i>contraseña</i>, <i>registrar persona</i>, <i>motos/taller</i>, <i>edad de acceso</i> o escribe <b>/ayuda</b>.";
+  }
+
+  // Envío
+  function handleSend(){
+    const q = input.value.trim();
+    if(!q) return;
+    addMsg(q, "user");
+    input.value = "";
+    // indicador de escribiendo
+    const typingId = "nkdbot-typing";
+    const tip = document.createElement("div");
+    tip.id = typingId; tip.className = "nkdbot-msg nkdbot-bot";
+    tip.textContent = "Escribiendo...";
+    msgBox.appendChild(tip);
+    msgBox.scrollTop = msgBox.scrollHeight;
+
+    setTimeout(()=>{
+      tip.remove();
+      addMsg(answer(q), "bot");
+    }, 450);
+  }
+
+  send.addEventListener("click", handleSend);
+  input.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter"){ handleSend(); }
+  });
+
+  // Mensaje de bienvenida y chips
+  addMsg("¡Hola! Soy el <b>NKD BOT</b>. Pregúntame sobre tu página: contraseña, personas, motos/taller o edad de acceso. Escribe <b>/ayuda</b> para ver más opciones.");
+  renderChips();
+})();
+</script>
+
+</body> -->
 <div id="bot-ayuda" style="position:fixed;bottom:20px;right:20px;z-index:9999;">
   <button id="abrir-bot" style="background:#00cfff;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:2em;box-shadow:0 0 15px #00cfff;cursor:pointer;">🤖</button>
   <div id="ventana-bot" style="display:none;position:absolute;bottom:70px;right:0;width:320px;max-width:90vw;background:#111;border:2px solid #00cfff;border-radius:12px;box-shadow:0 0 25px #00cfff;padding:15px;">
