@@ -1014,7 +1014,15 @@
   document.getElementById("cerrar-bot").onclick = function() {
     document.getElementById("ventana-bot").style.display = "none";
   };
-  // Bot de ayuda mejorado (offline)
+  // Mostrar/ocultar ventana del bot
+document.getElementById("abrir-bot").onclick = function() {
+  document.getElementById("ventana-bot").style.display = "block";
+};
+document.getElementById("cerrar-bot").onclick = function() {
+  document.getElementById("ventana-bot").style.display = "none";
+};
+
+// Bot de ayuda mejorado (offline)
 document.getElementById("enviar-bot").onclick = enviarPreguntaBot;
 document.getElementById("input-bot").addEventListener("keydown", function(e){
   if(e.key === "Enter") enviarPreguntaBot();
