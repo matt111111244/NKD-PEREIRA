@@ -427,6 +427,40 @@
     });
   </script>
   <script>
+// Bloquear acceso a iPhone
+document.addEventListener("DOMContentLoaded", function() {
+  var esIphone = /iPhone/i.test(navigator.userAgent);
+  if (esIphone) {
+    document.body.innerHTML = `
+      <div style="
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
+        background-size: 800% 800%;
+        animation: fondoAnimado 16s ease infinite;
+        z-index: 99999;
+      ">
+        <h1 style="color:#fff; font-size:2em; text-align:center;">
+          🚫 Acceso bloqueado 🚫<br>
+          No se permite el acceso desde iPhone.
+        </h1>
+      </div>
+      <style>
+        @keyframes fondoAnimado {
+          0% {background-position:0% 50%}
+          50% {background-position:100% 50%}
+          100% {background-position:0% 50%}
+        }
+      </style>
+    `;
+    return;
+  }
 
   // Bloqueo si intentan inspeccionar o copiar el código
   document.addEventListener("contextmenu", function(e) {
@@ -1014,28 +1048,51 @@
   document.getElementById("cerrar-bot").onclick = function() {
     document.getElementById("ventana-bot").style.display = "none";
   };
-  // Bot de ayuda básico
-  document.getElementById("enviar-bot").onclick = enviarPreguntaBot;
-  document.getElementById("input-bot").addEventListener("keydown", function(e){
-    if(e.key === "Enter") enviarPreguntaBot();
-  });
-  function enviarPreguntaBot() {
-    var chat = document.getElementById("chat-bot");
-    var pregunta = document.getElementById("input-bot").value.trim();
-    if(!pregunta) return;
-    chat.innerHTML += `<div style="color:#00cfff;text-align:right;">Tú: ${pregunta}</div>`;
-    document.getElementById("input-bot").value = "";
-    setTimeout(function(){
-      chat.innerHTML += `<div>${respuestaBot(pregunta)}</div>`;
-      chat.scrollTop = chat.scrollHeight;
-    }, 500);
+  // Bot de ayuda mejorado (offline)
+document.getElementById("enviar-bot").onclick = enviarPreguntaBot;
+document.getElementById("input-bot").addEventListener("keydown", function(e){
+  if(e.key === "Enter") enviarPreguntaBot();
+});
+
+function enviarPreguntaBot() {
+  var chat = document.getElementById("chat-bot");
+  var pregunta = document.getElementById("input-bot").value.trim();
+  if(!pregunta) return;
+  chat.innerHTML += `<div style="color:#00cfff;text-align:right;">Tú: ${pregunta}</div>`;
+  document.getElementById("input-bot").value = "";
+  setTimeout(function(){
+    chat.innerHTML += `<div>🤖 ${respuestaBot(pregunta)}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+  }, 500);
+}
+
+function respuestaBot(pregunta) {
+  pregunta = pregunta.toLowerCase();
+
+  if (pregunta.includes("contraseña")) {
+    return "🔑 La contraseña de acceso es: <b>1234</b> (por defecto).";
   }
-  // Respuestas simples del bot
-  function respuestaBot(pregunta) {
-    pregunta = pregunta.toLowerCase();
-    if(pregunta.includes("error") || pregunta.includes("problema")) {
-      return "¿Puedes describir el error? Intenta recargar la página o revisa los datos ingresados. Si el problema persiste, verifica tu conexión o contacta al administrador.";
-    }
+  if (pregunta.includes("registrar persona") || pregunta.includes("agregar persona")) {
+    return "👤 Para registrar una persona, completa todos los campos de nombre, apellido, cédula, teléfono y ciudad, luego haz clic en 'Registrar'.";
+  }
+  if (pregunta.includes("registrar moto") || pregunta.includes("moto")) {
+    return "🏍️ Para registrar una moto, llena los datos en la sección Motos/Taller y haz clic en 'Registrar Moto'.";
+  }
+  if (pregunta.includes("personas")) {
+    return "📋 En la sección Personas puedes agregar, editar o borrar personas. También puedes ver la lista completa con paginación.";
+  }
+  if (pregunta.includes("motos") || pregunta.includes("taller")) {
+    return "🔧 En la sección Motos/Taller puedes administrar las motos, editarlas o eliminarlas.";
+  }
+  if (pregunta.includes("edad") || pregunta.includes("acceso")) {
+    return "🔞 Al ingresar, debes seleccionar tu rango de edad. Solo los mayores de edad pueden acceder.";
+  }
+  if (pregunta.includes("ayuda") || pregunta.includes("bot")) {
+    return "🤖 Soy tu asistente de NKD PEREIRA. Puedo ayudarte con contraseñas, registros, personas y motos.";
+  }
+
+  return "🤔 No encontré una respuesta para eso. Intenta preguntar sobre: contraseña, registrar persona, registrar moto, personas, motos/taller o acceso.";
+}
     if(pregunta.includes("contraseña")) {
       return "La contraseña de acceso es: <b>1234</b> (por defecto).";
     }
