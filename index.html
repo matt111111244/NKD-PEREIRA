@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NKD PEREIRA 🔥</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <
+    script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -427,41 +428,6 @@
     });
   </script>
   <script>
-// Bloquear acceso a iPhone
-document.addEventListener("DOMContentLoaded", function() {
-  var esIphone = /iPhone/i.test(navigator.userAgent);
-  if (esIphone) {
-    document.body.innerHTML = `
-      <div style="
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
-        background-size: 800% 800%;
-        animation: fondoAnimado 16s ease infinite;
-        z-index: 99999;
-      ">
-        <h1 style="color:#fff; font-size:2em; text-align:center;">
-          🚫 Acceso bloqueado 🚫<br>
-          No se permite el acceso desde iPhone.
-        </h1>
-      </div>
-      <style>
-        @keyframes fondoAnimado {
-          0% {background-position:0% 50%}
-          50% {background-position:100% 50%}
-          100% {background-position:0% 50%}
-        }
-      </style>
-    `;
-    return;
-  }
-
   // Bloqueo si intentan inspeccionar o copiar el código
   document.addEventListener("contextmenu", function(e) {
     e.preventDefault();
