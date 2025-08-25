@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NKD PEREIRA 🔥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      color: #ff0000;
+      overflow-x: hidden;
+    }
+
+    /* Fondo degradado animado */
+    body {
+      background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
+      background-size: 800% 800%;
+      animation: fondoAnimado 16s ease infinite;
+    }
+
+    @keyframes fondoAnimado {
+      0% {background-position:0% 50%}
+      50% {background-position:100% 50%}
+      100% {background-position:0% 50%}
+    }
+
+    /* Efecto de resplandor en los botones */
+    .boton, .boton-modal {
+      box-shadow: 0 0 25px #ff0000, 0 0 40px #00cfff;
+      animation: glowBoton 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowBoton {
+      from { box-shadow: 0 0 10px #ff0000, 0 0 20px #00cfff; }
+      to   { box-shadow: 0 0 40px #ff0000, 0 0 60px #00cfff; }
+    }
+
+    #tsparticles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    header { padding: 20px 10px 10px; text-align: center; }
+
+    header h1 {
+      font-size: 3em;
+      color: #00cfff;
+      text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
+      animation: glow-celeste 2s ease-in-out infinite alternate;
+      letter-spacing: 2px;
+      margin-bottom: 0.2em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @keyframes glow-celeste {
+      from { text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff; }
+      to   { text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff; }
+    }
+
+    button, input { font-family: 'Orbitron', sans-serif; }
+
+    .boton, .boton-modal {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      margin: 20px;
+      background: black;
+      color: #ff0000;
+      border: 2px solid #ff0000;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff0000;
+      transition: all 0.3s ease-in-out;
+    }
+
+    main#contenido-principal {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 60px);
+      flex-direction: column;
+      padding-top: 0;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0; top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    .modal-content {
+      background-color: #111;
+      margin: 10% auto;
+      padding: 30px;
+      border: 2px solid red;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      color: #ff0000;
+      box-shadow: 0 0 20px #ff0000;
+      text-align: center;
+    }
+
+    .modal-content input {
+      padding: 10px;
+      width: 90%;
+      margin-top: 15px;
+      background: black;
+      border: 1px solid red;
+      color: red;
+      font-size: 1.2em;
+    }
+
+    .cerrar { float: right; font-size: 20px; cursor: pointer; color: red; }
+    .mensaje-error { color: red; margin-top: 10px; }
+
+    table {
+      width: 90%;
+      margin: 0 auto 30px;
+      border-collapse: collapse;
+      color: #fff;
+    }
+    th, td { border: 1px solid #ff0000; padding: 10px; text-align: center; }
+    th { background-color: #330000; }
+
+    .acciones button {
+      margin: 2px;
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #formulario-registro { text-align: center; margin-bottom: 20px; }
+    #formulario-registro input {
+      width: 200px;
+      margin: 5px;
+      padding: 8px;
+      background: black;
+      color: red;
+      border: 1px solid red;
+    }
+
+    .paginacion { text-align: center; margin: 10px; }
+    .paginacion button {
+      margin: 3px;
+      padding: 8px 12px;
+      background: black;
+      color: red;
+      border: 1px solid red;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .paginacion button.activo { background: red; color: black; }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.5em; }
+      main#contenido-principal { min-height: auto; padding: 10px; }
+      .boton, .boton-modal {
+        padding: 10px 15px;
+        font-size: 1em;
+        margin: 10px;
+      }
+      table, th, td { font-size: 0.9em; padding: 5px; }
+      #formulario-registro input,
+      #formulario-moto input,
+      #formulario-edicion input,
+      #formulario-edicion-moto input { width: 95%; font-size: 1em; margin: 5px 0; }
+      .modal-content { width: 98%; padding: 10px; }
+    }
+
+    /* ====== NKD BOT — Widget nuevo desde cero (estilos) ====== */
+    :root {
+      --nkd-cyan: #00cfff;
+      --nkd-cyan-2: #00eaff;
+      --nkd-red: #ff0000;
+      --nkd-bg: rgba(0,0,0,0.86);
+      --nkd-border: rgba(0,207,255,0.8);
+      --nkd-shadow: 0 0 25px var(--nkd-cyan), 0 0 40px var(--nkd-cyan-2);
+    }
+    #nkdbot-toggle {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      width: 62px; height: 62px;
+      border-radius: 50%;
+      border: 2px solid var(--nkd-cyan);
+      background: #000;
+      color: #fff;
+      font-size: 2rem;
+      box-shadow: var(--nkd-shadow);
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform .15s ease;
+      animation: nkdPulse 2s ease-in-out infinite alternate; /* ✨ animación ícono */
+    }
+    #nkdbot-toggle:active { transform: scale(.96); }
+    @keyframes nkdPulse {
+      from { box-shadow: 0 0 12px var(--nkd-cyan), 0 0 24px var(--nkd-cyan-2); transform: scale(1); }
+      to   { box-shadow: 0 0 28px var(--nkd-cyan), 0 0 48px var(--nkd-cyan-2); transform: scale(1.08); }
+    }
+
+    #nkdbot-panel {
+      position: fixed;
+      bottom: 90px; right: 20px;
+      width: 360px; max-width: 96vw; max-height: 70vh;
+      background: var(--nkd-bg);
+      border: 2px solid var(--nkd-border);
+      border-radius: 14px;
+      box-shadow: var(--nkd-shadow);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 10000;
+      transform: translateY(12px);
+      opacity: 0;
+      transition: all .25s ease;
+    }
+    #nkdbot-panel.open { display: flex; transform: translateY(0); opacity: 1; }
+    #nkdbot-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px;
+      background: linear-gradient(90deg, rgba(0,0,0,.6), rgba(0,207,255,.18));
+      border-bottom: 1px solid var(--nkd-border);
+    }
+    #nkdbot-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1rem; color: var(--nkd-cyan);
+      text-shadow: 0 0 12px var(--nkd-cyan);
+    }
+    #nkdbot-actions button {
+      background: transparent; border: none; color: var(--nkd-cyan);
+      font-size: 1.25rem; cursor: pointer; padding: 6px;
+    }
+    #nkdbot-messages {
+      padding: 12px; overflow-y: auto; flex: 1; color: #fff;
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6));
+    }
+    .nkdbot-msg {
+      margin: 8px 0; max-width: 85%; line-height: 1.35;
+      padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 0 10px rgba(0, 207, 255, .15);
+      word-break: break-word;
+    }
+    .nkdbot-user { margin-left: auto; background: #111; color: var(--nkd-cyan); }
+    .nkdbot-bot  { margin-right: auto; background: #151515; color: #fff; }
+    .nkdbot-time { display:block; font-size:.72rem; opacity:.7; margin-top:4px; }
+    #nkdbot-suggestions {
+      display:flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .nkd-chip {
+      background: #0e0e0e; color: var(--nkd-cyan);
+      border: 1px solid var(--nkd-border);
+      padding: 4px 8px; border-radius: 999px; cursor:pointer; font-size: .85rem;
+    }
+    #nkdbot-inputbar {
+      display:flex; gap:8px; padding: 10px; border-top: 1px solid var(--nkd-border);
+      background: rgba(0,0,0,.55);
+    }
+    #nkdbot-input {
+      flex:1; background:#0b0b0b; color:#fff; border:1px solid var(--nkd-border);
+      border-radius: 8px; padding: 10px; font-size: 1rem; outline:none;
+    }
+    #nkdbot-send {
+      background: #000; color: var(--nkd-cyan);
+      border: 1px solid var(--nkd-cyan); border-radius: 8px;
+      padding: 10px 12px; font-weight: 700; cursor:pointer;
+      box-shadow: 0 0 12px var(--nkd-cyan);
+    }
+    @media (max-width: 480px) {
+      #nkdbot-panel { right: 10px; bottom: 80px; width: 94vw; max-height: 70vh; }
+      #nkdbot-toggle { bottom: 12px; right: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // ====== Selector de edad al cargar la página ======
+    document.addEventListener("DOMContentLoaded", function() {
+      if (localStorage.getItem("accesoEdad") === "ok") return;
+
+      document.body.innerHTML = `
+        <div id="acceso-edad" style="
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          width: 100vw; height: 100vh;
+          display: flex; flex-direction: column; justify-content: center; align-items: center;
+          background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff);
+          background-size: 800% 800%;
+          animation: fondoAnimado 16s ease infinite;
+          z-index: 99999;
+        ">
+          <div style="
+            background: rgba(0,0,0,0.85);
+            border: 2px solid #00cfff;
+            border-radius: 18px;
+            box-shadow: 0 0 30px #00cfff, 0 0 60px #00eaff;
+            padding: 40px 30px; text-align: center; min-width: 270px; max-width: 90vw;
+          ">
+            <h1 style="color:#00cfff; font-size:2.2em; margin-bottom:.5em; text-shadow:0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; font-family:'Orbitron',sans-serif;">
+              Selecciona tu rango de edad
+            </h1>
+            <button id="btn-18-25" style="margin:18px 0 10px 0; padding:15px 40px; font-size:1.3em; border-radius:10px; border:2px solid #00cfff; background:#000; color:#00eaff; box-shadow:0 0 20px #00cfff; cursor:pointer; font-family:'Orbitron',sans-serif; display:block; width:100%;">
+              18 - 25 años
+            </button>
+            <button id="btn-10-17" style="margin:10px 0 0 0; padding:15px 40px; font-size:1.3em; border-radius:10px; border:2px solid #00cfff; background:#000; color:#00eaff; box-shadow:0 0 20px #00cfff; cursor:pointer; font-family:'Orbitron',sans-serif; display:block; width:100%;">
+              10 - 17 años
+            </button>
+          </div>
+        </div>
+        <style>
+          @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+          @keyframes glow-celeste { from{ text-shadow:0 0 15px #00cfff, 0 0 30px #00eaff;} to{ text-shadow:0 0 30px #00eaff, 0 0 60px #00cfff;} }
+        </style>
+      `;
+
+      document.getElementById("btn-18-25").onclick = function() {
+        localStorage.setItem("accesoEdad", "ok");
+        location.reload();
+      };
+      document.getElementById("btn-10-17").onclick = function() {
+        localStorage.removeItem("accesoEdad");
+        document.body.innerHTML = `
+          <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+            background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite;
+            color:#00cfff; font-family:'Orbitron',sans-serif; text-align:center; z-index:99999;">
+            <h1 style="font-size: 2.5em; color: #00cfff; text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; letter-spacing: 2px; margin-bottom: .5em;">
+              🚫 Acceso Denegado 🚫
+            </h1>
+            <p style="font-size:1.5em; color:#fff; text-shadow:0 0 10px #00cfff;">
+              Esta página es solo para mayores de 18 años.<br>¡Vuelve cuando seas mayor!
+            </p>
+          </div>
+          <style>
+            @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+            @keyframes glow-celeste { from{ text-shadow:0 0 15px #00cfff, 0 0 30px #00eaff;} to{ text-shadow:0 0 30px #00eaff, 0 0 60px #00cfff;} }
+          </style>
+        `;
+      };
+    });
+  </script>
+
+  <script>
+    // ====== Bloqueo de inspección / copia ======
+    document.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+      document.body.innerHTML = `
+        <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+          background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite; z-index:99999;">
+          <h1 style="color:#fff; font-size:2em; text-align:center;">
+            🚫 Acceso bloqueado 🚫<br>No intentes copiar ni inspeccionar esta página.
+          </h1>
+        </div>
+        <style>
+          @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        </style>
+      `;
+    });
+
+    document.addEventListener("keydown", function(e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) ||
+        (e.ctrlKey && (e.key === "U" || e.key === "S" || e.key === "C"))
+      ) {
+        e.preventDefault();
+        document.body.innerHTML = `
+          <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+            background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite; z-index:99999;">
+            <h1 style="color:#fff; font-size:2em; text-align:center;">
+              🚫 Acceso bloqueado 🚫<br>No intentes copiar ni inspeccionar esta página.
+            </h1>
+          </div>
+          <style>
+            @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+          </style>
+        `;
+      }
+    });
+  </script>
+
+  <div id="tsparticles"></div>
+
+  <header>
+    <h1 style="font-size: 3em; color: #00cfff; text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; letter-spacing: 2px; margin-bottom: 0.2em; display: flex; justify-content: center; align-items: center; gap: 18px; flex-wrap: wrap;">
+      🔥🔥 NKD PEREIRA 🔥🔥
+    </h1>
+  </header>
+
+  <main id="contenido-principal">
+    <button class="boton" onclick="abrirModal()">ENTRADA DE CLIENTES 🔐</button>
+  </main>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="cerrar" onclick="cerrarModal()">✖</span>
+      <h2>🔑 Ingrese la contraseña</h2>
+      <input type="password" id="password" placeholder="********">
+      <div class="mensaje-error" id="mensaje-error"></div>
+      <button class="boton-modal" onclick="verificarPassword()">Entrar</button>
+    </div>
+  </div>
+
+  <section id="seccion-secreta" style="display:none; text-align:center;">
+    <h2>✅ Acceso Autorizado</h2>
+    <button class="boton" onclick="mostrarPersonas()">👤 PERSONAS</button>
+    <button class="boton" onclick="mostrarMotosTaller()">🏍️ MOTOS/TALLER</button>
+    <button class="boton" onclick="volverAtras()">🔙 Volver atrás</button>
+  </section>
+
+  <section id="seccion-personas" style="display:none;">
+    <h2 style="text-align:center;">👤 Lista de Personas</h2>
+
+    <div id="formulario-registro">
+      <input type="text" id="nombre" placeholder="Nombre">
+      <input type="text" id="apellido" placeholder="Apellido">
+      <input type="text" id="cedula" placeholder="Cédula">
+      <input type="text" id="telefono" placeholder="Teléfono">
+      <input type="text" id="ciudad" placeholder="Ciudad">
+      <button class="boton" onclick="registrarPersona()">Registrar</button>
+    </div>
+
+    <div id="formulario-edicion" style="display:none; text-align:center;">
+      <h3>Editar Persona</h3>
+      <input type="hidden" id="edit-id">
+      <input type="text" id="edit-nombre" placeholder="Nombre">
+      <input type="text" id="edit-apellido" placeholder="Apellido">
+      <input type="text" id="edit-cedula" placeholder="Cédula">
+      <input type="text" id="edit-telefono" placeholder="Teléfono">
+      <input type="text" id="edit-ciudad" placeholder="Ciudad">
+      <button class="boton" onclick="guardarEdicion()">Guardar</button>
+      <button class="boton" onclick="cancelarEdicion()">Cancelar</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Apellido</th><th>Cédula</th><th>Teléfono</th><th>Ciudad</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-personas"></tbody>
+    </table>
+
+    <div class="paginacion" id="paginacion"></div>
+    <div style="text-align:center;">
+      <button class="boton" onclick="volverDesdePersonas()">🔙 Volver atrás</button>
+    </div>
+  </section>
+
+  <section id="seccion-motos-taller" style="display:none;">
+    <h2 style="text-align:center;">🏍️ Motos/Taller</h2>
+
+    <div id="formulario-moto" style="text-align:center; margin-bottom:20px;">
+      <input type="text" id="moto-nombre" placeholder="Nombre">
+      <input type="text" id="moto-apellido" placeholder="Apellido">
+      <input type="text" id="moto-cedula" placeholder="Cédula">
+      <input type="text" id="moto-telefono" placeholder="Teléfono">
+      <input type="text" id="moto-placa" placeholder="Placa">
+      <button class="boton" onclick="registrarMoto()">Registrar Moto</button>
+    </div>
+
+    <div id="formulario-edicion-moto" style="display:none; text-align:center;">
+      <h3>Editar Moto/Taller</h3>
+      <input type="hidden" id="edit-moto-id">
+      <input type="text" id="edit-moto-nombre" placeholder="Nombre">
+      <input type="text" id="edit-moto-apellido" placeholder="Apellido">
+      <input type="text" id="edit-moto-cedula" placeholder="Cédula">
+      <input type="text" id="edit-moto-telefono" placeholder="Teléfono">
+      <input type="text" id="edit-moto-placa" placeholder="Placa">
+      <button class="boton" onclick="guardarEdicionMoto()">Guardar</button>
+      <button class="boton" onclick="cancelarEdicionMoto()">Cancelar</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Apellido</th><th>Cédula</th><th>Teléfono</th><th>Placa</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-motos"></tbody>
+    </table>
+
+    <div class="paginacion" id="paginacion-motos"></div>
+    <div style="text-align:center;">
+      <button class="boton" onclick="volverDesdeMotosTaller()">🔙 Volver atrás</button>
+    </div>
+  </section>
+
+  <!-- Sonido global de clic en botones -->
+  <audio id="sonido-click" src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b6c_1.mp3"></audio>
+
+  <script>
+    // Reproduce sonido al hacer click en cualquier botón
+    document.addEventListener("DOMContentLoaded", function() {
+      const sonido = document.getElementById("sonido-click");
+      document.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          try { sonido.currentTime = 0; sonido.play(); } catch(e){}
+        });
+      });
+    });
+
+    // ====== Datos iniciales ======
+    let personas = JSON.parse(localStorage.getItem("personas")) || [
+      { id: 1, nombre: "Carlos", apellido: "Perez", cedula: "1000123456", telefono: "3210001111", ciudad: "Pereira" },
+    ];
+
+    let motos = JSON.parse(localStorage.getItem("motos")) || [
+      { id: 1, nombre: "Juan", apellido: "Gomez", cedula: "1000111111", telefono: "3221112222", placa: "ABC123" },
+    ];
+
+    let currentPage = 1, rowsPerPage = 5;
+    let currentPageMotos = 1, rowsPerPageMotos = 5;
+
+    // ====== Modal login ======
+    function abrirModal() {
+      document.getElementById("modal").style.display = "block";
+      document.getElementById("password").value = "";
+      document.getElementById("mensaje-error").textContent = "";
+    }
+    function cerrarModal() { document.getElementById("modal").style.display = "none"; }
+    function verificarPassword() {
+      const pass = document.getElementById("password").value;
+      if (pass === "1234") {
+        cerrarModal();
+        document.getElementById("contenido-principal").style.display = "none";
+        document.getElementById("seccion-secreta").style.display = "block";
+      } else {
+        document.getElementById("mensaje-error").textContent = "❌ Contraseña incorrecta";
+      }
+    }
+    function volverAtras() {
+      document.getElementById("contenido-principal").style.display = "block";
+      document.getElementById("seccion-secreta").style.display = "none";
+    }
+
+    // ====== Personas ======
+    function mostrarPersonas() {
+      document.getElementById("seccion-secreta").style.display = "none";
+      document.getElementById("seccion-personas").style.display = "block";
+      renderTabla();
+    }
+    function volverDesdePersonas() {
+      document.getElementById("seccion-personas").style.display = "none";
+      document.getElementById("seccion-secreta").style.display = "block";
+    }
+    function guardarPersonas() { localStorage.setItem("personas", JSON.stringify(personas)); }
+    function registrarPersona() {
+      const nombre = document.getElementById("nombre").value.trim();
+      const apellido = document.getElementById("apellido").value.trim();
+      const cedula = document.getElementById("cedula").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const ciudad = document.getElementById("ciudad").value.trim();
+
+      if (nombre && apellido && cedula && telefono && ciudad) {
+        const nueva = { id: personas.length ? personas[personas.length - 1].id + 1 : 1, nombre, apellido, cedula, telefono, ciudad };
+        personas.push(nueva);
+        guardarPersonas();
+        limpiarFormulario();
+        renderTabla();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function limpiarFormulario() {
+      ["nombre","apellido","cedula","telefono","ciudad"].forEach(id => document.getElementById(id).value = "");
+    }
+    function renderTabla() {
+      const inicio = (currentPage - 1) * rowsPerPage;
+      const visibles = personas.slice(inicio, inicio + rowsPerPage);
+      const cuerpo = visibles.map(p => `
+        <tr>
+          <td>${p.id}</td><td>${p.nombre}</td><td>${p.apellido}</td><td>${p.cedula}</td><td>${p.telefono}</td><td>${p.ciudad}</td>
+          <td class="acciones">
+            <button onclick="editarPersona(${p.id})">Editar</button>
+            <button onclick="borrarPersona(${p.id})">Borrar</button>
+          </td>
+        </tr>`).join("");
+      document.getElementById("tabla-personas").innerHTML = cuerpo;
+      renderPaginacion();
+    }
+    function editarPersona(id) {
+      const persona = personas.find(p => p.id === id);
+      if (!persona) return;
+      document.getElementById("formulario-edicion").style.display = "block";
+      document.getElementById("formulario-registro").style.display = "none";
+      document.getElementById("edit-id").value = persona.id;
+      document.getElementById("edit-nombre").value = persona.nombre;
+      document.getElementById("edit-apellido").value = persona.apellido;
+      document.getElementById("edit-cedula").value = persona.cedula;
+      document.getElementById("edit-telefono").value = persona.telefono;
+      document.getElementById("edit-ciudad").value = persona.ciudad;
+    }
+    function guardarEdicion() {
+      const id = parseInt(document.getElementById("edit-id").value, 10);
+      const nombre = document.getElementById("edit-nombre").value.trim();
+      const apellido = document.getElementById("edit-apellido").value.trim();
+      const cedula = document.getElementById("edit-cedula").value.trim();
+      const telefono = document.getElementById("edit-telefono").value.trim();
+      const ciudad = document.getElementById("edit-ciudad").value.trim();
+      const persona = personas.find(p => p.id === id);
+      if (persona && nombre && apellido && cedula && telefono && ciudad) {
+        Object.assign(persona, { nombre, apellido, cedula, telefono, ciudad });
+        guardarPersonas();
+        document.getElementById("formulario-edicion").style.display = "none";
+        document.getElementById("formulario-registro").style.display = "block";
+        renderTabla();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function cancelarEdicion() {
+      document.getElementById("formulario-edicion").style.display = "none";
+      document.getElementById("formulario-registro").style.display = "block";
+    }
+    function borrarPersona(id) {
+      if (!confirm("¿Estás seguro de borrar esta persona?")) return;
+      personas = personas.filter(p => p.id !== id);
+      guardarPersonas();
+      renderTabla();
+    }
+    function renderPaginacion() {
+      const total = Math.ceil(personas.length / rowsPerPage);
+      let botones = "";
+      for (let i = 1; i <= total; i++) {
+        botones += `<button class="${i === currentPage ? 'activo' : ''}" onclick="cambiarPagina(${i})">${i}</button>`;
+      }
+      document.getElementById("paginacion").innerHTML = botones;
+    }
+    function cambiarPagina(pag) { currentPage = pag; renderTabla(); }
+
+    // ====== Motos/Taller ======
+    function mostrarMotosTaller() {
+      document.getElementById("seccion-secreta").style.display = "none";
+      document.getElementById("seccion-motos-taller").style.display = "block";
+      renderTablaMotos();
+    }
+    function volverDesdeMotosTaller() {
+      document.getElementById("seccion-motos-taller").style.display = "none";
+      document.getElementById("seccion-secreta").style.display = "block";
+    }
+    function guardarMotos() { localStorage.setItem("motos", JSON.stringify(motos)); }
+    function registrarMoto() {
+      const nombre = document.getElementById("moto-nombre").value.trim();
+      const apellido = document.getElementById("moto-apellido").value.trim();
+      const cedula = document.getElementById("moto-cedula").value.trim();
+      const telefono = document.getElementById("moto-telefono").value.trim();
+      const placa = document.getElementById("moto-placa").value.trim();
+      if (nombre && apellido && cedula && telefono && placa) {
+        const nueva = { id: motos.length ? motos[motos.length - 1].id + 1 : 1, nombre, apellido, cedula, telefono, placa };
+        motos.push(nueva);
+        guardarMotos();
+        limpiarFormularioMoto();
+        renderTablaMotos();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function limpiarFormularioMoto() {
+      ["moto-nombre","moto-apellido","moto-cedula","moto-telefono","moto-placa"].forEach(id => document.getElementById(id).value = "");
+    }
+    function renderTablaMotos() {
+      const inicio = (currentPageMotos - 1) * rowsPerPageMotos;
+      const visibles = motos.slice(inicio, inicio + rowsPerPageMotos);
+      const cuerpo = visibles.map(m => `
+        <tr>
+          <td>${m.id}</td><td>${m.nombre}</td><td>${m.apellido}</td><td>${m.cedula}</td><td>${m.telefono}</td><td>${m.placa}</td>
+          <td class="acciones">
+            <button onclick="editarMoto(${m.id})">Editar</button>
+            <button onclick="borrarMoto(${m.id})">Borrar</button>
+          </td>
+        </tr>`).join("");
+      document.getElementById("tabla-motos").innerHTML = cuerpo;
+      renderPaginacionMotos();
+    }
+    function editarMoto(id) {
+      const moto = motos.find(m => m.id === id);
+      if (!moto) return;
+      document.getElementById("formulario-edicion-moto").style.display = "block";
+      document.getElementById("formulario-moto").style.display = "none";
+      document.getElementById("edit-moto-id").value = moto.id;
+      document.getElementById("edit-moto-nombre").value = moto.nombre;
+      document.getElementById("edit-moto-apellido").value = moto.apellido;
+      document.getElementById("edit-moto-cedula").value = moto.cedula;
+      document.getElementById("edit-moto-telefono").value = moto.telefono;
+      document.getElementById("edit-moto-placa").value = moto.placa;
+    }
+    function guardarEdicionMoto() {
+      const id = parseInt(document.getElementById("edit-moto-id").value, 10);
+      const nombre = document.getElementById("edit-moto-nombre").value.trim();
+      const apellido = document.getElementById("edit-moto-apellido").value.trim();
+      const cedula = document.getElementById("edit-moto-cedula").value.trim();
+      const telefono = document.getElementById("edit-moto-telefono").value.trim();
+      const placa = document.getElementById("edit-moto-placa").value.trim();
+      const moto = motos.find(m => m.id === id);
+      if (moto && nombre && apellido && cedula && telefono && placa) {
+        Object.assign(moto, { nombre, apellido, cedula, telefono, placa });
+        guardarMotos();
+        document.getElementById("formulario-edicion-moto").style.display = "none";
+        document.getElementById("formulario-moto").style.display = "block";
+        renderTablaMotos();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function cancelarEdicionMoto() {
+      document.getElementById("formulario-edicion-moto").style.display = "none";
+      document.getElementById("formulario-moto").style.display = "block";
+    }
+    function borrarMoto(id) {
+      if (!confirm("¿Estás seguro de borrar esta moto/taller?")) return;
+      motos = motos.filter(m => m.id !== id);
+      guardarMotos();
+      renderTablaMotos();
+    }
+    function renderPaginacionMotos() {
+      const total = Math.ceil(motos.length / rowsPerPageMotos);
+      let botones = "";
+      for (let i = 1; i <= total; i++) {
+        botones += `<button class="${i === currentPageMotos ? 'activo' : ''}" onclick="cambiarPaginaMotos(${i})">${i}</button>`;
+      }
+      document.getElementById("paginacion-motos").innerHTML = botones;
+    }
+    function cambiarPaginaMotos(pag) { currentPageMotos = pag; renderTablaMotos(); }
+
+    // ====== Partículas ======
+    tsParticles.load("tsparticles", {
+      fpsLimit: 120,
+      background: { color: "#000000" },
+      particles: {
+        number: { value: 120, density: { enable: true, area: 800 } },
+        color: { value: ["#ff0000", "#00cfff", "#ffffff"] },
+        shape: { type: ["circle", "star"] },
+        opacity: { value: 0.7, random: true },
+        size: { value: 4, random: true },
+        links: { enable: true, distance: 120, color: "#00cfff", opacity: 0.5, width: 2 },
+        move: { enable: true, speed: 2, direction: "none", outModes: { default: "bounce" } }
+      },
+      interactivity: {
+        events: { onHover: { enable: true, mode: "repulse" }, resize: true },
+        modes: { repulse: { distance: 100 } }
+      },
+      detectRetina: true
+    });
+  </script>
+
+  <!-- ====== NKD BOT — Widget nuevo desde cero (HTML) ====== -->
+  <button id="nkdbot-toggle" aria-label="Abrir chat de ayuda" title="Ayuda 🤖">🤖</button>
+
+  <div id="nkdbot-panel" role="dialog" aria-label="Chat de ayuda NKD">
+    <div id="nkdbot-header">
+      <div id="nkdbot-title">🤖 <strong>NKD BOT</strong> <span style="font-size:.85em;color:#bbb;">offline</span></div>
+      <div id="nkdbot-actions">
+        <button id="nkdbot-min" title="Minimizar">▁</button>
+        <button id="nkdbot-close" title="Cerrar">✖</button>
+      </div>
+    </div>
+    <div id="nkdbot-messages"></div>
+    <div id="nkdbot-suggestions"></div>
+    <div id="nkdbot-inputbar">
+      <input id="nkdbot-input" type="text" placeholder="Escribe tu pregunta..." autocomplete="off" />
+      <button id="nkdbot-send">Enviar</button>
+    </div>
+  </div>
+
+  <!-- Sonido específico de apertura del bot (además del global de botones) -->
+  <audio id="nkdbot-open" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b6c_1.mp3?filename=click-124467.mp3" preload="auto"></audio>
+
+  <!-- ====== NKD BOT — Lógica ====== -->
+  <script>
+    (function(){
+      const $ = (q) => document.querySelector(q);
+      const toggle = $("#nkdbot-toggle");
+      const panel  = $("#nkdbot-panel");
+      const btnMin = $("#nkdbot-min");
+      const btnCls = $("#nkdbot-close");
+      const msgBox = $("#nkdbot-messages");
+      const input  = $("#nkdbot-input");
+      const send   = $("#nkdbot-send");
+      const suggs  = $("#nkdbot-suggestions");
+      const openSfx = $("#nkdbot-open");
+
+      function openPanel(){
+        panel.classList.add("open");
+        panel.style.display = "flex";
+        try { openSfx.currentTime = 0; openSfx.play(); } catch(e){}
+        setTimeout(()=>input.focus(), 60);
+      }
+      function closePanel(){
+        panel.classList.remove("open");
+        setTimeout(()=>{ panel.style.display="none"; }, 200);
+      }
+      toggle.addEventListener("click", openPanel);
+      btnMin.addEventListener("click", ()=> panel.classList.toggle("open"));
+      btnCls.addEventListener("click", closePanel);
+
+      function addMsg(text, who="bot"){
+        const el = document.createElement("div");
+        el.className = "nkdbot-msg " + (who === "user" ? "nkdbot-user" : "nkdbot-bot");
+        const time = new Date();
+        const hh = String(time.getHours()).padStart(2,"0");
+        const mm = String(time.getMinutes()).padStart(2,"0");
+        el.innerHTML = text + '<span class="nkdbot-time">'+hh+':'+mm+'</span>';
+        msgBox.appendChild(el);
+        msgBox.scrollTop = msgBox.scrollHeight;
+      }
+
+      const chips = [
+        "¿Cuál es la contraseña?",
+        "¿Cómo registro una persona?",
+        "¿Dónde están las motos/taller?",
+        "¿Por qué pide edad al entrar?",
+        "¿Cómo edito o borro registros?",
+        "¿Dónde se guardan los datos?",
+        "¿Funciona en iPhone?"
+      ];
+      function renderChips(){
+        suggs.innerHTML = "";
+        chips.forEach(txt => {
+          const c = document.createElement("button");
+          c.className = "nkd-chip";
+          c.textContent = txt;
+          c.addEventListener("click", ()=> { input.value = txt; handleSend(); });
+          suggs.appendChild(c);
+        });
+      }
+
+      function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+
+      function answer(q){
+        const t = norm(q);
+
+        if (t === "/limpiar" || t === "limpiar chat") { msgBox.innerHTML = ""; return "✔️ Chat limpiado."; }
+        if (t === "/ayuda" || t.includes("ayuda") || t.includes("que puedes hacer")) {
+          return "Puedo ayudarte con: <b>contraseña</b>, <b>acceso por edad</b>, <b>registrar/editar/borrar personas</b>, <b>registrar motos</b>, secciones y dónde se guardan los datos (<code>localStorage</code>).";
+        }
+        if (t.includes("iphone") || t.includes("ios")) {
+          return "📱 Sí, funciona en iPhone/iOS. No hay bloqueos para dispositivos Apple.";
+        }
+
+        // Acceso
+        if (t.includes("contrase") || t.includes("password") || t.includes("clave"))
+          return "🔑 La contraseña por defecto es <b>1234</b>. Puedes cambiarla en <code>verificarPassword()</code>.";
+        if (t.includes("entrar") || t.includes("acceso") || t.includes("login") || t.includes("clientes"))
+          return "Para entrar: pulsa <b>ENTRADA DE CLIENTES</b>, escribe la contraseña y verás <b>PERSONAS</b> y <b>MOTOS/TALLER</b>.";
+
+        // Edad
+        if (t.includes("edad") || t.includes("mayor") || t.includes("menor"))
+          return "🔞 Al cargar la página, debes seleccionar tu rango de edad. 18-25 (mayor) habilita el acceso. 10-17 muestra denegado.";
+
+        // Personas
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("registr") || t.includes("agregar")))
+          return "👤 Completa <b>Nombre, Apellido, Cédula, Teléfono y Ciudad</b> y pulsa <b>Registrar</b>. Se guarda en <code>localStorage</code>.";
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("editar") || t.includes("modificar")))
+          return "✏️ Usa <b>Editar</b> en la tabla, cambia los campos y pulsa <b>Guardar</b>.";
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("borrar") || t.includes("eliminar")))
+          return "🗑️ Pulsa <b>Borrar</b> junto al registro y confirma.";
+
+        // Motos / Taller
+        if (t.includes("moto") || t.includes("taller")) {
+          if (t.includes("registr")) return "🏍️ En <b>Motos/Taller</b> llena los datos y pulsa <b>Registrar Moto</b>.";
+          if (t.includes("editar"))   return "🔧 Usa <b>Editar</b> en la tabla de Motos/Taller y guarda.";
+          if (t.includes("borrar") || t.includes("eliminar")) return "🗑️ Pulsa <b>Borrar</b> junto al registro y confirma.";
+          return "En <b>Motos/Taller</b> puedes registrar, editar y eliminar motos.";
+        }
+
+        // Datos
+        if (t.includes("dato") || t.includes("guardar") || t.includes("localstorage") || t.includes("se guardan"))
+          return "💾 Todo se guarda en el navegador con <code>localStorage</code>. Si borras caché, se pierde. Recomiendo exportar periódicamente.";
+
+        // Estilo / partículas / sonido
+        if (t.includes("particula") || t.includes("tsparticles")) return "✨ El fondo usa <b>tsParticles</b>. Ajusta densidad, forma y velocidad en su config.";
+        if (t.includes("sonido") || t.includes("click")) return "🔊 Los botones reproducen un clic gracias al audio global.";
+
+        return "🤔 No tengo esa respuesta aún. Prueba con: <i>contraseña</i>, <i>registrar persona</i>, <i>motos/taller</i>, <i>edad de acceso</i> o escribe <b>/ayuda</b>.";
+      }
+
+      function handleSend(){
+        const q = input.value.trim();
+        if(!q) return;
+        addMsg(q, "user");
+        input.value = "";
+        const tip = document.createElement("div");
+        tip.className = "nkdbot-msg nkdbot-bot"; tip.textContent = "Escribiendo...";
+        msgBox.appendChild(tip); msgBox.scrollTop = msgBox.scrollHeight;
+        setTimeout(()=>{ tip.remove(); addMsg(answer(q), "bot"); }, 450);
+      }
+
+      send.addEventListener("click", handleSend);
+      input.addEventListener("keydown", (e)=>{ if(e.key === "Enter"){ handleSend(); } });
+
+      addMsg("¡Hola! Soy el <b>NKD BOT</b>. Pregúntame sobre tu página: contraseña, personas, motos/taller o edad de acceso. Escribe <b>/ayuda</b> para ver más opciones.");
+      renderChips();
+    })();
+  </script>
+
+  <!-- Contenedor de partículas -->
+  <div id="tsparticles"></div>
+
+</body>
+</html>
