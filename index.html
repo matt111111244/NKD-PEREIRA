@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Descargar MP4 — Estilo Matrix</title>
+  <title>Página Web de Mateo</title>
   <style>
     body {
       margin: 0;
       background: #000;
-      color: #1cff85;
+      color: #00ff00;
       font-family: monospace;
       text-align: center;
       overflow: hidden;
     }
+
     #matrix-bg {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       z-index: -1;
     }
+
     .container {
       display: flex;
       flex-direction: column;
@@ -26,14 +28,29 @@
       align-items: center;
       height: 100vh;
     }
+
+    /* ✨ Texto hacker rainbow */
     h1 {
-      font-size: 2rem;
-      text-shadow: 0 0 10px #1cff85;
+      font-size: 2.5rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 6s linear infinite;
+      text-shadow: 0 0 15px #00ff99;
     }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 400% 50%; }
+    }
+
+    /* Botón estilo hacker */
     .btn {
-      margin-top: 20px;
-      padding: 12px 24px;
-      font-size: 1rem;
+      margin-top: 25px;
+      padding: 14px 30px;
+      font-size: 1.2rem;
       font-weight: bold;
       color: #eaffea;
       background: transparent;
@@ -41,40 +58,39 @@
       border-radius: 8px;
       cursor: pointer;
       text-decoration: none;
-      box-shadow: 0 0 10px #1cff85;
-      transition: all 0.2s ease-in-out;
+      box-shadow: 0 0 15px #1cff85, 0 0 30px #1cff85 inset;
+      transition: all 0.3s ease-in-out;
     }
     .btn:hover {
       background: #1cff85;
       color: #000;
-      box-shadow: 0 0 20px #1cff85;
+      box-shadow: 0 0 30px #1cff85, 0 0 50px #1cff85 inset;
+      transform: scale(1.1);
     }
   </style>
 </head>
 <body>
   <canvas id="matrix-bg"></canvas>
   <div class="container">
-    <h1>⬇️ Descargar mi video MP4</h1>
-    <!-- Aquí pones el nombre de tu archivo de video -->
-    <a href="video.mp4" download class="btn">Descargar Video</a>
+    <h1>💻 Página Web de Mateo 💀</h1>
+    <!-- Botón de descarga -->
+    <a href="video.mp4" download class="btn">⬇️ Descargar Video</a>
   </div>
 
   <script>
-    // Fondo Matrix
+    // ===== Fondo Matrix Hacker =====
     const canvas = document.getElementById('matrix-bg');
     const ctx = canvas.getContext('2d');
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-
-    const letters = '01アイウエオカキクケコｱｲｳｴｵｶｷｸｹｺ$#@*&%+~';
+    let fontSize = 18;
+    let columns, drops;
+    const letters = '01あいうえおｶｷｸｹｺ$#@*&%+~';
     const lettersArr = letters.split('');
 
-    const fontSize = 18;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
+    function initMatrix() {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+      columns = Math.floor(canvas.width / fontSize);
+      drops = Array(columns).fill(1);
     }
 
     function draw() {
@@ -93,13 +109,13 @@
         }
         drops[i]++;
       }
+
+      requestAnimationFrame(draw);
     }
 
-    setInterval(draw, 35);
-    window.addEventListener("resize", () => {
-      canvas.height = window.innerHeight;
-      canvas.width = window.innerWidth;
-    });
+    window.addEventListener("resize", initMatrix);
+    initMatrix();
+    draw();
   </script>
 </body>
 </html>
