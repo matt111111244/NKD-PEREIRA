@@ -3,249 +3,84 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Página — Fondo Pirámide</title>
-
-<!-- Fuente -->
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>Cubo 3D Azul Futurista</title>
 
 <style>
-:root{
-  --amber-500: #f59e0b;
-  --amber-400: #fbbf24;
-  --amber-600: #d97706;
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* ====== Fondo pirámide 3D ====== */
 body, html {
-  margin:0; padding:0;
-  width:100%; height:100%;
-  font-family: 'Share Tech Mono', monospace;
-  background:#000;
-  overflow:hidden;
-  display:flex; align-items:center; justify-content:center;
-  perspective: 1000px;
-}
-
-.pyramid-container {
-  position: fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transform-style: preserve-3d;
-  z-index:-1;
-}
-
-.pyramid {
-  width:200px;
-  height:200px;
-  transform-style: preserve-3d;
-  animation: rotate 12s linear infinite;
-  position:relative;
-}
-
-.pyramid-face {
-  position:absolute;
-  width:100%;
-  height:100%;
-  background: linear-gradient(to top, var(--amber-500), var(--amber-400));
-  border: 1px solid rgba(255,255,255,0.05);
-  transform-origin: center bottom;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
-
-/* cuatro caras */
-.pyramid-face:nth-child(1){ transform: rotateY(0deg) translateZ(100px) rotateX(0deg);}
-.pyramid-face:nth-child(2){ transform: rotateY(90deg) translateZ(100px);}
-.pyramid-face:nth-child(3){ transform: rotateY(180deg) translateZ(100px);}
-.pyramid-face:nth-child(4){ transform: rotateY(270deg) translateZ(100px);}
-
-@keyframes rotate {
-  0%{ transform: rotateY(0deg) rotateX(-10deg); }
-  100%{ transform: rotateY(360deg) rotateX(-10deg); }
-}
-
-/* ====== Loader overlay ====== */
-#loader{
-  position: fixed;
-  inset:0;
-  background: rgba(0,0,0,0.85);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  z-index: 9999;
-  color:#00ff00;
-  gap:14px;
-}
-
-.spinner{
-  width:44px;
-  height:44px;
-  animation: spinner-y 2s infinite ease;
-  transform-style:preserve-3d;
-  margin-top:6px;
-}
-.spinner>div{
-  background-color: rgba(0,77,255,0.18);
-  height:100%;
-  position:absolute;
-  width:100%;
-  border:2px solid #004dff;
-  box-sizing:border-box;
-  border-radius:4px;
-}
-.spinner div:nth-of-type(1){ transform: translateZ(-22px) rotateY(180deg); }
-.spinner div:nth-of-type(2){ transform: rotateY(-270deg) translateX(50%); transform-origin: top right; }
-.spinner div:nth-of-type(3){ transform: rotateY(270deg) translateX(-50%); transform-origin: center left; }
-.spinner div:nth-of-type(4){ transform: rotateX(90deg) translateY(-50%); transform-origin: top center; }
-.spinner div:nth-of-type(5){ transform: rotateX(-90deg) translateY(50%); transform-origin: bottom center; }
-.spinner div:nth-of-type(6){ transform: translateZ(22px); }
-@keyframes spinner-y { 0%{ transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);} 50%{ transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);} 100%{ transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);} }
-
-/* ====== Contenido principal ====== */
-.container {
-  display: none; /* visible tras carga */
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
   align-items: center;
   justify-content: center;
-  height:100vh;
-  text-align:center;
-  padding:20px;
-  z-index:10;
-  position:relative;
-  gap:18px;
+  perspective: 1200px;
+  overflow: hidden;
 }
 
-h1.typing {
-  color: #00ff00;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  filter: drop-shadow(0 0 5px currentColor);
-  margin: 0 0 18px 0;
-  white-space: nowrap;
+/* Contenedor del cubo */
+.cube-container {
+  width: 200px;
+  height: 200px;
+  transform-style: preserve-3d;
+  animation: rotateCube 8s linear infinite;
   position: relative;
-  display: inline-block;
 }
 
-h1.typing::after{
+/* Caras del cubo */
+.cube-face {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, #0066ff, #00ccff);
+  border: 1px solid rgba(255,255,255,0.1);
+  opacity: 0.95;
+  box-shadow: 0 0 20px #00f, 0 0 40px #00f, 0 0 60px #00f inset;
+  transition: 0.3s;
+}
+
+/* Posicionamiento de cada cara */
+.cube-face:nth-child(1){ transform: rotateY(0deg) translateZ(100px);}
+.cube-face:nth-child(2){ transform: rotateY(90deg) translateZ(100px);}
+.cube-face:nth-child(3){ transform: rotateY(180deg) translateZ(100px);}
+.cube-face:nth-child(4){ transform: rotateY(270deg) translateZ(100px);}
+.cube-face:nth-child(5){ transform: rotateX(90deg) translateZ(100px);}
+.cube-face:nth-child(6){ transform: rotateX(-90deg) translateZ(100px);}
+
+/* Animación de rotación */
+@keyframes rotateCube {
+  0% { transform: rotateX(-15deg) rotateY(0deg); }
+  100% { transform: rotateX(-15deg) rotateY(360deg); }
+}
+
+/* Glow radial alrededor del cubo */
+.cube-container::before {
   content: '';
-  display: inline-block;
-  width: .2em;
-  height: .7em;
-  background-color: currentColor;
-  margin-left: .12em;
-  animation: blink 1s linear infinite forwards;
-  vertical-align: baseline;
-}
-
-@keyframes blink {
-  0%,50%{ visibility: visible; }
-  51%,100%{ visibility: hidden; }
-}
-
-/* ====== Tarjeta 3D Descarga ====== */
-.download-area { display:flex; flex-direction:column; align-items:center; gap:14px; z-index:11; }
-.file-wrapper { display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.file {
-  width:240px; height:160px;
-  cursor:pointer; perspective:1500px; position:relative; z-index:50;
-  display:grid; place-items:center;
-}
-.work-5 { width:100%; height:100%; background: var(--amber-600); border-radius:16px; border-top-left-radius:0; transform-origin: top center; transition: box-shadow .25s ease, transform .3s ease; position:relative; }
-.work-5::after{ content:""; position:absolute; bottom:99%; left:0; width:80px; height:16px; background: var(--amber-600); border-top-left-radius:12px; border-top-right-radius:12px; }
-.work-5::before{ content:""; position:absolute; top:-15px; left:75.5px; width:16px; height:16px; background: var(--amber-600); clip-path: polygon(0 35%, 0% 100%, 50% 100%); }
-.work-4, .work-3, .work-2 { position:absolute; inset:8px; border-radius:12px; transition: transform .3s ease; transform-origin: bottom center; pointer-events:none; }
-.work-4{ background:#a8a29e; }
-.work-3{ background:#d1d5db; }
-.work-2{ background:#e5e7eb; }
-.work-1{ position:absolute; bottom:0; width:100%; height:156px; border-radius:16px; border-top-right-radius:0; background: linear-gradient(to top, var(--amber-500), var(--amber-400)); display:flex; align-items:flex-end; transform-origin:bottom center; transition: transform .3s ease, box-shadow .3s ease; box-shadow: inset 0 20px 40px rgba(251,191,36,0.12), inset 0 -20px 40px rgba(217,119,6,0.06); }
-.work-1::after{ content:""; position:absolute; bottom:99%; right:0; width:146px; height:16px; background: var(--amber-400); border-top-left-radius:12px; border-top-right-radius:12px; }
-.work-1::before{ content:""; position:absolute; top:-10px; right:142px; width:16px; height:16px; background: var(--amber-400); clip-path: polygon(100% 14%, 50% 100%, 100% 100%); }
-
-.file:hover .work-4 { transform: rotateX(-20deg); }
-.file:hover .work-3 { transform: rotateX(-30deg); }
-.file:hover .work-2 { transform: rotateX(-38deg); }
-.file:hover .work-1 { transform: rotateX(-46deg) translateY(1px); box-shadow: inset 0 20px 40px #fbbf24, inset 0 -20px 40px #d97706; }
-.file:hover .work-5 { box-shadow: 0 20px 40px rgba(0,0,0,.2); transform: translateZ(4px); }
-
-.file-caption { margin-top:.6rem; font-size:1.1rem; color:#fff; opacity:.2; pointer-events:none; }
-
-.download-btn button{ width:165px; height:62px; cursor:pointer; color:#fff; font-size:17px; border-radius:12px; border:none; background:#100720; transition:.25s; box-shadow:0 0 10px rgba(255,94,247,0.6); }
-.download-btn button:hover{ transform:scale(1.05); box-shadow:0 0 20px rgba(2,245,255,0.9),0 0 30px rgba(255,94,247,0.9); }
-
-@media (max-width:420px){
-  .file{ width:12rem; height:8rem; }
-  .work-1{ height:120px; }
-  h1.typing{ font-size: 2rem; }
+  position: absolute;
+  top: -50px; left: -50px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,102,255,0.3) 0%, transparent 70%);
+  filter: blur(40px);
+  z-index: -1;
 }
 </style>
 </head>
 <body>
 
-<!-- Fondo pirámide -->
-<div class="pyramid-container">
-  <div class="pyramid">
-    <div class="pyramid-face"></div>
-    <div class="pyramid-face"></div>
-    <div class="pyramid-face"></div>
-    <div class="pyramid-face"></div>
-  </div>
+<div class="cube-container">
+  <div class="cube-face"></div>
+  <div class="cube-face"></div>
+  <div class="cube-face"></div>
+  <div class="cube-face"></div>
+  <div class="cube-face"></div>
+  <div class="cube-face"></div>
 </div>
 
-<!-- Loader -->
-<div id="loader">
-  <div>Cargando sistema...</div>
-  <div class="spinner"><div></div><div></div><div></div><div></div><div></div><div></div></div>
-</div>
-
-<!-- Contenido -->
-<div class="container">
-  <h1 class="typing">El mejor grupo de la exposición...</h1>
-  <div class="download-area">
-    <div class="file-wrapper">
-      <div class="file" role="button" tabindex="0">
-        <div class="work-5"></div>
-        <div class="work-4"></div>
-        <div class="work-3"></div>
-        <div class="work-2"></div>
-        <div class="work-1"></div>
-      </div>
-      <p class="file-caption">Archivo listo</p>
-    </div>
-    <div class="download-btn">
-      <a href="video.mp4" download><button>Descargar</button></a>
-    </div>
-  </div>
-</div>
-
-<script>
-window.addEventListener('load', () => {
-  const loader = document.getElementById('loader');
-  setTimeout(() => {
-    loader.style.opacity='0';
-    loader.style.transition='opacity .45s ease';
-    setTimeout(()=>{
-      loader.style.display='none';
-      document.querySelector('.container').style.display='flex';
-    },450);
-  },1500);
-});
-
-// Focus accesible
-const fileEl = document.querySelector('.file');
-fileEl.addEventListener('focus', ()=>fileEl.classList.add('focused'));
-fileEl.addEventListener('blur', ()=>fileEl.classList.remove('focused'));
-
-const style = document.createElement('style');
-style.textContent = `
-.file.focused .work-4 { transform: rotateX(-20deg); }
-.file.focused .work-3 { transform: rotateX(-30deg); }
-.file.focused .work-2 { transform: rotateX(-38deg); }
-.file.focused .work-1 { transform: rotateX(-46deg) translateY(1px); box-shadow: inset 0 20px 40px #fbbf24, inset 0 -20px 40px #d97706; }
-.file.focused .work-5 { box-shadow: 0 20px 40px rgba(0,0,0,.2); transform: translateZ(4px); }
-`;
-document.head.appendChild(style);
-</script>
 </body>
 </html>
