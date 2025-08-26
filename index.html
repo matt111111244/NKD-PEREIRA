@@ -112,191 +112,70 @@
       font-size: 1.5rem;
     }
 
-    /* ================= MANO / DEDOS (ESTRECHA, tamaño parecido a la pirámide) ================= */
-    .hand-loader {
-      --skin-color: #E4C560;
-      --tap-speed: 0.6s;
-      --tap-stagger: 0.09s;
-      position: relative;
-      width: 110px;   /* ancho del conjunto (más cercano a la pirámide) */
-      height: 80px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px;
+    /* ================== SPINNER 3D (AqFox) ================== */
+    .spinner {
+      width: 44px;
+      height: 44px;
+      animation: spinner-y0fdc1 2s infinite ease;
+      transform-style: preserve-3d;
+      margin-top: 18px;
     }
 
-    .hand-loader:before {
-      content: '';
-      position: absolute;
-      width: 120%;
-      height: 22%;
-      bottom: -8%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.35);
-      filter: blur(8px);
-      border-radius: 50%;
-      z-index: 0;
-    }
-
-    /* palma y estructura */
-    .🤚 {
-      --skin-color: var(--skin-color);
-      --tap-speed: var(--tap-speed);
-      --tap-stagger: var(--tap-stagger);
-      position: relative;
-      width: 64px;   /* más estrecha */
-      height: 48px;
-      margin: 0 auto;
-      z-index: 2;
-    }
-
-    /* sombra/reflejo (ajustada) */
-    .🤚:before {
-      content: '';
-      display: block;
-      width: 160%;
-      height: 65%;
-      position: absolute;
-      top: 68%;
-      left: -10%;
-      background-color: rgba(0,0,0,0.5);
-      border-radius: 30px 8px;
-      filter: blur(8px);
-      opacity: 0.28;
-      z-index: 0;
-    }
-
-    /* muñeca (más estrecha) */
-    .🤚:after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 26%;
-      left: 50%;
-      bottom: -20%;
-      transform: translateX(-50%);
-      background: var(--skin-color);
-      border-radius: 18px;
-      box-shadow: inset 0 -3px rgba(0,0,0,0.06);
-      z-index: 1;
-    }
-
-    /* palma */
-    .🌴 {
-      display: block;
-      width: 100%;
+    .spinner > div {
+      background-color: rgba(0,77,255,0.2);
       height: 100%;
       position: absolute;
-      top: 0;
-      left: 0;
-      background-color: var(--skin-color);
-      border-radius: 8px 34px;
-      z-index: 2;
+      width: 100%;
+      border: 2px solid #004dff;
+      box-sizing: border-box;
+      border-radius: 4px;
     }
 
-    /* pulgar (ajustado a la palma estrecha) */
-    .👍 {
-      position: absolute;
-      width: 105%;
-      height: 30px;
-      background-color: var(--skin-color);
-      bottom: 8%;
-      right: -6%;
-      transform-origin: calc(100% - 14px) 16px;
-      transform: rotate(-22deg);
-      border-radius: 28px 18px 18px 8px;
-      border-bottom: 2px solid rgba(0, 0, 0, 0.12);
-      border-left: 2px solid rgba(0, 0, 0, 0.08);
-      z-index: 3;
+    .spinner div:nth-of-type(1) {
+      transform: translateZ(-22px) rotateY(180deg);
     }
 
-    .👍:after {
-      width: 20%;
-      height: 60%;
-      content: '';
-      background-color: rgba(255, 255, 255, 0.28);
-      position: absolute;
-      bottom: -6%;
-      left: 5px;
-      border-radius: 60% 10% 10% 30%;
-      border-right: 2px solid rgba(0, 0, 0, 0.05);
-      z-index: 4;
+    .spinner div:nth-of-type(2) {
+      transform: rotateY(-270deg) translateX(50%);
+      transform-origin: top right;
     }
 
-    /* dedos (estrechos y más compactos) */
-    .👉 {
-      position: absolute;
-      width: 58%;
-      height: 22px;
-      background-color: var(--skin-color);
-      bottom: 34%;
-      right: 14%;
-      transform-origin: 100% 18px;
-      animation-duration: calc(var(--tap-speed) * 2);
-      animation-timing-function: ease-in-out;
-      animation-iteration-count: infinite;
-      transform: rotate(12deg);
-      border-radius: 14px;
-      z-index: 3;
+    .spinner div:nth-of-type(3) {
+      transform: rotateY(270deg) translateX(-50%);
+      transform-origin: center left;
     }
 
-    .👉:before {
-      content: '';
-      position: absolute;
-      width: 110%;
-      height: 20px;
-      background-color: var(--skin-color);
-      bottom: 6%;
-      right: 66%;
-      transform-origin: calc(100% - 18px) 18px;
-      transform: rotate(-56deg);
-      border-radius: 18px;
+    .spinner div:nth-of-type(4) {
+      transform: rotateX(90deg) translateY(-50%);
+      transform-origin: top center;
     }
 
-    /* delays para el efecto cascade */
-    .👉:nth-of-type(1) {
-      animation-delay: 0;
-      filter: brightness(72%);
-      animation-name: tap-upper-1;
-    }
-    .👉:nth-of-type(2) {
-      animation-delay: var(--tap-stagger);
-      filter: brightness(82%);
-      animation-name: tap-upper-2;
-    }
-    .👉:nth-of-type(3) {
-      animation-delay: calc(var(--tap-stagger) * 2);
-      filter: brightness(92%);
-      animation-name: tap-upper-3;
-    }
-    .👉:nth-of-type(4) {
-      animation-delay: calc(var(--tap-stagger) * 3);
-      filter: brightness(100%);
-      animation-name: tap-upper-4;
+    .spinner div:nth-of-type(5) {
+      transform: rotateX(-90deg) translateY(50%);
+      transform-origin: bottom center;
     }
 
-    @keyframes tap-upper-1 {
-      0%,50%,100% { transform: rotate(12deg) scale(0.45); }
-      40% { transform: rotate(52deg) scale(0.45); }
-    }
-    @keyframes tap-upper-2 {
-      0%,50%,100% { transform: rotate(12deg) scale(0.62); }
-      40% { transform: rotate(52deg) scale(0.62); }
-    }
-    @keyframes tap-upper-3 {
-      0%,50%,100% { transform: rotate(12deg) scale(0.8); }
-      40% { transform: rotate(52deg) scale(0.8); }
-    }
-    @keyframes tap-upper-4 {
-      0%,50%,100% { transform: rotate(12deg) scale(1); }
-      40% { transform: rotate(52deg) scale(1); }
+    .spinner div:nth-of-type(6) {
+      transform: translateZ(22px);
     }
 
-    /* versión pequeña para la mano que aparece debajo del botón */
-    .hand-small {
-      transform: scale(0.7);
+    @keyframes spinner-y0fdc1 {
+      0% {
+        transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+      }
+
+      50% {
+        transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+      }
+
+      100% {
+        transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+      }
+    }
+
+    /* versión pequeña para el spinner que aparece debajo del botón */
+    .spinner-small {
+      transform: scale(0.75);
       margin-top: 40px;
     }
 
@@ -307,16 +186,9 @@
   <div id="loader">
     <div>Cargando sistema...</div>
 
-    <!-- Mano (reemplaza la pirámide en la carga) -->
-    <div class="hand-loader" aria-hidden="true">
-      <div class="🤚">
-        <div class="🌴"></div>
-        <div class="👍"></div>
-        <div class="👉"></div>
-        <div class="👉"></div>
-        <div class="👉"></div>
-        <div class="👉"></div>
-      </div>
+    <!-- Spinner en la carga (AqFox) -->
+    <div class="spinner" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div><div></div>
     </div>
   </div>
 
@@ -332,16 +204,9 @@
       </a>
     </div>
 
-    <!-- Mano debajo del botón (tamaño reducido) -->
-    <div class="hand-loader hand-small" aria-hidden="true">
-      <div class="🤚">
-        <div class="🌴"></div>
-        <div class="👍"></div>
-        <div class="👉"></div>
-        <div class="👉"></div>
-        <div class="👉"></div>
-        <div class="👉"></div>
-      </div>
+    <!-- Spinner debajo del botón (tamaño reducido) -->
+    <div class="spinner spinner-small" aria-hidden="true">
+      <div></div><div></div><div></div><div></div><div></div><div></div>
     </div>
   </div>
 
