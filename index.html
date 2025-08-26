@@ -3,9 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Banner transparente sobre Matrix</title>
+  <title>Página de Mateo 6-2 — Descarga con tarjeta 3D</title>
   <style>
-    /* ====== Base / Matrix / Layout ====== */
+    /* ---------- Base / Matrix / Layout ---------- */
+    :root {
+      --amber-500: #f59e0b;
+      --amber-400: #fbbf24;
+      --amber-600: #d97706;
+    }
+
     body{
       margin:0;
       height:100vh;
@@ -15,16 +21,14 @@
       overflow:hidden;
     }
 
-    /* Canvas Matrix detrás */
     canvas{
       position:fixed;
       top:0; left:0;
       z-index:-2;
     }
 
-    /* Contenedor principal */
     .container{
-      display:none; /* se muestra cuando termina el loader */
+      display:none;
       flex-direction:column;
       align-items:center;
       justify-content:center;
@@ -36,31 +40,20 @@
     }
 
     .typing-text{
-      font-size:clamp(1.2rem,4vw,2.5rem);
+      font-size:clamp(1.2rem,4vw,2.2rem);
       color:#00ff00;
-      text-shadow:0 0 5px #00ff00,0 0 15px #00ff00;
+      text-shadow:0 0 5px #00ff00,0 0 12px #00ff00;
       border-right:2px solid #00ff00;
       white-space:nowrap;
       overflow:hidden;
       width:0;
-      animation:typing 4s steps(30,end) infinite alternate, blink .7s infinite;
-      margin-bottom:14px;
+      animation: typing 4s steps(30,end) infinite alternate, blink .7s infinite;
+      margin-bottom:18px;
     }
     @keyframes typing{ from{width:0} to{width:25ch} }
     @keyframes blink{ 50%{ border-color: transparent } }
 
-    /* Botón */
-    .download-btn{ margin-top:12px; z-index:3; }
-    .download-btn button{
-      width:165px; height:62px; cursor:pointer;
-      color:#fff; font-size:17px; border-radius:1rem; border:none;
-      position:relative; background:#100720; transition:.25s;
-      box-shadow:0 0 10px rgba(255,94,247,0.6);
-    }
-    .download-btn button:hover{ transform:scale(1.05); box-shadow:0 0 20px rgba(2,245,255,0.9),0 0 30px rgba(255,94,247,0.9); }
-    .download-btn button:active{ transform:scale(.95) rotate(2deg); }
-
-    /* Loader */
+    /* ---------- Loader & spinner ---------- */
     #loader{
       position:fixed; inset:0;
       background:black;
@@ -68,8 +61,7 @@
       z-index:9999; color:#00ff00; font-size:1.4rem;
     }
 
-    /* Spinner 3D */
-    .spinner{ width:44px; height:44px; animation: spinner-y0fdc1 2s infinite ease; transform-style:preserve-3d; margin-top:14px; }
+    .spinner{ width:44px; height:44px; animation: spinner-y 2s infinite ease; transform-style:preserve-3d; margin-top:14px; }
     .spinner>div{ background-color: rgba(0,77,255,0.18); height:100%; position:absolute; width:100%; border:2px solid #004dff; box-sizing:border-box; border-radius:4px; }
     .spinner div:nth-of-type(1){ transform: translateZ(-22px) rotateY(180deg); }
     .spinner div:nth-of-type(2){ transform: rotateY(-270deg) translateX(50%); transform-origin: top right; }
@@ -77,77 +69,149 @@
     .spinner div:nth-of-type(4){ transform: rotateX(90deg) translateY(-50%); transform-origin: top center; }
     .spinner div:nth-of-type(5){ transform: rotateX(-90deg) translateY(50%); transform-origin: bottom center; }
     .spinner div:nth-of-type(6){ transform: translateZ(22px); }
-    @keyframes spinner-y0fdc1{
+    @keyframes spinner-y {
       0%{ transform: rotate(45deg) rotateX(-25deg) rotateY(25deg); }
       50%{ transform: rotate(45deg) rotateX(-385deg) rotateY(25deg); }
       100%{ transform: rotate(45deg) rotateX(-385deg) rotateY(385deg); }
     }
 
-    /* ========== SECTION-BANNER transparente ========== */
-    .section-banner{
-      width:250px;
-      height:250px;
-      position:relative;
-      margin:8px 0;
-      border-radius:50%;
-      overflow:hidden;
-      display:block;
-      /* fallback visible si no pegas base64: */
-      background: radial-gradient(circle at 30% 30%, rgba(0,255,140,0.03), rgba(0,0,0,0.45));
-      box-shadow: 0 6px 24px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,255,140,0.03);
-      z-index:2;
+    /* ---------- Botón (estándar) ---------- */
+    .download-area { display:flex; flex-direction:column; align-items:center; gap:14px; z-index:2; }
+    .download-btn button{
+      width:165px; height:62px; cursor:pointer;
+      color:#fff; font-size:17px; border-radius:12px; border:none;
+      position:relative; background:#100720; transition:.25s;
+      box-shadow:0 0 10px rgba(255,94,247,0.6);
+    }
+    .download-btn button:hover{ transform:scale(1.05); box-shadow:0 0 20px rgba(2,245,255,0.9),0 0 30px rgba(255,94,247,0.9); }
+    .download-btn button:active{ transform:scale(.95) rotate(2deg); }
+
+    /* ---------- Tarjeta 3D (recreación del snippet Tailwind) ---------- */
+    .file-wrapper {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      width:100%;
     }
 
-    /* Pseudo-capa que contiene tu base64 + control de opacidad
-       Reemplaza DATA_BASE64_HERE por tu base64 (sin comillas adicionales). */
-    .section-banner::before{
-      content:'';
+    .file {
+      width: 15rem;            /* w-60 = 240px (15rem) */
+      height: 10rem;           /* h-40 = 160px (10rem) */
+      cursor: pointer;
+      perspective: 1500px;
+      position: relative;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+    }
+
+    /* The layered faces */
+    .work-5 {
+      width:100%; height:100%;
+      background: var(--amber-600);
+      border-radius: 16px;
+      border-top-left-radius: 0;
+      position: relative;
+      transform-origin: top center;
+      transition: box-shadow .25s ease, transform .3s ease;
+    }
+    .work-5::after{
+      content:"";
       position:absolute;
-      inset:0;
-      background-repeat:no-repeat;
-      background-size:cover;
-      background-position:center;
-      opacity:0.28; /* <-- control de transparencia (ajusta entre 0 y 1) */
+      bottom:99%;
+      left:0;
+      width:80px; height:16px;
+      background: var(--amber-600);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      filter: blur(.0px);
+    }
+    .work-5::before{
+      content:"";
+      position:absolute;
+      top:-15px;
+      left:75.5px;
+      width:16px; height:16px;
+      background: var(--amber-600);
+      /* small triangular clip */
+      clip-path: polygon(0 35%, 0% 100%, 50% 100%);
+    }
+
+    .work-4, .work-3, .work-2 {
+      position:absolute;
+      inset: 8px; /* similar to absolute inset-1 */
+      border-radius: 12px;
+      transition: transform .3s ease;
+      transform-origin: bottom center;
+      pointer-events: none;
+    }
+    .work-4 { background: #a8a29e; } /* zinc-400 */
+    .work-3 { background: #d1d5db; } /* zinc-300 */
+    .work-2 { background: #e5e7eb; } /* zinc-200 */
+
+    .work-1 {
+      position:absolute;
+      bottom:0;
+      width:100%;
+      height:156px; /* same as the original code */
+      border-radius: 16px;
+      border-top-right-radius: 0;
+      background: linear-gradient(to top, var(--amber-500), var(--amber-400));
+      display:flex;
+      align-items:flex-end;
+      transform-origin: bottom center;
+      transition: transform .3s ease, box-shadow .3s ease;
+      box-shadow: inset 0 20px 40px rgba(251,191,36,0.12), inset 0 -20px 40px rgba(217,119,6,0.06);
+    }
+    .work-1::after{
+      content:"";
+      position:absolute;
+      bottom:99%;
+      right:0;
+      width:146px; height:16px;
+      background: var(--amber-400);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .work-1::before{
+      content:"";
+      position:absolute;
+      top:-10px;
+      right:142px;
+      width:16px; height:16px;
+      background: var(--amber-400);
+      /* triangular clip */
+      clip-path: polygon(100% 14%, 50% 100%, 100% 100%);
+    }
+
+    /* hover group -> rotate layers */
+    .file:hover .work-4 { transform: rotateX(-20deg); }
+    .file:hover .work-3 { transform: rotateX(-30deg); }
+    .file:hover .work-2 { transform: rotateX(-38deg); }
+    .file:hover .work-1 { transform: rotateX(-46deg) translateY(1px); box-shadow: inset 0 20px 40px #fbbf24, inset 0 -20px 40px #d97706; }
+
+    /* subtle shadow on the top-most when hovered */
+    .file:hover .work-5 { box-shadow: 0 20px 40px rgba(0,0,0,.2); transform: translateZ(4px); }
+
+    /* caption */
+    .file-caption{
+      margin-top:0.75rem;
+      font-size:1.4rem;
+      color:#fff;
+      opacity:.2;
       pointer-events:none;
-      z-index:0;
-      /* ejemplo: si ya tienes la base64, descomenta y pega:
-      background-image: url("data:image/jpeg;base64,DATA_BASE64_HERE");
-      */
     }
-
-    /* Aseguramos que el contenido (estrellas) quede encima de la capa de la imagen */
-    .section-banner > .stars { position:relative; z-index:2; pointer-events:none; }
-
-    /* Estrellas pequeñas decorativas */
-    .curved-corner-star { display:flex; position:relative; width:12px; height:12px; }
-    .curved-corner-star div { width:4px; height:5px; position:relative; }
-    .curved-corner-star div:before {
-      content:''; display:block; width:200%; height:200%; position:absolute; border-radius:50%;
-      background:white; box-shadow:0 0 6px rgba(255,255,255,0.95); opacity:0.95;
-    }
-    @keyframes twinkling{ 0%,100%{opacity:.12} 50%{opacity:1} }
-
-    /* colocación de las 7 estrellas dentro del banner */
-    #star-1 { position:absolute; left:18px; top:18px; animation: twinkling 3s infinite; }
-    #star-2 { position:absolute; left:40px; top:60px; animation: twinkling 2s infinite; transform:scale(.92); }
-    #star-3 { position:absolute; left:160px; top:36px; animation: twinkling 4s infinite; transform:scale(1); }
-    #star-4 { position:absolute; left:190px; top:140px; animation: twinkling 3s infinite; transform:scale(.95); }
-    #star-5 { position:absolute; left:50px; top:180px; animation: twinkling 1.6s infinite; transform:scale(.9); }
-    #star-6 { position:absolute; left:140px; top:12px; animation: twinkling 4s infinite; transform:scale(.85); }
-    #star-7 { position:absolute; left:205px; top:92px; animation: twinkling 2s infinite; transform:scale(.85); }
 
     /* responsive */
     @media (max-width:420px){
-      .section-banner{ width:180px; height:180px; }
-      #star-3{ left:120px; top:24px; }
-      #star-4{ left:140px; top:100px; }
-      #star-7{ left:160px; top:62px; }
+      .file { width:12rem; height:8rem; }
+      .work-1 { height:120px; }
     }
-
   </style>
 </head>
 <body>
-  <!-- loader -->
+  <!-- Loader -->
   <div id="loader">
     <div>Cargando sistema...</div>
     <div class="spinner" aria-hidden="true">
@@ -162,54 +226,24 @@
   <div class="container">
     <div class="typing-text">El mejor grupo de la exposición...</div>
 
-    <!-- SECTION-BANNER: pega tu base64 en la línea indicada abajo -->
-    <div class="section-banner" id="sectionBanner" aria-hidden="true">
-      <!-- contenido visible encima de la imagen -->
-      <div class="stars">
-        <div id="star-1">
-          <div class="curved-corner-star">
-            <div></div><div></div>
-          </div>
-          <div class="curved-corner-star">
-            <div></div><div></div>
-          </div>
+    <!-- ---------- DESCARGAS: aquí se colocó la tarjeta 3D (solo en descargas) ---------- -->
+    <div class="download-area" aria-label="Área de descarga">
+      <div class="file-wrapper">
+        <!-- file 3D -->
+        <div class="file" role="button" tabindex="0" aria-label="Archivo interactivo">
+          <div class="work-5" aria-hidden="true"></div>
+          <div class="work-4" aria-hidden="true"></div>
+          <div class="work-3" aria-hidden="true"></div>
+          <div class="work-2" aria-hidden="true"></div>
+          <div class="work-1" aria-hidden="true"></div>
         </div>
-
-        <div id="star-2">
-          <div class="curved-corner-star"><div></div><div></div></div>
-          <div class="curved-corner-star"><div></div><div></div></div>
-        </div>
-
-        <div id="star-3">
-          <div class="curved-corner-star"><div></div><div></div></div>
-          <div class="curved-corner-star"><div></div><div></div></div>
-        </div>
-
-        <div id="star-4">
-          <div class="curved-corner-star"><div></div><div></div></div>
-          <div class="curved-corner-star"><div></div><div></div></div>
-        </div>
-
-        <div id="star-5">
-          <div class="curved-corner-star"><div></div><div></div></div>
-          <div class="curved-corner-star"><div></div><div></div></div>
-        </div>
-
-        <div id="star-6">
-          <div class="curved-corner-star"><div></div><div></div></div>
-          <div class="curved-corner-star"><div></div><div></div></div>
-        </div>
-
-        <div id="star-7">
-          <div class="curved-corner-star"><div></div><div></div></div>
-          <div class="curved-corner-star"><div></div><div></div></div>
-        </div>
+        <p class="file-caption">Hover over</p>
       </div>
-    </div>
 
-    <!-- Botón Descargar -->
-    <div class="download-btn">
-      <a href="video.mp4" download><button>Descargar</button></a>
+      <!-- Botón descargar -->
+      <div class="download-btn">
+        <a href="video.mp4" download><button>Descargar</button></a>
+      </div>
     </div>
   </div>
 
@@ -253,31 +287,20 @@
       }, 1500);
     });
 
-    // ============ Inserta la base64 desde JS (opcional) ============
-    // Si prefieres no editar el CSS en línea, puedes inyectar la base64 aquí:
-    (function setBannerBase64(){
-      const base64 = ""; // <- pega tu cadena base64 AQUÍ entre las comillas (sin "data:image...," si quieres)
-      if(!base64) return;
-      const el = document.getElementById('sectionBanner');
-      // si pegaste sólo la parte después de la coma, forma la URL:
-      const url = base64.startsWith('data:') ? base64 : ('data:image/jpeg;base64,' + base64);
-      // aplica como estilo en pseudo-elemento usando CSS variable
-      el.style.setProperty('--banner-url', `url("${url}")`);
-      // aplica via direct style on ::before is not possible; instead asignamos background-image al propio elemento y lo hacemos semitransparente con overlay:
-      el.style.backgroundImage = `url("${url}")`;
-      el.style.backgroundSize = 'cover';
-      el.style.backgroundPosition = 'center';
-      el.style.opacity = '1';
-      // luego reducimos opacidad visual del fondo con un overlay color (dejamos la pseudo capa CSS para control fino)
-      // Nota: la opacidad de .section-banner afectaría también a las estrellas; por eso uso pseudo-capa en CSS preferentemente.
-    })();
-
-    /* IMPORTANTE:
-       - Para que la imagen se muestre con transparencia, pega tu base64 en la variable `base64` de arriba (entre comillas).
-       - Mejor práctica: pega la cadena completa empezando por "data:image/jpeg;base64,..." o solo la parte base64 — el script maneja ambos casos.
-       - También puedes pegar la URL directamente en la regla CSS .section-banner::before (ver comentario dentro del CSS).
-    */
-
+    // Accessibility: allow keyboard "hover" (focus) to also trigger transforms
+    const fileEl = document.querySelector('.file');
+    fileEl.addEventListener('focus', () => fileEl.classList.add('focused'));
+    fileEl.addEventListener('blur', () => fileEl.classList.remove('focused'));
+    // Toggle similar styles via CSS when .focused present:
+    const style = document.createElement('style');
+    style.textContent = `
+      .file.focused .work-4 { transform: rotateX(-20deg); }
+      .file.focused .work-3 { transform: rotateX(-30deg); }
+      .file.focused .work-2 { transform: rotateX(-38deg); }
+      .file.focused .work-1 { transform: rotateX(-46deg) translateY(1px); box-shadow: inset 0 20px 40px #fbbf24, inset 0 -20px 40px #d97706; }
+      .file.focused .work-5 { box-shadow: 0 20px 40px rgba(0,0,0,.2); transform: translateZ(4px); }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
