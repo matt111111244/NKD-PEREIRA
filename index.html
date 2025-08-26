@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Página de Mateo 6-2</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
     body {
       margin: 0;
       height: 100vh;
@@ -12,6 +14,7 @@
       color: #00ff00;
       font-family: 'Courier New', Courier, monospace;
       overflow: hidden;
+      position: relative;
     }
 
     /* Canvas Matrix */
@@ -19,7 +22,15 @@
       position: fixed;
       top: 0;
       left: 0;
-      z-index: -1;
+      z-index: -2;
+    }
+
+    /* Canvas Estrellas */
+    #starsCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -3;
     }
 
     /* Contenedor principal */
@@ -30,6 +41,8 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
     /* Texto animado estilo hacker */
@@ -54,7 +67,7 @@
       50% { border-color: transparent; }
     }
 
-    /* ================== NUEVO BOTÓN ================== */
+    /* Botón Descarga */
     .download-btn {
       margin-top: 20px;
     }
@@ -70,6 +83,7 @@
       position: relative;
       background: #100720;
       transition: 0.1s;
+      overflow: hidden;
     }
 
     .download-btn button::after {
@@ -90,10 +104,33 @@
       transition: 0.5s;
     }
 
+    /* Robot animado fondo */
+    #robot {
+      position: fixed;
+      bottom: 0;
+      left: -150px;
+      width: 150px;
+      animation: moveRobot 20s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes moveRobot {
+      0% { left: -150px; }
+      50% { left: 50%; transform: translateX(-50%) rotate(0deg);}
+      100% { left: 100%; }
+    }
   </style>
 </head>
 <body>
+  <!-- Canvas para estrellas -->
+  <canvas id="starsCanvas"></canvas>
+
+  <!-- Canvas Matrix -->
   <canvas id="matrix"></canvas>
+
+  <!-- Robot animado -->
+  <img id="robot" src="https://i.imgur.com/4aiRv0K.png" alt="robot">
+
   <div class="container">
     <div class="typing-text">El mejor grupo de la exposición...</div>
 
@@ -106,39 +143,56 @@
   </div>
 
   <script>
-    // ============= ANIMACIÓN MATRIX =============
+    // ================== MATRIX ==================
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
-
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-
     const letters = "01";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
+    const drops = Array.from({length: columns}, () => 1);
 
-    const drops = [];
-    for (let x = 0; x < columns; x++) drops[x] = 1;
-
-    function draw() {
+    function drawMatrix() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`;
       ctx.font = fontSize + "px monospace";
-
       for (let i = 0; i < drops.length; i++) {
         const text = letters.charAt(Math.floor(Math.random() * letters.length));
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
     }
+    setInterval(drawMatrix, 35);
 
-    setInterval(draw, 35);
+    // ================== ESTRELLAS ==================
+    const starsCanvas = document.getElementById("starsCanvas");
+    const sCtx = starsCanvas.getContext("2d");
+    starsCanvas.width = window.innerWidth;
+    starsCanvas.height = window.innerHeight;
+    const stars = Array.from({length: 200}, () => ({
+      x: Math.random() * starsCanvas.width,
+      y: Math.random() * starsCanvas.height,
+      size: Math.random() * 2,
+      speed: Math.random() * 0.5 + 0.2
+    }));
+
+    function drawStars() {
+      sCtx.fillStyle = "black";
+      sCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
+      sCtx.fillStyle = "white";
+      stars.forEach(star => {
+        sCtx.beginPath();
+        sCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        sCtx.fill();
+        star.y += star.speed;
+        if (star.y > starsCanvas.height) star.y = 0;
+      });
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
   </script>
 </body>
 </html>
