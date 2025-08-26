@@ -103,7 +103,7 @@
 
   <!-- Contenido principal -->
   <div id="content">
-    <h1>Página de Mateo 6-2</h1>
+    <h1 id="titulo">Página de Mateo 6-2</h1>
     <button onclick="playClick();alert('Aquí pondremos la descarga del video')">⬇ Descargar Video</button>
   </div>
 
@@ -144,7 +144,7 @@
         drops[i]++;
       }
     }
-    setInterval(drawMatrix, 30); // velocidad más rápida
+    setInterval(drawMatrix, 30);
 
     // ---- Loader frases ----
     const frases = [
@@ -180,6 +180,16 @@
     }
 
     cicloFrases();
+
+    // ---- Cambio automático del título ----
+    const titulo = document.getElementById("titulo");
+    const titulos = ["El mejor grupo de la exposición", "Página de Mateo 6-2"];
+    let indexTitulo = 0;
+
+    setInterval(() => {
+      indexTitulo = (indexTitulo + 1) % titulos.length;
+      titulo.textContent = titulos[indexTitulo];
+    }, 4000); // cambia cada 4 segundos
 
     // ---- Sonido al click ----
     function playClick() {
