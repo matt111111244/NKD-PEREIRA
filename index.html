@@ -1,93 +1,112 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cielo Nocturno con Muñeco</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Te Amo 💖</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'Courier New', monospace;
+  }
 
-    /* Muñeco */
-    .muñeco {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+  /* Contenedor */
+  #container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+  }
 
-    .cabeza {
-      width: 50px;
-      height: 50px;
-      background: #444;
-      border-radius: 50%;
-    }
+  /* Corazón inicial */
+  .heart {
+    position: absolute;
+    width: 100px;
+    height: 90px;
+    background: red;
+    transform: rotate(-45deg);
+    top: 100px;
+    left: 100px;
+    animation: heartDisappear 3s forwards 2s;
+  }
 
-    .cuerpo {
-      width: 20px;
-      height: 80px;
-      background: #555;
-      margin-top: 5px;
-      border-radius: 10px;
-    }
+  .heart::before,
+  .heart::after {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 90px;
+    background: red;
+    border-radius: 50%;
+  }
 
-    .piernas {
-      display: flex;
-      gap: 10px;
-      margin-top: 5px;
-    }
+  .heart::before { top: -50px; left: 0; }
+  .heart::after { top: 0; left: 50px; }
 
-    .pierna {
-      width: 15px;
-      height: 60px;
-      background: #555;
-      border-radius: 10px;
-    }
+  @keyframes heartDisappear {
+    0% { transform: rotate(-45deg) scale(1); opacity: 1; }
+    100% { transform: rotate(-45deg) scale(0.1); opacity: 0; }
+  }
 
-    /* Estrellas */
-    .estrella {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      border-radius: 50%;
-      animation: brillar 2s infinite alternate;
-    }
+  /* Texto final */
+  .final-text {
+    position: absolute;
+    color: cyan;
+    font-size: 2.5rem;
+    opacity: 0;
+    text-align: center;
+    width: 100%;
+    top: 40%;
+    animation: showText 2s forwards 5s;
+  }
 
-    @keyframes brillar {
-      from { opacity: 0.2; transform: scale(1); }
-      to   { opacity: 1; transform: scale(1.5); }
+  @keyframes showText {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Partículas */
+  .particle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: red;
+    border-radius: 50%;
+    opacity: 1;
+    animation: particleMove 3s forwards 2s;
+  }
+
+  @keyframes particleMove {
+    to {
+      transform: translate(calc(-50px + 100px * var(--randX)), calc(-50px + 100px * var(--randY)));
+      opacity: 0;
     }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <!-- Muñeco -->
-  <div class="muñeco">
-    <div class="cabeza"></div>
-    <div class="cuerpo"></div>
-    <div class="piernas">
-      <div class="pierna"></div>
-      <div class="pierna"></div>
-    </div>
+  <div id="container">
+    <div class="heart"></div>
+    <div class="final-text">Te amo 💙</div>
   </div>
 
-  <script>
-    // Crear estrellas aleatorias
-    for (let i = 0; i < 100; i++) {
-      let estrella = document.createElement("div");
-      estrella.className = "estrella";
-      estrella.style.top = Math.random() * 100 + "vh";
-      estrella.style.left = Math.random() * 100 + "vw";
-      estrella.style.animationDuration = (1 + Math.random() * 2) + "s";
-      document.body.appendChild(estrella);
-    }
-  </script>
+<script>
+  // Crear partículas que se desplacen cuando el corazón desaparece
+  const container = document.getElementById('container');
+  for(let i=0;i<100;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.setProperty('--randX', Math.random());
+    p.style.setProperty('--randY', Math.random());
+    p.style.top = '140px'; // centro del corazón
+    p.style.left = '140px';
+    container.appendChild(p);
+  }
+</script>
 </body>
 </html>
