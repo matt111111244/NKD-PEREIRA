@@ -8,38 +8,33 @@
     body {
       margin: 0;
       background: #000;
-      color: #00ff99;
+      color: #1cff85;
       font-family: "Courier New", monospace;
+      text-align: center;
       overflow: hidden;
+    }
+
+    /* Fondo Matrix */
+    #matrix-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: -1;
     }
 
     /* Pantalla de carga */
     #loading-screen {
       position: fixed;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: #000;
+      width: 100%; height: 100%;
+      background: black;
+      color: #1cff85;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       flex-direction: column;
-      color: #00ff99;
       font-size: 1.5rem;
-      z-index: 1000;
-      transition: opacity 1s ease;
-    }
-
-    #loading-text {
-      margin-top: 20px;
-      text-shadow: 0 0 10px #00ff99;
-    }
-
-    /* Canvas Matrix */
-    #matrix-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: -1;
+      z-index: 9999;
     }
 
     /* Contenido principal */
@@ -49,72 +44,67 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      text-align: center;
-      color: #fff;
       z-index: 10;
+      position: relative;
     }
 
     h1 {
       font-size: 2rem;
-      color: #00ff99;
-      text-shadow: 0 0 10px #00ff99;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 2px solid #00ff99;
-      width: 0ch;
-      animation: typing 4s steps(30) infinite alternate, blink 0.7s infinite;
+      text-shadow: 0 0 15px #1cff85;
     }
 
-    @keyframes typing {
-      from { width: 0ch; }
-      to { width: 30ch; }
+    .btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #eaffea;
+      background: transparent;
+      border: 2px solid #1cff85;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 0 15px #1cff85;
+      transition: all 0.2s ease-in-out;
     }
-    @keyframes blink {
-      50% { border-color: transparent; }
+
+    .btn:hover {
+      background: #1cff85;
+      color: #000;
+      box-shadow: 0 0 25px #1cff85;
+    }
+
+    /* Texto hacker animado */
+    .hacker-text {
+      font-size: 2rem;
+      color: #00ffea;
+      text-shadow: 0 0 10px #00fff2, 0 0 20px #00f7ff;
+      min-height: 2.5rem;
     }
   </style>
 </head>
 <body>
-  <!-- Pantalla de carga -->
-  <div id="loading-screen">
-    <div id="loading-text">Cargando... 0%</div>
-  </div>
-
-  <!-- Sonido de teclado hacker -->
-  <audio id="keyboard-sound" autoplay loop>
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_72a3b5b4c4.mp3" type="audio/mpeg">
-  </audio>
-
   <!-- Fondo Matrix -->
   <canvas id="matrix-bg"></canvas>
 
-  <!-- Contenido -->
-  <div class="container">
-    <h1 id="typewriter"></h1>
+  <!-- Pantalla de carga -->
+  <div id="loading-screen">
+    <p id="loading-text">🔍 Buscando servidores...</p>
   </div>
 
+  <!-- Contenido principal -->
+  <div class="container" style="display:none;">
+    <h1 class="hacker-text" id="typewriter"></h1>
+    <a href="video.mp4" download class="btn">⬇️ Descargar Video</a>
+  </div>
+
+  <!-- Sonido teclado -->
+  <audio id="keyboard-sound" autoplay loop>
+    <source src="https://www.soundjay.com/mechanical/keyboard-1.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
-    // --------- Loading Screen ----------
-    let load = 0;
-    const loadingText = document.getElementById("loading-text");
-    const loadingScreen = document.getElementById("loading-screen");
-    const keyboardSound = document.getElementById("keyboard-sound");
-
-    const fakeLoading = setInterval(() => {
-      load++;
-      loadingText.textContent = "Cargando... " + load + "%";
-
-      if (load >= 100) {
-        clearInterval(fakeLoading);
-        loadingScreen.style.opacity = "0";
-        setTimeout(() => { 
-          loadingScreen.style.display = "none"; 
-          // el sonido sigue de fondo
-        }, 1000);
-      }
-    }, 40); // Velocidad de carga
-
-    // --------- Fondo Matrix ----------
+    /* Fondo Matrix Animado */
     const canvas = document.getElementById('matrix-bg');
     const ctx = canvas.getContext('2d');
     canvas.height = window.innerHeight;
@@ -124,14 +114,16 @@
     const lettersArr = letters.split('');
     const fontSize = 18;
     const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+    const drops = [];
+
+    for (let i = 0; i < columns; i++) drops[i] = 1;
 
     function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Colores hacker cambiantes
-      const colors = ['#00ff99', '#1cff85', '#00ffff', '#ff00ff'];
+      // Cambiar color dinámicamente
+      const colors = ["#1cff85", "#00fff2", "#ff00ff", "#ffea00"];
       ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
       ctx.font = fontSize + "px monospace";
 
@@ -139,45 +131,66 @@
         const text = lettersArr[Math.floor(Math.random() * lettersArr.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
     }
-    setInterval(draw, 30); // velocidad Matrix
+    setInterval(draw, 30);
 
-    // --------- Typewriter Hacker ----------
-    const texts = ["El mejor grupo de la exposición", "Página de Mateo 6-2"];
-    let index = 0;
+    window.addEventListener("resize", () => {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+    });
+
+    /* Pantalla de carga */
+    const frases = [
+      "🔍 Buscando servidores...",
+      "📡 Conectando a la red segura...",
+      "🔐 Acceso autorizado...",
+      "✅ Bienvenido a la Página de Mateo 6-2"
+    ];
+    let fraseIndex = 0;
+    const loadingText = document.getElementById("loading-text");
+
+    const interval = setInterval(() => {
+      loadingText.textContent = frases[fraseIndex];
+      fraseIndex++;
+      if (fraseIndex >= frases.length) {
+        clearInterval(interval);
+        document.getElementById("loading-screen").style.display = "none";
+        document.querySelector(".container").style.display = "flex";
+      }
+    }, 1500);
+
+    /* Texto hacker tipo máquina de escribir */
+    const hackerTexts = ["El mejor grupo de la exposición", "Página de Mateo 6-2"];
+    let tIndex = 0;
     let charIndex = 0;
-    let currentText = "";
     let deleting = false;
-    const typewriterEl = document.getElementById("typewriter");
+    const speed = 100;
+    const typewriter = document.getElementById("typewriter");
 
-    function typeWriter() {
-      currentText = texts[index];
-
+    function typeEffect() {
+      const currentText = hackerTexts[tIndex];
       if (!deleting) {
-        typewriterEl.textContent = currentText.substring(0, charIndex + 1);
+        typewriter.textContent = currentText.substring(0, charIndex + 1);
         charIndex++;
         if (charIndex === currentText.length) {
           deleting = true;
-          setTimeout(typeWriter, 2000); // pausa antes de borrar
+          setTimeout(typeEffect, 1200);
           return;
         }
       } else {
-        typewriterEl.textContent = currentText.substring(0, charIndex - 1);
+        typewriter.textContent = currentText.substring(0, charIndex - 1);
         charIndex--;
         if (charIndex === 0) {
           deleting = false;
-          index = (index + 1) % texts.length;
+          tIndex = (tIndex + 1) % hackerTexts.length;
         }
       }
-      setTimeout(typeWriter, deleting ? 60 : 100);
+      setTimeout(typeEffect, speed);
     }
-
-    typeWriter();
+    setTimeout(typeEffect, 500);
   </script>
 </body>
 </html>
