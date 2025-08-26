@@ -14,7 +14,6 @@
       overflow: hidden;
     }
 
-    /* Canvas Matrix */
     canvas {
       position: fixed;
       top: 0;
@@ -22,7 +21,6 @@
       z-index: -1;
     }
 
-    /* Contenedor principal */
     .container {
       display: flex;
       flex-direction: column;
@@ -30,9 +28,10 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
+      z-index: 1;
+      position: relative;
     }
 
-    /* Texto animado estilo hacker */
     .typing-text {
       font-size: 2rem;
       color: #00ff00;
@@ -54,7 +53,6 @@
       50% { border-color: transparent; }
     }
 
-    /* ================== NUEVO BOTÓN ================== */
     .download-btn {
       margin-top: 20px;
     }
@@ -89,15 +87,15 @@
       background: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
       transition: 0.5s;
     }
-
   </style>
 </head>
 <body>
   <canvas id="matrix"></canvas>
+  <canvas id="stars"></canvas>
+  <canvas id="robot"></canvas>
+
   <div class="container">
     <div class="typing-text">El mejor grupo de la exposición...</div>
-
-    <!-- Botón de Descargar -->
     <div class="download-btn">
       <a href="video.mp4" download>
         <button>Descargar</button>
@@ -106,39 +104,85 @@
   </div>
 
   <script>
-    // ============= ANIMACIÓN MATRIX =============
+    // ===== MATRIX =====
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
-
-    canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
     const letters = "01";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
+    const drops = Array(columns).fill(1);
 
-    const drops = [];
-    for (let x = 0; x < columns; x++) drops[x] = 1;
-
-    function draw() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0,0,0,0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`;
       ctx.font = fontSize + "px monospace";
-
       for (let i = 0; i < drops.length; i++) {
         const text = letters.charAt(Math.floor(Math.random() * letters.length));
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
     }
+    setInterval(drawMatrix, 35);
 
-    setInterval(draw, 35);
+    // ===== ESTRELLAS =====
+    const starCanvas = document.getElementById("stars");
+    const sCtx = starCanvas.getContext("2d");
+    starCanvas.width = window.innerWidth;
+    starCanvas.height = window.innerHeight;
+
+    const stars = Array.from({length: 150}, () => ({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height,
+      size: Math.random() * 2,
+      speed: Math.random() * 0.5 + 0.2
+    }));
+
+    function drawStars() {
+      sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      sCtx.fillStyle = "white";
+      stars.forEach(star => {
+        sCtx.beginPath();
+        sCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        sCtx.fill();
+        star.y += star.speed;
+        if (star.y > starCanvas.height) star.y = 0;
+      });
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    // ===== ROBOT =====
+    const robotCanvas = document.getElementById("robot");
+    const rCtx = robotCanvas.getContext("2d");
+    robotCanvas.width = window.innerWidth;
+    robotCanvas.height = window.innerHeight;
+
+    const robot = new Image();
+    robot.src = "https://i.imgur.com/9LhPl4W.png"; // ejemplo de robot
+
+    let robotX = 0;
+    let robotY = window.innerHeight / 2 + 50;
+    let speed = 2;
+
+    function drawRobot() {
+      rCtx.clearRect(0,0,robotCanvas.width, robotCanvas.height);
+      rCtx.drawImage(robot, robotX, robotY, 100, 100);
+      robotX += speed;
+      if (robotX > window.innerWidth) robotX = -100;
+      requestAnimationFrame(drawRobot);
+    }
+    robot.onload = drawRobot;
+
+    // ===== AJUSTE RESIZE =====
+    window.addEventListener("resize", () => {
+      canvas.width = starCanvas.width = robotCanvas.width = window.innerWidth;
+      canvas.height = starCanvas.height = robotCanvas.height = window.innerHeight;
+    });
   </script>
 </body>
 </html>
