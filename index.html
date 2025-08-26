@@ -1,123 +1,148 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Página de Mateo 6-2</title>
   <style>
-    /* Fondo negro hacker */
     body {
       margin: 0;
-      background: #000;
-      color: #00ff88;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
+      color: #00ff00;
       font-family: "Courier New", monospace;
       overflow: hidden;
+      cursor: url('https://cur.cursors-4u.net/cursors/cur-2/cur116.cur'), auto;
     }
 
-    /* Pantalla de carga */
+    /* Loader */
     #loader {
-      position: fixed;
+      position: absolute;
       top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #000;
+      width: 100%;
+      height: 100%;
+      background: black;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      z-index: 9999;
+      z-index: 1000;
     }
 
     #loading-text {
       font-size: 1.5rem;
-      color: #00ff88;
-      text-shadow: 0 0 8px #00ff88;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 2px solid #00ff88;
-      width: 0;
-      animation: typing 3s steps(40, end) forwards, blink .8s infinite;
+      color: #0f0;
+      white-space: pre-wrap;
+      text-align: center;
+      padding: 0 15px;
     }
 
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-
-    @keyframes blink {
-      50% { border-color: transparent }
-    }
-
-    /* Fondo Matrix */
-    #matrix-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: -1;
-    }
-
-    .container {
+    /* Contenido principal */
+    #content {
       display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       text-align: center;
-      padding: 20px;
     }
 
     h1 {
       font-size: 2rem;
-      text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
-      animation: rainbow 6s infinite linear;
+      font-weight: bold;
+      animation: rainbow 3s linear infinite;
+      margin-bottom: 20px;
     }
 
     @keyframes rainbow {
-      0% { color: #00ff88; }
-      25% { color: #1cff85; }
-      50% { color: #00e5ff; }
-      75% { color: #ff00d4; }
-      100% { color: #00ff88; }
+      0% { color: red; }
+      14% { color: orange; }
+      28% { color: yellow; }
+      42% { color: green; }
+      57% { color: cyan; }
+      71% { color: blue; }
+      85% { color: violet; }
+      100% { color: red; }
     }
 
-    .btn {
-      margin-top: 20px;
-      padding: 12px 24px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: #eaffea;
+    button {
       background: transparent;
-      border: 2px solid #1cff85;
-      border-radius: 8px;
+      color: #0f0;
+      border: 2px solid #0f0;
+      padding: 10px 20px;
+      font-size: 1.2rem;
       cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 0 10px #1cff85;
-      transition: all 0.2s ease-in-out;
+      transition: 0.3s;
     }
 
-    .btn:hover {
-      background: #1cff85;
-      color: #000;
-      box-shadow: 0 0 20px #1cff85;
+    button:hover {
+      background: #0f0;
+      color: black;
+    }
+
+    /* Matrix background effect */
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
   </style>
 </head>
 <body>
+  <canvas id="matrix"></canvas>
+
   <!-- Loader -->
   <div id="loader">
     <div id="loading-text"></div>
   </div>
 
-  <!-- Fondo Matrix -->
-  <canvas id="matrix-bg"></canvas>
-
   <!-- Contenido principal -->
-  <div class="container" id="content">
-    <h1>🌐 Página de Mateo 6-2</h1>
-    <a href="video.mp4" download class="btn">⬇️ Descargar Video</a>
+  <div id="content">
+    <h1>Página de Mateo 6-2</h1>
+    <button onclick="playClick();alert('Aquí pondremos la descarga del video')">⬇ Descargar Video</button>
   </div>
 
+  <!-- Sonido -->
+  <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/beep-07.mp3"></audio>
+
   <script>
-    // Frases hacker
+    // ---- Matrix Effect ----
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const letters = "01";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+
+    const drops = [];
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0f0";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 40);
+
+    // ---- Loader frases ----
     const frases = [
       "Conectando con servidores seguros...",
       "Iniciando protocolo de descifrado...",
@@ -129,25 +154,22 @@
     let fraseIndex = 0;
     const loaderText = document.getElementById("loading-text");
 
-    function mostrarFrase(frase, callback) {
-      loaderText.style.width = "0";
-      loaderText.innerHTML = "";
-      loaderText.style.animation = "none";
-      void loaderText.offsetWidth; // reset animación
-
-      loaderText.textContent = frase;
-      loaderText.style.animation = "typing 2.5s steps(40, end) forwards, blink .8s infinite";
-      setTimeout(callback, 3000);
+    function escribirFrase(frase, i = 0, callback) {
+      if (i < frase.length) {
+        loaderText.innerHTML = frase.substring(0, i + 1);
+        setTimeout(() => escribirFrase(frase, i + 1, callback), 50);
+      } else {
+        setTimeout(callback, 1000);
+      }
     }
 
     function cicloFrases() {
       if (fraseIndex < frases.length) {
-        mostrarFrase(frases[fraseIndex], () => {
+        escribirFrase(frases[fraseIndex], 0, () => {
           fraseIndex++;
           cicloFrases();
         });
       } else {
-        // Ocultar loader y mostrar contenido
         document.getElementById("loader").style.display = "none";
         document.getElementById("content").style.display = "flex";
       }
@@ -155,37 +177,10 @@
 
     cicloFrases();
 
-    // Fondo Matrix
-    const canvas = document.getElementById('matrix-bg');
-    const ctx = canvas.getContext('2d');
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-
-    const letters = '01アイウエオカキクケコｱｲｳｴｵｶｷｸｹｺ$#@*&%+~';
-    const lettersArr = letters.split('');
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
-
-    function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#00ff88';
-      ctx.font = fontSize + "px monospace";
-      for (let i = 0; i < drops.length; i++) {
-        const text = lettersArr[Math.floor(Math.random() * lettersArr.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-      }
-      requestAnimationFrame(draw);
+    // ---- Sonido al click ----
+    function playClick() {
+      document.getElementById("click-sound").play();
     }
-    draw();
-
-    window.addEventListener("resize", () => {
-      canvas.height = window.innerHeight;
-      canvas.width = window.innerWidth;
-    });
   </script>
 </body>
 </html>
