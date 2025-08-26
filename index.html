@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Página de Mateo 6-2</title>
   <style>
@@ -9,16 +9,39 @@
       margin: 0;
       background: #000;
       color: #1cff85;
-      font-family: monospace;
+      font-family: "Courier New", monospace;
       text-align: center;
       overflow: hidden;
     }
+
+    /* Botón activar sonido */
+    #sound-btn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #1cff85;
+      padding: 10px 20px;
+      font-size: 14px;
+      color: #1cff85;
+      cursor: pointer;
+      border-radius: 6px;
+      text-shadow: 0 0 10px #1cff85;
+      z-index: 1000;
+    }
+    #sound-btn:hover {
+      background: #1cff85;
+      color: #000;
+    }
+
+    /* Fondo Matrix */
     #matrix-bg {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       z-index: -1;
     }
+
     .container {
       display: flex;
       flex-direction: column;
@@ -26,10 +49,12 @@
       align-items: center;
       height: 100vh;
     }
+
     h1 {
       font-size: 2rem;
       text-shadow: 0 0 10px #1cff85;
     }
+
     .btn {
       margin-top: 20px;
       padding: 12px 24px;
@@ -49,36 +74,17 @@
       color: #000;
       box-shadow: 0 0 20px #1cff85;
     }
-
-    /* Mensaje de activar sonido */
-    #audio-message {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background: rgba(0, 0, 0, 0.8);
-      border: 2px solid #1cff85;
-      padding: 10px 20px;
-      border-radius: 8px;
-      color: #1cff85;
-      font-family: monospace;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 1000;
-      box-shadow: 0 0 10px #1cff85;
-      animation: blink 1s infinite;
-    }
-    @keyframes blink {
-      50% { opacity: 0.5; }
-    }
   </style>
 </head>
 <body>
+  <!-- Botón para activar sonido -->
+  <button id="sound-btn">🔊 Activar Sonido</button>
+
+  <!-- Fondo Matrix -->
   <canvas id="matrix-bg"></canvas>
-  
-  <div id="audio-message">🔊 Haz clic aquí para activar sonido</div>
 
   <div class="container">
-    <h1 id="dynamic-text"></h1>
+    <h1 id="title">Cargando...</h1>
     <a href="video.mp4" download class="btn">⬇️ Descargar Video</a>
   </div>
 
@@ -87,61 +93,60 @@
   </audio>
 
   <script>
-    // Fondo Matrix con colores
+    // Fondo Matrix
     const canvas = document.getElementById('matrix-bg');
     const ctx = canvas.getContext('2d');
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
+
     const letters = '01アイウエオカキクケコｱｲｳｴｵｶｷｸｹｺ$#@*&%+~';
     const lettersArr = letters.split('');
+
     const fontSize = 18;
     const columns = canvas.width / fontSize;
     const drops = [];
-    for (let i = 0; i < columns; i++) { drops[i] = 1; }
+
+    for (let i = 0; i < columns; i++) {
+      drops[i] = 1;
+    }
+
     function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Cambio dinámico de color
       ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
       ctx.font = fontSize + "px monospace";
+
       for (let i = 0; i < drops.length; i++) {
         const text = lettersArr[Math.floor(Math.random() * lettersArr.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
         drops[i]++;
       }
     }
+
     setInterval(draw, 30);
 
-    // Texto dinámico (escribe y borra)
-    const textElement = document.getElementById("dynamic-text");
-    const texts = ["Buscando servidores...", "El mejor grupo de la exposición", "Página de Mateo 6-2"];
-    let i = 0, j = 0, currentText = "", isDeleting = false;
-    function typeEffect() {
-      currentText = texts[i];
-      textElement.textContent = isDeleting ? currentText.substring(0, j--) : currentText.substring(0, j++);
-      if (!isDeleting && j === currentText.length) {
-        isDeleting = true; setTimeout(typeEffect, 1200);
-      } else if (isDeleting && j === 0) {
-        isDeleting = false; i = (i + 1) % texts.length; setTimeout(typeEffect, 300);
-      } else {
-        setTimeout(typeEffect, isDeleting ? 50 : 100);
-      }
-    }
-    typeEffect();
-
-    // Activar sonido al hacer clic
-    const audioMessage = document.getElementById("audio-message");
-    const keyboardSound = document.getElementById("keyboard-sound");
-
-    audioMessage.addEventListener("click", () => {
-      keyboardSound.play();
-      audioMessage.style.display = "none";
-    });
-
-    // Ajustar canvas en resize
     window.addEventListener("resize", () => {
       canvas.height = window.innerHeight;
       canvas.width = window.innerWidth;
+    });
+
+    // Sistema de sonido al hacer click
+    const soundBtn = document.getElementById("sound-btn");
+    const sound = document.getElementById("keyboard-sound");
+
+    soundBtn.addEventListener("click", () => {
+      sound.play().then(() => {
+        soundBtn.innerText = "✅ Sonido Activado";
+        soundBtn.style.borderColor = "lime";
+      }).catch(err => {
+        console.log("Error al reproducir sonido:", err);
+      });
     });
   </script>
 </body>
