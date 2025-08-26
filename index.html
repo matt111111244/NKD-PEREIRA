@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cielo Nocturno Animado</title>
+  <title>Cielo Nocturno con Muñeco</title>
   <style>
     body {
       margin: 0;
@@ -12,6 +12,46 @@
       overflow: hidden;
     }
 
+    /* Muñeco */
+    .muñeco {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cabeza {
+      width: 50px;
+      height: 50px;
+      background: #444;
+      border-radius: 50%;
+    }
+
+    .cuerpo {
+      width: 20px;
+      height: 80px;
+      background: #555;
+      margin-top: 5px;
+      border-radius: 10px;
+    }
+
+    .piernas {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .pierna {
+      width: 15px;
+      height: 60px;
+      background: #555;
+      border-radius: 10px;
+    }
+
+    /* Estrellas */
     .estrella {
       position: absolute;
       width: 2px;
@@ -28,8 +68,18 @@
   </style>
 </head>
 <body>
+  <!-- Muñeco -->
+  <div class="muñeco">
+    <div class="cabeza"></div>
+    <div class="cuerpo"></div>
+    <div class="piernas">
+      <div class="pierna"></div>
+      <div class="pierna"></div>
+    </div>
+  </div>
+
   <script>
-    // Crear 100 estrellas en posiciones aleatorias
+    // Crear estrellas aleatorias
     for (let i = 0; i < 100; i++) {
       let estrella = document.createElement("div");
       estrella.className = "estrella";
