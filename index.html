@@ -80,9 +80,9 @@
     <div id="loading-text">Cargando... 0%</div>
   </div>
 
-  <!-- Sonido hacker -->
-  <audio id="hacker-sound" autoplay loop>
-    <source src="https://www.soundjay.com/misc/sounds/beep-07.mp3" type="audio/mpeg">
+  <!-- Sonido de teclado hacker -->
+  <audio id="keyboard-sound" autoplay loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_72a3b5b4c4.mp3" type="audio/mpeg">
   </audio>
 
   <!-- Fondo Matrix -->
@@ -98,7 +98,7 @@
     let load = 0;
     const loadingText = document.getElementById("loading-text");
     const loadingScreen = document.getElementById("loading-screen");
-    const hackerSound = document.getElementById("hacker-sound");
+    const keyboardSound = document.getElementById("keyboard-sound");
 
     const fakeLoading = setInterval(() => {
       load++;
@@ -109,7 +109,7 @@
         loadingScreen.style.opacity = "0";
         setTimeout(() => { 
           loadingScreen.style.display = "none"; 
-          hackerSound.pause(); // apaga el sonido al terminar
+          // el sonido sigue de fondo
         }, 1000);
       }
     }, 40); // Velocidad de carga
@@ -181,4 +181,3 @@
   </script>
 </body>
 </html>
-
