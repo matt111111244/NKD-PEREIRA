@@ -5,22 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Página de Mateo 6-2</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-
+    /* Fondo negro hacker */
     body {
       margin: 0;
       background: #000;
-      color: #1cff85;
-      font-family: 'Share Tech Mono', monospace;
+      color: #00ff88;
+      font-family: "Courier New", monospace;
       overflow: hidden;
-      text-align: center;
     }
 
     /* Pantalla de carga */
-    #loading-screen {
+    #loader {
       position: fixed;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      width: 100%; height: 100%;
       background: #000;
       display: flex;
       justify-content: center;
@@ -31,18 +29,20 @@
 
     #loading-text {
       font-size: 1.5rem;
-      text-shadow: 0 0 10px #1cff85;
+      color: #00ff88;
+      text-shadow: 0 0 8px #00ff88;
       white-space: nowrap;
       overflow: hidden;
-      border-right: 2px solid #1cff85;
+      border-right: 2px solid #00ff88;
       width: 0;
-      animation: typing 3s steps(30, end) forwards, blink 0.8s infinite;
+      animation: typing 3s steps(40, end) forwards, blink .8s infinite;
     }
 
     @keyframes typing {
       from { width: 0 }
-      to { width: 18ch }
+      to { width: 100% }
     }
+
     @keyframes blink {
       50% { border-color: transparent }
     }
@@ -55,27 +55,28 @@
       z-index: -1;
     }
 
-    /* Contenido principal */
     .container {
-      display: none; /* oculto hasta terminar carga */
+      display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      text-align: center;
+      padding: 20px;
     }
 
     h1 {
       font-size: 2rem;
-      animation: rainbow 3s infinite linear;
+      text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
+      animation: rainbow 6s infinite linear;
     }
 
     @keyframes rainbow {
-      0% { color: #ff0000; }
-      20% { color: #ff9900; }
-      40% { color: #00ff00; }
-      60% { color: #00ffff; }
-      80% { color: #ff00ff; }
-      100% { color: #ff0000; }
+      0% { color: #00ff88; }
+      25% { color: #1cff85; }
+      50% { color: #00e5ff; }
+      75% { color: #ff00d4; }
+      100% { color: #00ff88; }
     }
 
     .btn {
@@ -92,21 +93,17 @@
       box-shadow: 0 0 10px #1cff85;
       transition: all 0.2s ease-in-out;
     }
+
     .btn:hover {
       background: #1cff85;
       color: #000;
       box-shadow: 0 0 20px #1cff85;
     }
-
-    /* Cursor personalizado */
-    body, a, button {
-      cursor: url('https://cur.cursors-4u.net/cursors/cur-2/cur113.cur'), auto;
-    }
   </style>
 </head>
 <body>
-  <!-- Pantalla de carga -->
-  <div id="loading-screen">
+  <!-- Loader -->
+  <div id="loader">
     <div id="loading-text"></div>
   </div>
 
@@ -114,55 +111,49 @@
   <canvas id="matrix-bg"></canvas>
 
   <!-- Contenido principal -->
-  <div class="container" id="main-content">
-    <h1>💻 Página de Mateo 6-2 💻</h1>
+  <div class="container" id="content">
+    <h1>🌐 Página de Mateo 6-2</h1>
     <a href="video.mp4" download class="btn">⬇️ Descargar Video</a>
   </div>
 
   <script>
-    // Frases estilo hacker
+    // Frases hacker
     const frases = [
-      "Buscando servidores...",
-      "Accediendo al sistema...",
-      "Conexión establecida...",
-      "Bienvenido Mateo 6-2"
+      "Conectando con servidores seguros...",
+      "Iniciando protocolo de descifrado...",
+      "Accediendo a la base de datos secreta...",
+      "Estableciendo conexión encriptada...",
+      "Acceso autorizado ✔ Bienvenido Mateo."
     ];
 
-    const loadingText = document.getElementById("loading-text");
-    let i = 0;
+    let fraseIndex = 0;
+    const loaderText = document.getElementById("loading-text");
 
-    function escribirFrase(frase, callback) {
-      let j = 0;
-      loadingText.style.width = "0";
-      loadingText.innerHTML = "";
+    function mostrarFrase(frase, callback) {
+      loaderText.style.width = "0";
+      loaderText.innerHTML = "";
+      loaderText.style.animation = "none";
+      void loaderText.offsetWidth; // reset animación
 
-      const typing = setInterval(() => {
-        loadingText.innerHTML = frase.substring(0, j);
-        j++;
-        if (j > frase.length) {
-          clearInterval(typing);
-          setTimeout(callback, 1000);
-        }
-      }, 80);
+      loaderText.textContent = frase;
+      loaderText.style.animation = "typing 2.5s steps(40, end) forwards, blink .8s infinite";
+      setTimeout(callback, 3000);
     }
 
-    function mostrarFrases() {
-      if (i < frases.length) {
-        // cambiar color cada frase
-        const colores = ["#1cff85", "#0ff", "#ff00ff", "#ff0", "#f00"];
-        loadingText.style.color = colores[i % colores.length];
-        escribirFrase(frases[i], () => {
-          i++;
-          mostrarFrases();
+    function cicloFrases() {
+      if (fraseIndex < frases.length) {
+        mostrarFrase(frases[fraseIndex], () => {
+          fraseIndex++;
+          cicloFrases();
         });
       } else {
-        // quitar loading y mostrar página
-        document.getElementById("loading-screen").style.display = "none";
-        document.getElementById("main-content").style.display = "flex";
+        // Ocultar loader y mostrar contenido
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("content").style.display = "flex";
       }
     }
 
-    mostrarFrases();
+    cicloFrases();
 
     // Fondo Matrix
     const canvas = document.getElementById('matrix-bg');
@@ -172,34 +163,25 @@
 
     const letters = '01アイウエオカキクケコｱｲｳｴｵｶｷｸｹｺ$#@*&%+~';
     const lettersArr = letters.split('');
-
-    const fontSize = 18;
+    const fontSize = 16;
     const columns = canvas.width / fontSize;
-    const drops = [];
-
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
-    }
+    const drops = Array(Math.floor(columns)).fill(1);
 
     function draw() {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = '#1cff85';
+      ctx.fillStyle = '#00ff88';
       ctx.font = fontSize + "px monospace";
-
       for (let i = 0; i < drops.length; i++) {
         const text = lettersArr[Math.floor(Math.random() * lettersArr.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
+      requestAnimationFrame(draw);
     }
+    draw();
 
-    setInterval(draw, 35);
     window.addEventListener("resize", () => {
       canvas.height = window.innerHeight;
       canvas.width = window.innerWidth;
