@@ -3,110 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Te Amo 💖</title>
+<title>Teamo Celeste 💖</title>
 <style>
   body {
     margin: 0;
-    height: 100vh;
     background: black;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    height: 100vh;
     font-family: 'Courier New', monospace;
   }
 
-  /* Contenedor */
-  #container {
-    position: relative;
-    width: 300px;
-    height: 300px;
-  }
-
-  /* Corazón inicial */
-  .heart {
+  canvas {
     position: absolute;
-    width: 100px;
-    height: 90px;
-    background: red;
-    transform: rotate(-45deg);
-    top: 100px;
-    left: 100px;
-    animation: heartDisappear 3s forwards 2s;
+    top:0;
+    left:0;
   }
 
-  .heart::before,
-  .heart::after {
-    content: '';
+  #message {
     position: absolute;
-    width: 100px;
-    height: 90px;
-    background: red;
-    border-radius: 50%;
-  }
-
-  .heart::before { top: -50px; left: 0; }
-  .heart::after { top: 0; left: 50px; }
-
-  @keyframes heartDisappear {
-    0% { transform: rotate(-45deg) scale(1); opacity: 1; }
-    100% { transform: rotate(-45deg) scale(0.1); opacity: 0; }
-  }
-
-  /* Texto final */
-  .final-text {
-    position: absolute;
-    color: cyan;
-    font-size: 2.5rem;
-    opacity: 0;
+    font-size: 3rem;
+    color: #00ffff;
     text-align: center;
-    width: 100%;
-    top: 40%;
-    animation: showText 2s forwards 5s;
-  }
-
-  @keyframes showText {
-    from { opacity: 0; transform: scale(0.5); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  /* Partículas */
-  .particle {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    background: red;
-    border-radius: 50%;
-    opacity: 1;
-    animation: particleMove 3s forwards 2s;
-  }
-
-  @keyframes particleMove {
-    to {
-      transform: translate(calc(-50px + 100px * var(--randX)), calc(-50px + 100px * var(--randY)));
-      opacity: 0;
-    }
+    opacity: 0;
+    text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+    letter-spacing: 3px;
   }
 </style>
 </head>
 <body>
-  <div id="container">
-    <div class="heart"></div>
-    <div class="final-text">Te amo 💙</div>
-  </div>
+<canvas id="canvas"></canvas>
+<div id="message"></div>
 
 <script>
-  // Crear partículas que se desplacen cuando el corazón desaparece
-  const container = document.getElementById('container');
-  for(let i=0;i<100;i++){
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.setProperty('--randX', Math.random());
-    p.style.setProperty('--randY', Math.random());
-    p.style.top = '140px'; // centro del corazón
-    p.style.left = '140px';
-    container.appendChild(p);
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const centerX = canvas.width/2;
+const centerY = canvas.height/2;
+
+// Mini partículas para explosión de letras
+class MiniParticle {
+  constructor(x,y,color,size){
+    this.x = x;
+    this.y = y;
+    this.vx = (Math.random()-0.5)*5;
+    this.vy = (Math.random()-0.5)*5 -1;
+    this.alpha = 1;
+    this.color = color;
+    this.size = size;
   }
+  update(){
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy += 0.03;
+    this.alpha -= 0.02;
+  }
+  draw(){
+    ctx.globalAlpha = this.alpha;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+// Crear partículas del corazón flotante
+let heartParticles = [];
+function createHeartParticles(){
+  for(let i=0;i<600;i++){
+    let t = Math.random()*Math.PI*2;
+    let r = Math.random();
+    let x = 16*Math.pow(Math.sin(t),3);
+    let y = 13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
+    x *= 12*r;
+    y *= 12*r;
+    heartParticles.push({
+      x: centerX + x,
+      y: centerY - y,
+      baseX: centerX + x,
+      baseY: centerY - y,
+      vx:0,
+      vy:0,
+      alpha:1,
+      color:'red',
+      size:2+Math.random()*2
+    });
+  }
+}
+
+createHeartParticles();
+
+let explode = false;
+let explodedParticles = [];
+let extraParticles = [];
+let angle=0;
+
+// Animación del corazón
+function animate(){
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  angle +=0.05;
+  let offsetX = Math.sin(angle)*30;
+  let offsetY = Math.cos(angle)*20;
+
+  if(!explode){
+    heartParticles.forEach(p=>{
+      let a = Math.random()*Math.PI*2;
+      let r = Math.random()*2;
+      p.vx = Math.cos(a)*r;
+      p.vy = Math.sin(a)*r;
+      p.x = p.baseX + p.vx + offsetX;
+      p.y = p.baseY + p.vy + offsetY;
+
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  if(explode){
+    if(heartParticles.length>0){
+      heartParticles.forEach(p=>{
+        for(let i=0;i<4;i++){
+          explodedParticles.push(new MiniParticle(p.x,p.y,'red',2+Math.random()*2));
+        }
+        for(let i=0;i<2;i++){
+          extraParticles.push(new MiniParticle(p.x,p.y,'#ff66ff',1+Math.random()*2));
+        }
+      });
+      heartParticles=[];
+    }
+
+    explodedParticles.forEach((p,i)=>{
+      p.update();
+      p.draw();
+      if(p.alpha<=0) explodedParticles.splice(i,1);
+    });
+    extraParticles.forEach((p,i)=>{
+      p.update();
+      p.draw();
+      if(p.alpha<=0) extraParticles.splice(i,1);
+    });
+
+    if(Math.random()<0.03){
+      explodedParticles.push(new MiniParticle(centerX + (Math.random()-0.5)*200, centerY + (Math.random()-0.5)*200,'#ff0040',2+Math.random()*2));
+      explodedParticles.push(new MiniParticle(centerX + (Math.random()-0.5)*200, centerY + (Math.random()-0.5)*200,'#ff8000',2+Math.random()*2));
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Explosión después de 3 segundos
+setTimeout(()=>{ explode=true; },3000);
+
+// Mostrar "Teamo Celeste" letra por letra como fuegos artificiales
+const messageEl = document.getElementById('message');
+const messageText = "Teamo Celeste 💖";
+let currentIndex = 0;
+
+function showNextLetter(){
+  if(currentIndex < messageText.length){
+    messageEl.textContent += messageText[currentIndex];
+
+    // Mini explosión de partículas en cada letra
+    const letterX = centerX - messageText.length*12 + currentIndex*24;
+    const letterY = centerY + 150;
+    for(let i=0;i<8;i++){
+      explodedParticles.push(new MiniParticle(letterX + (Math.random()-0.5)*20, letterY + (Math.random()-0.5)*10,'#00ffff',1+Math.random()*2));
+    }
+
+    currentIndex++;
+    setTimeout(showNextLetter,200); // velocidad de escritura
+  }
+}
+
+// Iniciar escritura después de 5 segundos
+setTimeout(()=>{
+  messageEl.style.opacity = 1;
+  showNextLetter();
+},5000);
+
 </script>
 </body>
 </html>
