@@ -24,19 +24,20 @@
 
     /* Contenedor principal */
     .container {
-      display: flex;
+      display: none; /* Oculto hasta que termine la carga */
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
       text-align: center;
+      padding: 20px;
     }
 
     /* Texto animado estilo hacker */
     .typing-text {
-      font-size: 2rem;
+      font-size: clamp(1.2rem, 4vw, 2.5rem);
       color: #00ff00;
-      text-shadow: 0 0 10px #00ff00;
+      text-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00, 0 0 30px #00ff00;
       border-right: 2px solid #00ff00;
       white-space: nowrap;
       overflow: hidden;
@@ -54,9 +55,9 @@
       50% { border-color: transparent; }
     }
 
-    /* ================== NUEVO BOTÓN ================== */
+    /* ================== BOTÓN ================== */
     .download-btn {
-      margin-top: 20px;
+      margin-top: 30px;
     }
 
     .download-btn button {
@@ -69,7 +70,8 @@
       border: none;
       position: relative;
       background: #100720;
-      transition: 0.1s;
+      transition: 0.3s;
+      box-shadow: 0 0 10px rgba(255, 94, 247, 0.6);
     }
 
     .download-btn button::after {
@@ -77,27 +79,80 @@
       width: 100%;
       height: 100%;
       background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
-      filter: blur(15px);
+      filter: blur(20px);
       z-index: -1;
       position: absolute;
       left: 0;
       top: 0;
+      opacity: 0.8;
+      border-radius: 1rem;
+      transition: 0.3s;
+    }
+
+    .download-btn button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(2,245,255,0.9), 0 0 30px rgba(255,94,247,0.9);
     }
 
     .download-btn button:active {
       transform: scale(0.9) rotate(3deg);
       background: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
-      transition: 0.5s;
+      transition: 0.2s;
     }
 
+    /* ================== PANTALLA DE CARGA ================== */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      color: #00ff00;
+      font-size: 1.5rem;
+    }
+
+    .loading-bar {
+      width: 300px;
+      height: 20px;
+      border: 2px solid #00ff00;
+      margin-top: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loading-fill {
+      width: 0;
+      height: 100%;
+      background: #00ff00;
+      box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+      animation: load 3s linear forwards;
+    }
+
+    @keyframes load {
+      from { width: 0; }
+      to { width: 100%; }
+    }
   </style>
 </head>
 <body>
+  <!-- Pantalla de carga -->
+  <div id="loader">
+    <div>Cargando sistema...</div>
+    <div class="loading-bar"><div class="loading-fill"></div></div>
+  </div>
+
+  <!-- Fondo Matrix -->
   <canvas id="matrix"></canvas>
+
+  <!-- Contenido -->
   <div class="container">
     <div class="typing-text">El mejor grupo de la exposición...</div>
-
-    <!-- Botón de Descargar -->
     <div class="download-btn">
       <a href="video.mp4" download>
         <button>Descargar</button>
@@ -124,7 +179,7 @@
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`;
+      ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
       ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
@@ -139,6 +194,25 @@
     }
 
     setInterval(draw, 35);
+
+    // Ajustar canvas en resize
+    window.addEventListener("resize", () => {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+    });
+
+    // ============= SISTEMA DE CARGA =============
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("loader");
+      setTimeout(() => {
+        loader.style.opacity = "0";
+        loader.style.transition = "0.5s";
+        setTimeout(() => {
+          loader.style.display = "none";
+          document.querySelector(".container").style.display = "flex";
+        }, 500);
+      }, 3000); // dura 3s la carga
+    });
   </script>
 </body>
 </html>
