@@ -24,19 +24,25 @@
       z-index: -1;
     }
 
-    /* Estilo para la pantalla inicial */
+    /* Recuadro hacker */
     .container {
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
+    }
+
+    .box {
+      border: 3px solid #00ff00;
+      padding: 40px 60px;
+      border-radius: 12px;
+      box-shadow: 0 0 25px #00ff00;
       text-align: center;
-      padding: 20px;
+      max-width: 90%;
     }
 
     .typing {
-      font-size: 3rem;
+      font-size: 2.8rem; /* un poco más grande */
       font-weight: bold;
       border-right: 4px solid #00ff00;
       white-space: nowrap;
@@ -57,13 +63,15 @@
       font-size: 2.5rem;
       color: cyan;
       text-shadow: 0px 0px 10px cyan;
+      padding: 20px;
+      text-align: center;
     }
 
-    /* Botón para bajar */
+    /* Botón */
     .scroll-btn {
       margin-top: 30px;
       padding: 15px 30px;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       background: none;
       border: 2px solid #00ff00;
       color: #00ff00;
@@ -82,8 +90,10 @@
   <canvas id="matrix"></canvas>
 
   <div class="container">
-    <div class="typing" id="typing-text"></div>
-    <button class="scroll-btn" onclick="scrollToSection()">Entrar</button>
+    <div class="box">
+      <div class="typing" id="typing-text"></div>
+      <button class="scroll-btn" onclick="scrollToSection()">Entrar</button>
+    </div>
   </div>
 
   <div class="second-section" id="second-section">
@@ -109,7 +119,7 @@
     function draw() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`; // colores aleatorios
+      ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`;
       ctx.font = fontSize + "px monospace";
       for (let i = 0; i < drops.length; i++) {
         const text = matrix[Math.floor(Math.random() * matrix.length)];
@@ -118,9 +128,9 @@
         drops[i]++;
       }
     }
-    setInterval(draw, 35); // más rápido
+    setInterval(draw, 35);
 
-    // === Animación de texto (escribir y borrar) ===
+    // === Animación de texto ===
     const frases = [
       "Buscando servidores...",
       "El mejor grupo de la exposición",
