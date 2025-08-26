@@ -3,166 +3,147 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Página de Mateo 6-2 — banner arreglado</title>
+  <title>Banner transparente sobre Matrix</title>
   <style>
-    /* ====== base / matrix / layout ====== */
-    body {
-      margin: 0;
-      height: 100vh;
-      background: black;
-      color: #00ff00;
+    /* ====== Base / Matrix / Layout ====== */
+    body{
+      margin:0;
+      height:100vh;
+      background:black;
+      color:#00ff00;
       font-family: 'Courier New', Courier, monospace;
-      overflow: hidden;
+      overflow:hidden;
     }
 
-    /* Canvas Matrix (ahora detrás de todo con -2) */
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -2;
+    /* Canvas Matrix detrás */
+    canvas{
+      position:fixed;
+      top:0; left:0;
+      z-index:-2;
     }
 
-    /* Contenedor principal (visible tras loader) */
-    .container {
-      display: none; /* se muestra tras loader */
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-      padding: 20px;
-      z-index: 1;
-      position: relative;
+    /* Contenedor principal */
+    .container{
+      display:none; /* se muestra cuando termina el loader */
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
+      text-align:center;
+      padding:20px;
+      position:relative;
+      z-index:1;
     }
 
-    .typing-text {
-      font-size: clamp(1.2rem, 4vw, 2.5rem);
-      color: #00ff00;
-      text-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00, 0 0 30px #00ff00;
-      border-right: 2px solid #00ff00;
-      white-space: nowrap;
-      overflow: hidden;
-      width: 0;
-      animation: typing 4s steps(30, end) infinite alternate, blink 0.7s infinite;
-      margin-bottom: 18px;
+    .typing-text{
+      font-size:clamp(1.2rem,4vw,2.5rem);
+      color:#00ff00;
+      text-shadow:0 0 5px #00ff00,0 0 15px #00ff00;
+      border-right:2px solid #00ff00;
+      white-space:nowrap;
+      overflow:hidden;
+      width:0;
+      animation:typing 4s steps(30,end) infinite alternate, blink .7s infinite;
+      margin-bottom:14px;
     }
-    @keyframes typing { from{width:0} to{width:25ch} }
-    @keyframes blink { 50% { border-color: transparent } }
+    @keyframes typing{ from{width:0} to{width:25ch} }
+    @keyframes blink{ 50%{ border-color: transparent } }
 
-    /* botón descargar */
-    .download-btn { margin-top: 14px; z-index: 2; }
-    .download-btn button {
-      width: 165px;
-      height: 62px;
-      cursor: pointer;
-      color: #fff;
-      font-size: 17px;
-      border-radius: 1rem;
-      border: none;
-      position: relative;
-      background: #100720;
-      transition: 0.3s;
-      box-shadow: 0 0 10px rgba(255,94,247,0.6);
+    /* Botón */
+    .download-btn{ margin-top:12px; z-index:3; }
+    .download-btn button{
+      width:165px; height:62px; cursor:pointer;
+      color:#fff; font-size:17px; border-radius:1rem; border:none;
+      position:relative; background:#100720; transition:.25s;
+      box-shadow:0 0 10px rgba(255,94,247,0.6);
     }
-    .download-btn button::after{
-      content: '';
-      width:100%; height:100%;
-      background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
-      filter: blur(20px);
-      z-index: -1; position:absolute; left:0; top:0; opacity:0.8; border-radius:1rem;
-    }
-    .download-btn button:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(2,245,255,0.9), 0 0 30px rgba(255,94,247,0.9); }
-    .download-btn button:active { transform: scale(0.9) rotate(3deg); transition:.2s; }
+    .download-btn button:hover{ transform:scale(1.05); box-shadow:0 0 20px rgba(2,245,255,0.9),0 0 30px rgba(255,94,247,0.9); }
+    .download-btn button:active{ transform:scale(.95) rotate(2deg); }
 
-    /* loader (sin tocar) */
-    #loader {
-      position: fixed; inset:0;
-      background: black;
+    /* Loader */
+    #loader{
+      position:fixed; inset:0;
+      background:black;
       display:flex; align-items:center; justify-content:center; flex-direction:column;
       z-index:9999; color:#00ff00; font-size:1.4rem;
     }
 
-    /* spinner 3D (igual que antes) */
-    .spinner { width:44px; height:44px; animation: spinner-y0fdc1 2s infinite ease; transform-style: preserve-3d; margin-top:16px }
-    .spinner>div{ background-color: rgba(0,77,255,0.2); height:100%; position:absolute; width:100%; border:2px solid #004dff; box-sizing:border-box; border-radius:4px; }
+    /* Spinner 3D */
+    .spinner{ width:44px; height:44px; animation: spinner-y0fdc1 2s infinite ease; transform-style:preserve-3d; margin-top:14px; }
+    .spinner>div{ background-color: rgba(0,77,255,0.18); height:100%; position:absolute; width:100%; border:2px solid #004dff; box-sizing:border-box; border-radius:4px; }
     .spinner div:nth-of-type(1){ transform: translateZ(-22px) rotateY(180deg); }
     .spinner div:nth-of-type(2){ transform: rotateY(-270deg) translateX(50%); transform-origin: top right; }
     .spinner div:nth-of-type(3){ transform: rotateY(270deg) translateX(-50%); transform-origin: center left; }
     .spinner div:nth-of-type(4){ transform: rotateX(90deg) translateY(-50%); transform-origin: top center; }
     .spinner div:nth-of-type(5){ transform: rotateX(-90deg) translateY(50%); transform-origin: bottom center; }
     .spinner div:nth-of-type(6){ transform: translateZ(22px); }
-    @keyframes spinner-y0fdc1 {
-      0% { transform: rotate(45deg) rotateX(-25deg) rotateY(25deg); }
-      50% { transform: rotate(45deg) rotateX(-385deg) rotateY(25deg); }
-      100% { transform: rotate(45deg) rotateX(-385deg) rotateY(385deg); }
+    @keyframes spinner-y0fdc1{
+      0%{ transform: rotate(45deg) rotateX(-25deg) rotateY(25deg); }
+      50%{ transform: rotate(45deg) rotateX(-385deg) rotateY(25deg); }
+      100%{ transform: rotate(45deg) rotateX(-385deg) rotateY(385deg); }
     }
 
-    /* ====== section-banner (arreglado para verse bien) ====== */
+    /* ========== SECTION-BANNER transparente ========== */
     .section-banner{
       width:250px;
       height:250px;
-      position: relative;
-      margin: 6px 0 6px 0;
-      border-radius: 50%;
-      /* fallback si la imagen base64 no carga: */
-      background: radial-gradient(circle at 30% 30%, rgba(0,255,140,0.06), rgba(0,0,0,0.5));
-      box-shadow:
-        0 0 30px rgba(0,255,140,0.06) inset,
-        0 0 18px rgba(0,255,140,0.04),
-        0 6px 24px rgba(0,0,0,0.6);
-      overflow: hidden;
-      z-index: 2;
-      display: block;
+      position:relative;
+      margin:8px 0;
+      border-radius:50%;
+      overflow:hidden;
+      display:block;
+      /* fallback visible si no pegas base64: */
+      background: radial-gradient(circle at 30% 30%, rgba(0,255,140,0.03), rgba(0,0,0,0.45));
+      box-shadow: 0 6px 24px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,255,140,0.03);
+      z-index:2;
     }
 
-    /* Si quieres usar la imagen base64 larga original la puedes poner aquí
-       como `background-image: url("data:image/jpeg;base64,....");`
-       pero para fiabilidad dejé el fallback visible. */
+    /* Pseudo-capa que contiene tu base64 + control de opacidad
+       Reemplaza DATA_BASE64_HERE por tu base64 (sin comillas adicionales). */
+    .section-banner::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center;
+      opacity:0.28; /* <-- control de transparencia (ajusta entre 0 y 1) */
+      pointer-events:none;
+      z-index:0;
+      /* ejemplo: si ya tienes la base64, descomenta y pega:
+      background-image: url("data:image/jpeg;base64,DATA_BASE64_HERE");
+      */
+    }
 
-    /* pequeñas estrellas "curved-corner-star" */
+    /* Aseguramos que el contenido (estrellas) quede encima de la capa de la imagen */
+    .section-banner > .stars { position:relative; z-index:2; pointer-events:none; }
+
+    /* Estrellas pequeñas decorativas */
     .curved-corner-star { display:flex; position:relative; width:12px; height:12px; }
-    #curved-corner-bottomleft,
-    #curved-corner-bottomright,
-    #curved-corner-topleft,
-    #curved-corner-topright {
-      width: 4px; height: 5px; overflow:hidden; position: relative;
-    }
-    #curved-corner-bottomleft:before,
-    #curved-corner-bottomright:before,
-    #curved-corner-topleft:before,
-    #curved-corner-topright:before {
+    .curved-corner-star div { width:4px; height:5px; position:relative; }
+    .curved-corner-star div:before {
       content:''; display:block; width:200%; height:200%; position:absolute; border-radius:50%;
-      background:white;
-      box-shadow: 0 0 6px rgba(255,255,255,0.95);
-      opacity:0.95;
+      background:white; box-shadow:0 0 6px rgba(255,255,255,0.95); opacity:0.95;
     }
-    #curved-corner-bottomleft:before { bottom:0; left:0; }
-    #curved-corner-bottomright:before { bottom:0; right:0; }
-    #curved-corner-topleft:before { top:0; left:0; }
-    #curved-corner-topright:before { top:0; right:0; }
+    @keyframes twinkling{ 0%,100%{opacity:.12} 50%{opacity:1} }
 
-    @keyframes twinkling {
-      0%,100% { opacity: 0.12; }
-      50% { opacity: 1; }
-    }
+    /* colocación de las 7 estrellas dentro del banner */
+    #star-1 { position:absolute; left:18px; top:18px; animation: twinkling 3s infinite; }
+    #star-2 { position:absolute; left:40px; top:60px; animation: twinkling 2s infinite; transform:scale(.92); }
+    #star-3 { position:absolute; left:160px; top:36px; animation: twinkling 4s infinite; transform:scale(1); }
+    #star-4 { position:absolute; left:190px; top:140px; animation: twinkling 3s infinite; transform:scale(.95); }
+    #star-5 { position:absolute; left:50px; top:180px; animation: twinkling 1.6s infinite; transform:scale(.9); }
+    #star-6 { position:absolute; left:140px; top:12px; animation: twinkling 4s infinite; transform:scale(.85); }
+    #star-7 { position:absolute; left:205px; top:92px; animation: twinkling 2s infinite; transform:scale(.85); }
 
-    /* REPOSICIONÉ las estrellas para que estén dentro del banner */
-    #star-1 { position:absolute; left: 18px; top: 18px; animation: twinkling 3s infinite; }
-    #star-2 { position:absolute; left: 40px; top: 60px; animation: twinkling 2s infinite; transform: scale(.9); }
-    #star-3 { position:absolute; left: 160px; top: 36px; animation: twinkling 4s infinite; transform: scale(1.0); }
-    #star-4 { position:absolute; left: 190px; top: 140px; animation: twinkling 3s infinite; transform: scale(.95); }
-    #star-5 { position:absolute; left: 50px; top: 180px; animation: twinkling 1.5s infinite; transform: scale(.9); }
-    #star-6 { position:absolute; left: 140px; top: 12px; animation: twinkling 4s infinite; transform: scale(.85); }
-    #star-7 { position:absolute; left: 205px; top: 92px; animation: twinkling 2s infinite; transform: scale(.85); }
-
-    /* pequeño ajuste responsive (reduce banner en pantallas chicas) */
+    /* responsive */
     @media (max-width:420px){
       .section-banner{ width:180px; height:180px; }
-      #star-3 { left: 120px; top: 24px; }
-      #star-4 { left: 140px; top: 100px; }
-      #star-7 { left: 160px; top: 62px; }
+      #star-3{ left:120px; top:24px; }
+      #star-4{ left:140px; top:100px; }
+      #star-7{ left:160px; top:62px; }
     }
+
   </style>
 </head>
 <body>
@@ -174,112 +155,74 @@
     </div>
   </div>
 
-  <!-- matrix canvas -->
+  <!-- Matrix canvas -->
   <canvas id="matrix"></canvas>
 
-  <!-- contenido (oculto hasta que loader se oculte) -->
+  <!-- Contenido -->
   <div class="container">
     <div class="typing-text">El mejor grupo de la exposición...</div>
 
-    <!-- section-banner (visible y recolocado) -->
-    <div class="section-banner" aria-hidden="true">
-      <div id="star-1">
-        <div class="curved-corner-star">
-          <div id="curved-corner-bottomright"></div>
-          <div id="curved-corner-bottomleft"></div>
+    <!-- SECTION-BANNER: pega tu base64 en la línea indicada abajo -->
+    <div class="section-banner" id="sectionBanner" aria-hidden="true">
+      <!-- contenido visible encima de la imagen -->
+      <div class="stars">
+        <div id="star-1">
+          <div class="curved-corner-star">
+            <div></div><div></div>
+          </div>
+          <div class="curved-corner-star">
+            <div></div><div></div>
+          </div>
         </div>
-        <div class="curved-corner-star">
-          <div id="curved-corner-topright"></div>
-          <div id="curved-corner-topleft"></div>
-        </div>
-      </div>
 
-      <div id="star-2">
-        <div class="curved-corner-star">
-          <div id="curved-corner-bottomright"></div>
-          <div id="curved-corner-bottomleft"></div>
+        <div id="star-2">
+          <div class="curved-corner-star"><div></div><div></div></div>
+          <div class="curved-corner-star"><div></div><div></div></div>
         </div>
-        <div class="curved-corner-star">
-          <div id="curved-corner-topright"></div>
-          <div id="curved-corner-topleft"></div>
-        </div>
-      </div>
 
-      <div id="star-3">
-        <div class="curved-corner-star">
-          <div id="curved-corner-bottomright"></div>
-          <div id="curved-corner-bottomleft"></div>
+        <div id="star-3">
+          <div class="curved-corner-star"><div></div><div></div></div>
+          <div class="curved-corner-star"><div></div><div></div></div>
         </div>
-        <div class="curved-corner-star">
-          <div id="curved-corner-topright"></div>
-          <div id="curved-corner-topleft"></div>
-        </div>
-      </div>
 
-      <div id="star-4">
-        <div class="curved-corner-star">
-          <div id="curved-corner-bottomright"></div>
-          <div id="curved-corner-bottomleft"></div>
+        <div id="star-4">
+          <div class="curved-corner-star"><div></div><div></div></div>
+          <div class="curved-corner-star"><div></div><div></div></div>
         </div>
-        <div class="curved-corner-star">
-          <div id="curved-corner-topright"></div>
-          <div id="curved-corner-topleft"></div>
-        </div>
-      </div>
 
-      <div id="star-5">
-        <div class="curved-corner-star">
-          <div id="curved-corner-bottomright"></div>
-          <div id="curved-corner-bottomleft"></div>
+        <div id="star-5">
+          <div class="curved-corner-star"><div></div><div></div></div>
+          <div class="curved-corner-star"><div></div><div></div></div>
         </div>
-        <div class="curved-corner-star">
-          <div id="curved-corner-topright"></div>
-          <div id="curved-corner-topleft"></div>
-        </div>
-      </div>
 
-      <div id="star-6">
-        <div class="curved-corner-star">
-          <div id="curved-corner-bottomright"></div>
-          <div id="curved-corner-bottomleft"></div>
+        <div id="star-6">
+          <div class="curved-corner-star"><div></div><div></div></div>
+          <div class="curved-corner-star"><div></div><div></div></div>
         </div>
-        <div class="curved-corner-star">
-          <div id="curved-corner-topright"></div>
-          <div id="curved-corner-topleft"></div>
-        </div>
-      </div>
 
-      <div id="star-7">
-        <div class="curved-corner-star">
-          <div id="curved-corner-bottomright"></div>
-          <div id="curved-corner-bottomleft"></div>
-        </div>
-        <div class="curved-corner-star">
-          <div id="curved-corner-topright"></div>
-          <div id="curved-corner-topleft"></div>
+        <div id="star-7">
+          <div class="curved-corner-star"><div></div><div></div></div>
+          <div class="curved-corner-star"><div></div><div></div></div>
         </div>
       </div>
     </div>
 
-    <!-- botón descargar -->
+    <!-- Botón Descargar -->
     <div class="download-btn">
       <a href="video.mp4" download><button>Descargar</button></a>
     </div>
   </div>
 
   <script>
-    // ============ matrix =============
+    // ============ Matrix ============
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
     const fontSize = 16;
-    let letters = "01";
-    function resizeCanvas(){
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    function resizeCanvas(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     resizeCanvas();
     let columns = Math.floor(canvas.width / fontSize);
     let drops = new Array(columns).fill(1);
+    const letters = "01";
 
     function draw(){
       ctx.fillStyle = "rgba(0,0,0,0.05)";
@@ -300,18 +243,41 @@
       drops = new Array(columns).fill(1);
     });
 
-    // ============ loader -> show content ============
+    // ============ Loader -> show content ============
     window.addEventListener('load', ()=>{
       const loader = document.getElementById('loader');
       setTimeout(()=>{
         loader.style.opacity = 0;
-        loader.style.transition = '0.5s';
-        setTimeout(()=> {
-          loader.style.display = 'none';
-          document.querySelector('.container').style.display = 'flex';
-        }, 500);
-      }, 1500); // lo hago algo más rápido para test (1.5s). Cámbialo a 3000 si quieres.
+        loader.style.transition = '0.45s';
+        setTimeout(()=> { loader.style.display = 'none'; document.querySelector('.container').style.display = 'flex'; }, 450);
+      }, 1500);
     });
+
+    // ============ Inserta la base64 desde JS (opcional) ============
+    // Si prefieres no editar el CSS en línea, puedes inyectar la base64 aquí:
+    (function setBannerBase64(){
+      const base64 = ""; // <- pega tu cadena base64 AQUÍ entre las comillas (sin "data:image...," si quieres)
+      if(!base64) return;
+      const el = document.getElementById('sectionBanner');
+      // si pegaste sólo la parte después de la coma, forma la URL:
+      const url = base64.startsWith('data:') ? base64 : ('data:image/jpeg;base64,' + base64);
+      // aplica como estilo en pseudo-elemento usando CSS variable
+      el.style.setProperty('--banner-url', `url("${url}")`);
+      // aplica via direct style on ::before is not possible; instead asignamos background-image al propio elemento y lo hacemos semitransparente con overlay:
+      el.style.backgroundImage = `url("${url}")`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.style.opacity = '1';
+      // luego reducimos opacidad visual del fondo con un overlay color (dejamos la pseudo capa CSS para control fino)
+      // Nota: la opacidad de .section-banner afectaría también a las estrellas; por eso uso pseudo-capa en CSS preferentemente.
+    })();
+
+    /* IMPORTANTE:
+       - Para que la imagen se muestre con transparencia, pega tu base64 en la variable `base64` de arriba (entre comillas).
+       - Mejor práctica: pega la cadena completa empezando por "data:image/jpeg;base64,..." o solo la parte base64 — el script maneja ambos casos.
+       - También puedes pegar la URL directamente en la regla CSS .section-banner::before (ver comentario dentro del CSS).
+    */
+
   </script>
 </body>
 </html>
