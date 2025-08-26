@@ -7,202 +7,138 @@
   <style>
     body {
       margin: 0;
-      padding: 0;
+      height: 100vh;
       background: black;
       color: #00ff00;
-      font-family: 'Courier New', monospace;
-      overflow-x: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
     }
 
+    /* Canvas Matrix */
     canvas {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
       z-index: -1;
     }
 
+    /* Contenedor principal */
     .container {
-      height: 100vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-    }
-
-    .box {
-      border: 3px solid #00ff00;
-      padding: 40px 60px;
-      border-radius: 12px;
-      box-shadow: 0 0 25px #00ff00;
+      justify-content: center;
+      height: 100vh;
       text-align: center;
-      max-width: 90%;
     }
 
-    .typing {
-      font-size: 2.8rem;
-      font-weight: bold;
-      border-right: 4px solid #00ff00;
+    /* Texto animado estilo hacker */
+    .typing-text {
+      font-size: 2rem;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+      border-right: 2px solid #00ff00;
       white-space: nowrap;
       overflow: hidden;
-      animation: blink 0.7s infinite;
+      width: 0;
+      animation: typing 4s steps(30, end) infinite alternate,
+                 blink 0.7s infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 25ch; }
     }
 
     @keyframes blink {
       50% { border-color: transparent; }
     }
 
-    .second-section {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-size: 2rem;
-      color: cyan;
-      text-shadow: 0px 0px 10px cyan;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .scroll-btn {
-      margin-top: 30px;
-      padding: 15px 30px;
-      font-size: 1.4rem;
-      background: none;
-      border: 2px solid #00ff00;
-      color: #00ff00;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
-
-    .scroll-btn:hover {
-      background: #00ff00;
-      color: black;
-    }
-
-    /* Estilo del video */
-    video {
-      margin-top: 20px;
-      width: 80%;
-      max-width: 700px;
-      border: 3px solid cyan;
-      border-radius: 12px;
-      box-shadow: 0 0 25px cyan;
-    }
-
-    /* Botón de descarga */
+    /* ================== NUEVO BOTÓN ================== */
     .download-btn {
       margin-top: 20px;
-      padding: 12px 25px;
-      font-size: 1.3rem;
-      background: none;
-      border: 2px solid cyan;
-      color: cyan;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: 0.3s;
-      text-decoration: none;
-      display: inline-block;
     }
 
-    .download-btn:hover {
-      background: cyan;
-      color: black;
+    .download-btn button {
+      width: 165px;
+      height: 62px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 17px;
+      border-radius: 1rem;
+      border: none;
+      position: relative;
+      background: #100720;
+      transition: 0.1s;
     }
+
+    .download-btn button::after {
+      content: '';
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
+      filter: blur(15px);
+      z-index: -1;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .download-btn button:active {
+      transform: scale(0.9) rotate(3deg);
+      background: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
+      transition: 0.5s;
+    }
+
   </style>
 </head>
 <body>
   <canvas id="matrix"></canvas>
-
   <div class="container">
-    <div class="box">
-      <div class="typing" id="typing-text"></div>
-      <button class="scroll-btn" onclick="scrollToSection()">Entrar</button>
+    <div class="typing-text">El mejor grupo de la exposición...</div>
+
+    <!-- Botón de Descargar -->
+    <div class="download-btn">
+      <a href="video.mp4" download>
+        <button>Descargar</button>
+      </a>
     </div>
   </div>
 
-  <div class="second-section" id="second-section">
-    🚀 Bienvenidos a la página oficial de Mateo 6-2 🌟
-    
-    <!-- Video incrustado -->
-    <video controls>
-      <source src="video.mp4" type="video/mp4">
-      Tu navegador no soporta video.
-    </video>
-
-    <!-- Botón de descarga -->
-    <a class="download-btn" href="video.mp4" download>⬇ Descargar Video</a>
-  </div>
-
   <script>
-    // === Fondo Matrix ===
+    // ============= ANIMACIÓN MATRIX =============
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
+
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
 
-    const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&";
-    const matrix = letters.split("");
-
-    const fontSize = 14;
+    const letters = "01";
+    const fontSize = 16;
     const columns = canvas.width / fontSize;
-    const drops = [];
 
+    const drops = [];
     for (let x = 0; x < columns; x++) drops[x] = 1;
 
     function draw() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`;
       ctx.font = fontSize + "px monospace";
+
       for (let i = 0; i < drops.length; i++) {
-        const text = matrix[Math.floor(Math.random() * matrix.length)];
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
         drops[i]++;
       }
     }
+
     setInterval(draw, 35);
-
-    // === Animación de texto ===
-    const frases = [
-      "Buscando servidores...",
-      "El mejor grupo de la exposición",
-      "Página de Mateo 6-2"
-    ];
-    let fraseIndex = 0;
-    let charIndex = 0;
-    let borrando = false;
-
-    function typeEffect() {
-      const typingText = document.getElementById("typing-text");
-      const frase = frases[fraseIndex];
-
-      if (!borrando && charIndex <= frase.length) {
-        typingText.textContent = frase.substring(0, charIndex++);
-      } else if (borrando && charIndex >= 0) {
-        typingText.textContent = frase.substring(0, charIndex--);
-      }
-
-      if (charIndex === frase.length + 1) {
-        borrando = true;
-        setTimeout(typeEffect, 1000);
-        return;
-      } else if (charIndex < 0) {
-        borrando = false;
-        fraseIndex = (fraseIndex + 1) % frases.length;
-      }
-
-      setTimeout(typeEffect, borrando ? 50 : 100);
-    }
-    typeEffect();
-
-    // === Scroll suave ===
-    function scrollToSection() {
-      document.getElementById("second-section").scrollIntoView({ behavior: "smooth" });
-    }
   </script>
 </body>
 </html>
