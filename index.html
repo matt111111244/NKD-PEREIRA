@@ -21,6 +21,41 @@
       z-index: -1;
     }
 
+    /* ==== SISTEMA DE CARGA ==== */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #00ff00;
+      font-size: 2rem;
+      z-index: 9999;
+    }
+
+    .loading-bar {
+      margin-top: 20px;
+      width: 80%;
+      height: 20px;
+      border: 1px solid #00ff00;
+      position: relative;
+    }
+
+    .loading-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background: #00ff00;
+      transition: width 0.2s;
+    }
+
     /* ==== LINEAS ANIMADAS EN EL FONDO ==== */
     .lines {
       position: fixed;
@@ -57,7 +92,7 @@
       position: relative;
     }
 
-    /* ==== TEXTO CON EFECTO GLITCH ==== */
+    /* ==== TEXTO GLITCH ==== */
     .typing-text {
       font-size: 2rem;
       color: #00ff00;
@@ -116,10 +151,16 @@
       transform: scale(1.05);
       box-shadow: 0 0 40px #00ff00;
     }
-
   </style>
 </head>
 <body>
+  <!-- Loader -->
+  <div id="loader">
+    <div>Inicializando sistema...</div>
+    <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+    <div id="percent">0%</div>
+  </div>
+
   <canvas id="matrix"></canvas>
   <canvas id="stars"></canvas>
   <canvas id="robot"></canvas>
@@ -133,7 +174,7 @@
     <div class="line" style="left:90%; animation-delay: 4s;"></div>
   </div>
 
-  <div class="container">
+  <div class="container" style="display:none;">
     <div class="typing-text">El mejor grupo de la exposición...</div>
     <div class="download-btn">
       <a href="video.mp4" download>
@@ -143,6 +184,28 @@
   </div>
 
   <script>
+    // ===== LOADER =====
+    let percent = 0;
+    const loader = document.getElementById("loader");
+    const percentText = document.getElementById("percent");
+    const barFill = document.querySelector(".loading-bar-fill");
+    const container = document.querySelector(".container");
+
+    const interval = setInterval(() => {
+      percent += Math.floor(Math.random() * 8) + 1;
+      if (percent > 100) percent = 100;
+      percentText.textContent = percent + "%";
+      barFill.style.width = percent + "%";
+
+      if (percent === 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          loader.style.display = "none";
+          container.style.display = "flex";
+        }, 800);
+      }
+    }, 200);
+
     // ===== MATRIX =====
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
