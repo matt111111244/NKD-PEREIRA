@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Página de Mateo 6-2</title>
+  <title>Descarga Hacker</title>
   <style>
     body {
       margin: 0;
@@ -21,7 +21,7 @@
       z-index: -1;
     }
 
-    /* ==== SISTEMA DE CARGA ==== */
+    /* ==== Pantalla de carga ==== */
     #loader {
       position: fixed;
       top: 0;
@@ -33,188 +33,106 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      color: #00ff00;
-      font-size: 2rem;
       z-index: 9999;
     }
 
-    .loading-bar {
+    .loading-text {
+      font-size: 2rem;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
       margin-top: 20px;
-      width: 80%;
-      height: 20px;
-      border: 1px solid #00ff00;
-      position: relative;
+      animation: blink 1s infinite;
     }
 
-    .loading-bar-fill {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .progress-bar {
+      width: 300px;
+      height: 20px;
+      border: 2px solid #00ff00;
+      margin-top: 20px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress {
       height: 100%;
       width: 0%;
       background: #00ff00;
-      transition: width 0.2s;
+      box-shadow: 0 0 10px #00ff00;
     }
 
-    /* ==== LINEAS ANIMADAS EN EL FONDO ==== */
-    .lines {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      overflow: hidden;
-      z-index: -1;
+    @keyframes blink {
+      50% { opacity: 0; }
     }
 
-    .line {
-      position: absolute;
-      width: 2px;
-      height: 100%;
-      background: rgba(0, 255, 0, 0.2);
-      animation: fall 5s linear infinite;
-    }
-
-    @keyframes fall {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(100%); }
-    }
-
-    /* ==== CONTENEDOR CENTRAL ==== */
+    /* ==== Contenido principal ==== */
     .container {
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
       text-align: center;
-      z-index: 1;
       position: relative;
+      z-index: 1;
     }
 
-    /* ==== TEXTO GLITCH ==== */
     .typing-text {
       font-size: 2rem;
       color: #00ff00;
       text-shadow: 0 0 10px #00ff00;
-      position: relative;
-      animation: glitch 2s infinite;
+      margin-bottom: 20px;
     }
 
-    @keyframes glitch {
-      0% { text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
-      20% { text-shadow: -2px -2px #ff00ff, 2px 2px #00ffff; }
-      40% { text-shadow: 2px -2px #ff00ff, -2px 2px #00ffff; }
-      60% { text-shadow: -2px 2px #ff00ff, 2px -2px #00ffff; }
-      80% { text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
-      100% { text-shadow: none; }
-    }
-
-    /* ==== BOTÓN FUTURISTA ==== */
     .download-btn {
-      margin-top: 20px;
-    }
-
-    .download-btn button {
-      width: 180px;
-      height: 60px;
-      cursor: pointer;
-      color: #fff;
-      font-size: 17px;
-      border-radius: 1rem;
-      border: none;
-      position: relative;
-      background: #0a0f0a;
-      overflow: hidden;
-      box-shadow: 0 0 20px #00ff00;
+      display: inline-block;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      text-decoration: none;
+      text-shadow: 0 0 10px #00ff00;
       transition: 0.3s;
+      box-shadow: 0 0 15px #00ff00;
     }
 
-    .download-btn button::before {
-      content: "";
-      position: absolute;
-      width: 300%;
-      height: 300%;
-      background: conic-gradient(#0f0, #0ff, #0f0, #0ff);
-      top: -100%;
-      left: -100%;
-      animation: rotate 3s linear infinite;
-      z-index: -1;
-    }
-
-    @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .download-btn button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px #00ff00;
+    .download-btn:hover {
+      background: #00ff00;
+      color: black;
+      box-shadow: 0 0 25px #00ff00, 0 0 50px #00ff00;
     }
   </style>
 </head>
 <body>
   <!-- Loader -->
   <div id="loader">
-    <div>Inicializando sistema...</div>
-    <div class="loading-bar"><div class="loading-bar-fill"></div></div>
-    <div id="percent">0%</div>
-  </div>
-
-  <canvas id="matrix"></canvas>
-  <canvas id="stars"></canvas>
-  <canvas id="robot"></canvas>
-
-  <!-- Líneas de luz animadas -->
-  <div class="lines">
-    <div class="line" style="left:10%; animation-delay: 0s;"></div>
-    <div class="line" style="left:30%; animation-delay: 1s;"></div>
-    <div class="line" style="left:50%; animation-delay: 2s;"></div>
-    <div class="line" style="left:70%; animation-delay: 3s;"></div>
-    <div class="line" style="left:90%; animation-delay: 4s;"></div>
-  </div>
-
-  <div class="container" style="display:none;">
-    <div class="typing-text">El mejor grupo de la exposición...</div>
-    <div class="download-btn">
-      <a href="video.mp4" download>
-        <button>Descargar</button>
-      </a>
+    <div class="loading-text">Cargando...</div>
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
     </div>
   </div>
 
+  <!-- Fondo Matrix -->
+  <canvas id="matrix"></canvas>
+
+  <!-- Contenido -->
+  <div class="container" id="content">
+    <div class="typing-text">💾 Descarga tu archivo hackeado</div>
+    <a href="https://drive.google.com/uc?export=download&id=1HnzWVR8BdYJLwqZtgdK9KUj_vm5L-eDO" 
+       target="_blank" 
+       class="download-btn">⬇ Descargar Video</a>
+  </div>
+
   <script>
-    // ===== LOADER =====
-    let percent = 0;
-    const loader = document.getElementById("loader");
-    const percentText = document.getElementById("percent");
-    const barFill = document.querySelector(".loading-bar-fill");
-    const container = document.querySelector(".container");
-
-    const interval = setInterval(() => {
-      percent += Math.floor(Math.random() * 8) + 1;
-      if (percent > 100) percent = 100;
-      percentText.textContent = percent + "%";
-      barFill.style.width = percent + "%";
-
-      if (percent === 100) {
-        clearInterval(interval);
-        setTimeout(() => {
-          loader.style.display = "none";
-          container.style.display = "flex";
-        }, 800);
-      }
-    }, 200);
-
-    // ===== MATRIX =====
+    // ===== FONDO MATRIX =====
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const letters = "01";
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
     const fontSize = 16;
-    const columns = canvas.width / fontSize;
+    const columns = Math.floor(canvas.width / fontSize);
     const drops = Array(columns).fill(1);
 
     function drawMatrix() {
@@ -222,69 +140,40 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#00ff00";
       ctx.font = fontSize + "px monospace";
+
       for (let i = 0; i < drops.length; i++) {
         const text = letters.charAt(Math.floor(Math.random() * letters.length));
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
         drops[i]++;
       }
     }
     setInterval(drawMatrix, 35);
 
-    // ===== ESTRELLAS =====
-    const starCanvas = document.getElementById("stars");
-    const sCtx = starCanvas.getContext("2d");
-    starCanvas.width = window.innerWidth;
-    starCanvas.height = window.innerHeight;
-
-    const stars = Array.from({length: 150}, () => ({
-      x: Math.random() * starCanvas.width,
-      y: Math.random() * starCanvas.height,
-      size: Math.random() * 2,
-      speed: Math.random() * 0.5 + 0.2
-    }));
-
-    function drawStars() {
-      sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-      sCtx.fillStyle = "white";
-      stars.forEach(star => {
-        sCtx.beginPath();
-        sCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        sCtx.fill();
-        star.y += star.speed;
-        if (star.y > starCanvas.height) star.y = 0;
-      });
-      requestAnimationFrame(drawStars);
-    }
-    drawStars();
-
-    // ===== ROBOT =====
-    const robotCanvas = document.getElementById("robot");
-    const rCtx = robotCanvas.getContext("2d");
-    robotCanvas.width = window.innerWidth;
-    robotCanvas.height = window.innerHeight;
-
-    const robot = new Image();
-    robot.src = "https://i.imgur.com/9LhPl4W.png"; // ejemplo de robot
-
-    let robotX = 0;
-    let robotY = window.innerHeight / 2 + 50;
-    let speed = 2;
-
-    function drawRobot() {
-      rCtx.clearRect(0,0,robotCanvas.width, robotCanvas.height);
-      rCtx.drawImage(robot, robotX, robotY, 100, 100);
-      robotX += speed;
-      if (robotX > window.innerWidth) robotX = -100;
-      requestAnimationFrame(drawRobot);
-    }
-    robot.onload = drawRobot;
-
-    // ===== AJUSTE RESIZE =====
     window.addEventListener("resize", () => {
-      canvas.width = starCanvas.width = robotCanvas.width = window.innerWidth;
-      canvas.height = starCanvas.height = robotCanvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
+
+    // ===== LOADER =====
+    const loader = document.getElementById("loader");
+    const content = document.getElementById("content");
+    const progress = document.getElementById("progress");
+
+    let load = 0;
+    const interval = setInterval(() => {
+      load += 2;
+      progress.style.width = load + "%";
+
+      if (load >= 100) {
+        clearInterval(interval);
+        loader.style.display = "none";
+        content.style.display = "flex";
+      }
+    }, 100); // 0.1 seg por tick (5 seg total)
   </script>
 </body>
 </html>
