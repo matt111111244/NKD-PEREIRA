@@ -2,211 +2,223 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cómo cuidar bien una PC</title>
+    <title>Quiz: Cómo cuidar la PC</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
             background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
-        #particles-js {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-        .container {
-            max-width: 800px;
+        .quiz-container {
+            max-width: 700px;
             margin: 40px auto;
-            background: rgba(255,255,255,0.95);
+            background: #fff;
             border-radius: 12px;
             box-shadow: 0 4px 24px #b0c4de;
             padding: 32px;
-            position: relative;
-            z-index: 1;
         }
         h1 {
+            text-align: center;
             color: #2c3e50;
-            text-align: center;
             margin-bottom: 24px;
-            text-shadow: 0 2px 8px #b0c4de;
         }
-        ul {
-            padding: 20px;
-            border-radius: 8px;
-            background: #f8faff;
-            box-shadow: 0 2px 12px #e0eafc;
+        .question {
+            margin-bottom: 24px;
         }
-        li {
-            margin-bottom: 18px;
+        .question h2 {
             font-size: 1.1em;
-            display: flex;
-            align-items: center;
-            transition: background 0.3s;
+            margin-bottom: 12px;
         }
-        li:hover {
-            background: #eaf6ff;
-        }
-        li img {
-            width: 40px;
-            height: 40px;
-            margin-right: 14px;
+        .answers label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 6px 12px;
             border-radius: 6px;
-            box-shadow: 0 1px 4px #ccc;
-            background: #fff;
-            transition: transform 0.3s;
+            transition: background 0.2s;
         }
-        li:hover img {
-            transform: scale(1.2) rotate(-10deg);
+        .answers input[type="radio"] {
+            margin-right: 8px;
         }
-        .shutdown-section {
-            margin-top: 32px;
-            padding: 20px;
+        .answers label:hover {
             background: #eaf6ff;
-            border-radius: 8px;
-            box-shadow: 0 2px 12px #b0c4de;
-            display: flex;
-            align-items: center;
-            transition: box-shadow 0.3s;
         }
-        .shutdown-section:hover {
-            box-shadow: 0 4px 24px #b0c4de;
-        }
-        .shutdown-section img {
-            width: 60px;
-            height: 60px;
-            margin-right: 18px;
-            filter: drop-shadow(0 2px 8px #b0c4de);
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #888;
+        #submit-btn {
+            display: block;
+            margin: 30px auto 0 auto;
+            padding: 12px 32px;
             font-size: 1.1em;
-            text-shadow: 0 1px 4px #e0eafc;
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #b0c4de;
+            transition: background 0.2s;
         }
-        /* Animación de entrada */
-        .container, .shutdown-section, ul, li {
-            animation: fadeInUp 1s ease;
+        #submit-btn:hover {
+            background: #1a242f;
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px);}
-            to { opacity: 1; transform: translateY(0);}
+        #result {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 1.2em;
+            color: #2c3e50;
         }
     </style>
-    <!-- Particles.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 </head>
 <body>
-    <div id="particles-js"></div>
-    <div class="container">
-        <h1>Cómo cuidar bien una PC</h1>
-        <p>Para mantener tu computadora en buen estado y prolongar su vida útil, sigue estos consejos:</p>
-        <ul>
-            <li>
-                <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" alt="Limpieza PC">
-                <strong>Limpieza regular:</strong> Limpia el teclado, pantalla y gabinete con productos adecuados para evitar acumulación de polvo.
-            </li>
-            <li>
-                <img src="https://cdn-icons-png.flaticon.com/512/1055/1055672.png" alt="Ventilación PC">
-                <strong>Evita el sobrecalentamiento:</strong> No bloquees las salidas de aire y utiliza la PC en lugares ventilados.
-            </li>
-            <li>
-                <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" alt="Actualización software">
-                <strong>Actualiza el software:</strong> Mantén el sistema operativo y los programas actualizados para mejorar la seguridad y el rendimiento.
-            </li>
-            <li>
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Antivirus">
-                <strong>Protege contra virus:</strong> Instala y actualiza un antivirus confiable.
-            </li>
-            <li>
-                <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" alt="Backup">
-                <strong>Haz copias de seguridad:</strong> Guarda tus archivos importantes en discos externos o en la nube.
-            </li>
-            <li>
-                <img src="https://cdn-icons-png.flaticon.com/512/1055/1055676.png" alt="Desconectar correctamente">
-                <strong>Desconecta correctamente:</strong> Apaga la PC usando el procedimiento adecuado y evita desconectarla bruscamente.
-            </li>
-            <li>
-                <img src="https://cdn-icons-png.flaticon.com/512/1055/1055679.png" alt="Evitar golpes">
-                <strong>Evita golpes y caídas:</strong> Manipula la computadora con cuidado para evitar daños físicos.
-            </li>
-        </ul>
-        <div class="shutdown-section">
-            <img src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="Apagar PC">
-            <div>
-                <h2>¿Cómo apagar la PC correctamente?</h2>
-                <p>
-                    Para apagar tu computadora de forma segura:<br>
-                    <strong>1.</strong> Guarda todos tus trabajos.<br>
-                    <strong>2.</strong> Cierra los programas abiertos.<br>
-                    <strong>3.</strong> Haz clic en el botón <b>Inicio</b> (<img src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="Inicio" style="width:18px;vertical-align:middle;">) y selecciona <b>Apagar</b>.<br>
-                    <strong>4.</strong> Espera a que la PC se apague completamente antes de desconectarla.
-                </p>
+    <div class="quiz-container">
+        <h1>Quiz: ¿Sabes cómo cuidar tu PC?</h1>
+        <form id="quizForm">
+            <!-- Pregunta 1 -->
+            <div class="question">
+                <h2>1. ¿Qué debes usar para limpiar la pantalla de tu PC?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q1" value="a"> Papel de cocina</label>
+                    <label><input type="radio" name="q1" value="b"> Paño suave y líquido especial</label>
+                    <label><input type="radio" name="q1" value="c"> Agua directamente</label>
+                </div>
             </div>
-        </div>
-        <div class="footer">
-            <p>Siguiendo estos pasos, tu PC funcionará mejor y por más tiempo.</p>
-        </div>
+            <!-- Pregunta 2 -->
+            <div class="question">
+                <h2>2. ¿Por qué es importante actualizar el sistema operativo?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q2" value="a"> Para cambiar el fondo de pantalla</label>
+                    <label><input type="radio" name="q2" value="b"> Para mejorar la seguridad y el rendimiento</label>
+                    <label><input type="radio" name="q2" value="c"> Para borrar archivos</label>
+                </div>
+            </div>
+            <!-- Pregunta 3 -->
+            <div class="question">
+                <h2>3. ¿Qué ayuda a evitar el sobrecalentamiento de la PC?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q3" value="a"> Usar la PC sobre la cama</label>
+                    <label><input type="radio" name="q3" value="b"> Mantener las salidas de aire libres</label>
+                    <label><input type="radio" name="q3" value="c"> Tapar los ventiladores</label>
+                </div>
+            </div>
+            <!-- Pregunta 4 -->
+            <div class="question">
+                <h2>4. ¿Qué programa ayuda a proteger tu PC de virus?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q4" value="a"> Antivirus</label>
+                    <label><input type="radio" name="q4" value="b"> Calculadora</label>
+                    <label><input type="radio" name="q4" value="c"> Bloc de notas</label>
+                </div>
+            </div>
+            <!-- Pregunta 5 -->
+            <div class="question">
+                <h2>5. ¿Qué debes hacer antes de apagar la PC?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q5" value="a"> Desconectarla directamente</label>
+                    <label><input type="radio" name="q5" value="b"> Guardar tu trabajo y cerrar programas</label>
+                    <label><input type="radio" name="q5" value="c"> Golpear el teclado</label>
+                </div>
+            </div>
+            <!-- Pregunta 6 -->
+            <div class="question">
+                <h2>6. ¿Dónde es mejor guardar copias de seguridad?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q6" value="a"> En la papelera de reciclaje</label>
+                    <label><input type="radio" name="q6" value="b"> En discos externos o la nube</label>
+                    <label><input type="radio" name="q6" value="c"> En el escritorio</label>
+                </div>
+            </div>
+            <!-- Pregunta 7 -->
+            <div class="question">
+                <h2>7. ¿Qué acción puede dañar físicamente la PC?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q7" value="a"> Manipularla con cuidado</label>
+                    <label><input type="radio" name="q7" value="b"> Golpearla o dejarla caer</label>
+                    <label><input type="radio" name="q7" value="c"> Usar mouse y teclado</label>
+                </div>
+            </div>
+            <!-- Pregunta 8 -->
+            <div class="question">
+                <h2>8. ¿Qué debes evitar para que la PC funcione bien?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q8" value="a"> Instalar programas desconocidos</label>
+                    <label><input type="radio" name="q8" value="b"> Actualizar el antivirus</label>
+                    <label><input type="radio" name="q8" value="c"> Limpiar el monitor</label>
+                </div>
+            </div>
+            <!-- Pregunta 9 -->
+            <div class="question">
+                <h2>9. ¿Cuál es la mejor forma de apagar la PC?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q9" value="a"> Usar el botón de inicio y seleccionar "Apagar"</label>
+                    <label><input type="radio" name="q9" value="b"> Desconectarla de la corriente</label>
+                    <label><input type="radio" name="q9" value="c"> Dejarla encendida siempre</label>
+                </div>
+            </div>
+            <!-- Pregunta 10 -->
+            <div class="question">
+                <h2>10. ¿Qué ayuda a mantener la PC libre de polvo?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q10" value="a"> Limpiarla regularmente</label>
+                    <label><input type="radio" name="q10" value="b"> Dejarla abierta</label>
+                    <label><input type="radio" name="q10" value="c"> No limpiarla nunca</label>
+                </div>
+            </div>
+            <!-- Pregunta 11 -->
+            <div class="question">
+                <h2>11. ¿Por qué es importante no instalar software pirata?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q11" value="a"> Porque puede traer virus y problemas legales</label>
+                    <label><input type="radio" name="q11" value="b"> Porque es más barato</label>
+                    <label><input type="radio" name="q11" value="c"> Porque ocupa menos espacio</label>
+                </div>
+            </div>
+            <!-- Pregunta 12 -->
+            <div class="question">
+                <h2>12. ¿Qué debes hacer si la PC funciona lenta?</h2>
+                <div class="answers">
+                    <label><input type="radio" name="q12" value="a"> Reiniciarla y revisar programas abiertos</label>
+                    <label><input type="radio" name="q12" value="b"> Golpearla</label>
+                    <label><input type="radio" name="q12" value="c"> Ignorar el problema</label>
+                </div>
+            </div>
+            <button type="button" id="submit-btn">Enviar respuestas</button>
+        </form>
+        <div id="result"></div>
     </div>
     <script>
-        // Configuración de partículas
-        particlesJS("particles-js", {
-            "particles": {
-                "number": {
-                    "value": 80,
-                    "density": { "enable": true, "value_area": 800 }
-                },
-                "color": { "value": "#2c3e50" },
-                "shape": {
-                    "type": "circle",
-                    "stroke": { "width": 0, "color": "#000" },
-                    "polygon": { "nb_sides": 5 }
-                },
-                "opacity": {
-                    "value": 0.3,
-                    "random": true,
-                    "anim": { "enable": false }
-                },
-                "size": {
-                    "value": 6,
-                    "random": true,
-                    "anim": { "enable": false }
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 120,
-                    "color": "#b0c4de",
-                    "opacity": 0.2,
-                    "width": 1
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 2,
-                    "direction": "none",
-                    "random": false,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false
-                }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": { "enable": true, "mode": "repulse" },
-                    "onclick": { "enable": true, "mode": "push" },
-                    "resize": true
-                },
-                "modes": {
-                    "repulse": { "distance": 100, "duration": 0.4 },
-                    "push": { "particles_nb": 4 }
-                }
-            },
-            "retina_detect": true
-        });
+        // Respuestas correctas
+        const correctAnswers = {
+            q1: "b",
+            q2: "b",
+            q3: "b",
+            q4: "a",
+            q5: "b",
+            q6: "b",
+            q7: "b",
+            q8: "a",
+            q9: "a",
+            q10: "a",
+            q11: "a",
+            q12: "a"
+        };
+
+        document.getElementById('submit-btn').onclick = function() {
+            let score = 0;
+            for (let i = 1; i <= 12; i++) {
+                const q = document.querySelector('input[name="q'+i+'"]:checked');
+                if (q && q.value === correctAnswers['q'+i]) score++;
+            }
+            let mensaje = "";
+            if (score === 12) {
+                mensaje = "¡Excelente! Sabes perfectamente cómo cuidar tu PC.";
+            } else if (score >= 8) {
+                mensaje = "¡Muy bien! Tienes buenos conocimientos sobre el cuidado de la PC.";
+            } else if (score >= 5) {
+                mensaje = "Bien, pero puedes mejorar tus hábitos de cuidado.";
+            } else {
+                mensaje = "Debes aprender más sobre cómo cuidar tu PC.";
+            }
+            document.getElementById('result').innerHTML = `Obtuviste ${score} de 12.<br>${mensaje}`;
+        };
     </script>
 </body>
 </html>
