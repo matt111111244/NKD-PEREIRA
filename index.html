@@ -1,224 +1,393 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Quiz: Cómo cuidar la PC</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-            margin: 0;
-            padding: 0;
-        }
-        .quiz-container {
-            max-width: 700px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px #b0c4de;
-            padding: 32px;
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 24px;
-        }
-        .question {
-            margin-bottom: 24px;
-        }
-        .question h2 {
-            font-size: 1.1em;
-            margin-bottom: 12px;
-        }
-        .answers label {
-            display: block;
-            margin-bottom: 8px;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-        .answers input[type="radio"] {
-            margin-right: 8px;
-        }
-        .answers label:hover {
-            background: #eaf6ff;
-        }
-        #submit-btn {
-            display: block;
-            margin: 30px auto 0 auto;
-            padding: 12px 32px;
-            font-size: 1.1em;
-            background: #2c3e50;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px #b0c4de;
-            transition: background 0.2s;
-        }
-        #submit-btn:hover {
-            background: #1a242f;
-        }
-        #result {
-            margin-top: 32px;
-            text-align: center;
-            font-size: 1.2em;
-            color: #2c3e50;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quiz Final: Cuidado y Seguridad del PC</title>
+<style>
+  :root{
+    --bg1:#041226; --accent:#47a7ff; --accent2:#7ee7c7;
+    --good:#c8f7c5; --bad:#f8d7da; --card:rgba(255,255,255,0.03);
+    --text:#e6eef8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg,#021032 0%, #052a4a 60%);
+    color:var(--text); padding:36px 12px;
+  }
+  .wrap{
+    max-width:980px; margin:0 auto; background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border-radius:14px; padding:26px; box-shadow:0 12px 40px rgba(2,8,23,0.6);
+    border:1px solid rgba(255,255,255,0.03); backdrop-filter: blur(6px);
+  }
+  header{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+  .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(135deg,var(--accent), #7b61ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#031026;transform:rotate(-6deg)}
+  h1{margin:0;font-size:1.4rem}
+  .lead{margin:6px 0 0;color:rgba(230,238,248,0.85);font-size:0.95rem}
+  .note{font-size:0.92rem;color:rgba(230,238,248,0.82);margin:10px 0 14px}
+  form{}
+  .question{
+    background:var(--card); padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.02);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .question:hover{transform:translateY(-3px)}
+  .question h3{margin:0 0 8px;font-size:1rem}
+  .answers label{
+    display:block;padding:8px 12px;border-radius:8px;margin:8px 0;cursor:pointer;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);
+    transition:background .12s ease, transform .08s ease;
+  }
+  .answers label:hover{background: rgba(255,255,255,0.02); transform:translateX(4px)}
+  .answers input{margin-right:10px;transform:translateY(1px)}
+  .correct{background:var(--good) !important}
+  .incorrect{background:var(--bad) !important}
+  .actions{display:flex;gap:12px;align-items:center;margin-top:16px}
+  #submit-btn{background:linear-gradient(90deg,var(--accent), #7b61ff);color:#031026;border:0;padding:12px 18px;border-radius:9px;font-size:1rem;cursor:pointer;box-shadow:0 8px 24px rgba(71,167,255,0.12)}
+  #reset-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:10px 14px;border-radius:9px;cursor:pointer}
+  #submit-btn:disabled{opacity:0.5;cursor:not-allowed}
+  #result{margin-top:16px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(0,0,0,0.1), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02)}
+  .small{font-size:0.92rem;color:rgba(230,238,248,0.85)}
+  @media (max-width:720px){header{flex-direction:column;align-items:flex-start}}
+</style>
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>Quiz: ¿Sabes cómo cuidar tu PC?</h1>
-        <form id="quizForm">
-            <!-- Pregunta 1 -->
-            <div class="question">
-                <h2>1. ¿Qué debes usar para limpiar la pantalla de tu PC?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q1" value="a"> Papel de cocina</label>
-                    <label><input type="radio" name="q1" value="b"> Paño suave y líquido especial</label>
-                    <label><input type="radio" name="q1" value="c"> Agua directamente</label>
-                </div>
-            </div>
-            <!-- Pregunta 2 -->
-            <div class="question">
-                <h2>2. ¿Por qué es importante actualizar el sistema operativo?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q2" value="a"> Para cambiar el fondo de pantalla</label>
-                    <label><input type="radio" name="q2" value="b"> Para mejorar la seguridad y el rendimiento</label>
-                    <label><input type="radio" name="q2" value="c"> Para borrar archivos</label>
-                </div>
-            </div>
-            <!-- Pregunta 3 -->
-            <div class="question">
-                <h2>3. ¿Qué ayuda a evitar el sobrecalentamiento de la PC?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q3" value="a"> Usar la PC sobre la cama</label>
-                    <label><input type="radio" name="q3" value="b"> Mantener las salidas de aire libres</label>
-                    <label><input type="radio" name="q3" value="c"> Tapar los ventiladores</label>
-                </div>
-            </div>
-            <!-- Pregunta 4 -->
-            <div class="question">
-                <h2>4. ¿Qué programa ayuda a proteger tu PC de virus?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q4" value="a"> Antivirus</label>
-                    <label><input type="radio" name="q4" value="b"> Calculadora</label>
-                    <label><input type="radio" name="q4" value="c"> Bloc de notas</label>
-                </div>
-            </div>
-            <!-- Pregunta 5 -->
-            <div class="question">
-                <h2>5. ¿Qué debes hacer antes de apagar la PC?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q5" value="a"> Desconectarla directamente</label>
-                    <label><input type="radio" name="q5" value="b"> Guardar tu trabajo y cerrar programas</label>
-                    <label><input type="radio" name="q5" value="c"> Golpear el teclado</label>
-                </div>
-            </div>
-            <!-- Pregunta 6 -->
-            <div class="question">
-                <h2>6. ¿Dónde es mejor guardar copias de seguridad?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q6" value="a"> En la papelera de reciclaje</label>
-                    <label><input type="radio" name="q6" value="b"> En discos externos o la nube</label>
-                    <label><input type="radio" name="q6" value="c"> En el escritorio</label>
-                </div>
-            </div>
-            <!-- Pregunta 7 -->
-            <div class="question">
-                <h2>7. ¿Qué acción puede dañar físicamente la PC?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q7" value="a"> Manipularla con cuidado</label>
-                    <label><input type="radio" name="q7" value="b"> Golpearla o dejarla caer</label>
-                    <label><input type="radio" name="q7" value="c"> Usar mouse y teclado</label>
-                </div>
-            </div>
-            <!-- Pregunta 8 -->
-            <div class="question">
-                <h2>8. ¿Qué debes evitar para que la PC funcione bien?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q8" value="a"> Instalar programas desconocidos</label>
-                    <label><input type="radio" name="q8" value="b"> Actualizar el antivirus</label>
-                    <label><input type="radio" name="q8" value="c"> Limpiar el monitor</label>
-                </div>
-            </div>
-            <!-- Pregunta 9 -->
-            <div class="question">
-                <h2>9. ¿Cuál es la mejor forma de apagar la PC?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q9" value="a"> Usar el botón de inicio y seleccionar "Apagar"</label>
-                    <label><input type="radio" name="q9" value="b"> Desconectarla de la corriente</label>
-                    <label><input type="radio" name="q9" value="c"> Dejarla encendida siempre</label>
-                </div>
-            </div>
-            <!-- Pregunta 10 -->
-            <div class="question">
-                <h2>10. ¿Qué ayuda a mantener la PC libre de polvo?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q10" value="a"> Limpiarla regularmente</label>
-                    <label><input type="radio" name="q10" value="b"> Dejarla abierta</label>
-                    <label><input type="radio" name="q10" value="c"> No limpiarla nunca</label>
-                </div>
-            </div>
-            <!-- Pregunta 11 -->
-            <div class="question">
-                <h2>11. ¿Por qué es importante no instalar software pirata?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q11" value="a"> Porque puede traer virus y problemas legales</label>
-                    <label><input type="radio" name="q11" value="b"> Porque es más barato</label>
-                    <label><input type="radio" name="q11" value="c"> Porque ocupa menos espacio</label>
-                </div>
-            </div>
-            <!-- Pregunta 12 -->
-            <div class="question">
-                <h2>12. ¿Qué debes hacer si la PC funciona lenta?</h2>
-                <div class="answers">
-                    <label><input type="radio" name="q12" value="a"> Reiniciarla y revisar programas abiertos</label>
-                    <label><input type="radio" name="q12" value="b"> Golpearla</label>
-                    <label><input type="radio" name="q12" value="c"> Ignorar el problema</label>
-                </div>
-            </div>
-            <button type="button" id="submit-btn">Enviar respuestas</button>
-        </form>
-        <div id="result"></div>
-    </div>
-    <script>
-        // Respuestas correctas
-        const correctAnswers = {
-            q1: "b",
-            q2: "b",
-            q3: "b",
-            q4: "a",
-            q5: "b",
-            q6: "b",
-            q7: "b",
-            q8: "a",
-            q9: "a",
-            q10: "a",
-            q11: "a",
-            q12: "a"
-        };
+  <div class="wrap">
+    <header>
+      <div class="logo">PC</div>
+      <div>
+        <h1>Quiz: Cuidado y Seguridad del PC</h1>
+        <p class="lead">25 preguntas — una vez marcada la respuesta, no se puede cambiar. Al enviar verás aciertos y fallos con colores.</p>
+      </div>
+    </header>
 
-        document.getElementById('submit-btn').onclick = function() {
-            let score = 0;
-            for (let i = 1; i <= 12; i++) {
-                const q = document.querySelector('input[name="q'+i+'"]:checked');
-                if (q && q.value === correctAnswers['q'+i]) score++;
-            }
-            let mensaje = "";
-            if (score === 12) {
-                mensaje = "¡Excelente! Sabes perfectamente cómo cuidar tu PC.";
-            } else if (score >= 8) {
-                mensaje = "¡Muy bien! Tienes buenos conocimientos sobre el cuidado de la PC.";
-            } else if (score >= 5) {
-                mensaje = "Bien, pero puedes mejorar tus hábitos de cuidado.";
-            } else {
-                mensaje = "Debes aprender más sobre cómo cuidar tu PC.";
-            }
-            document.getElementById('result').innerHTML = `Obtuviste ${score} de 12.<br>${mensaje}`;
-        };
-    </script>
+    <form id="quizForm">
+      <p class="note">Selecciona una opción por pregunta. Cada pregunta se bloqueará al seleccionar.</p>
+
+      <!-- Preguntas 1..25 -->
+      <div class="question" id="q1-box">
+        <h3>1. ¿Cómo contribuir efectivamente a que el lugar de trabajo sea seguro para las personas?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q1" value="a"> Organizar el lugar de trabajo, no consumir alimentos o bebidas</label>
+          <label><input type="radio" name="q1" value="b"> Mantener el equipo en un lugar limpio y seco</label>
+          <label><input type="radio" name="q1" value="c"> Evitar moverse dentro de la sala</label>
+          <label><input type="radio" name="q1" value="d"> Todas las anteriores</label>
+          <label><input type="radio" name="q1" value="e"> Ninguna de las anteriores</label>
+        </div>
+      </div>
+
+      <div class="question" id="q2-box">
+        <h3>2. ¿Qué requiere la computadora para mantenerse en buen estado?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q2" value="a"> Tener a la mano productos de limpieza como límpido</label>
+          <label><input type="radio" name="q2" value="b"> Tener el escritorio lleno de íconos</label>
+          <label><input type="radio" name="q2" value="c"> Un encendido, uso adecuado y apagado correcto</label>
+        </div>
+      </div>
+
+      <div class="question" id="q3-box">
+        <h3>3. ¿Qué medidas se emplean para resguardar la información?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q3" value="a"> Usar protección contra variaciones de corriente</label>
+          <label><input type="radio" name="q3" value="b"> Mantener el antivirus actualizado</label>
+          <label><input type="radio" name="q3" value="c"> Aceptar todos los regalos en línea</label>
+          <label><input type="radio" name="q3" value="d"> Todas las anteriores</label>
+        </div>
+      </div>
+
+      <div class="question" id="q4-box">
+        <h3>4. ¿Por qué es importante seguir recomendaciones para cuidar los equipos?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q4" value="a"> Para que se dañen más rápido</label>
+          <label><input type="radio" name="q4" value="b"> Detectar rápidamente sobrevoltajes</label>
+          <label><input type="radio" name="q4" value="c"> Cuidar la vida útil y aprovecharlos más tiempo</label>
+        </div>
+      </div>
+
+      <div class="question" id="q5-box">
+        <h3>5. ¿En dónde se deben usar los computadores para mantenerlos seguros?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q5" value="a"> Dejarlo en cualquier parte</label>
+          <label><input type="radio" name="q5" value="b"> En oficinas, alejándolos del polvo y corrientes de aire</label>
+          <label><input type="radio" name="q5" value="c"> Al aire libre</label>
+        </div>
+      </div>
+
+      <div class="question" id="q6-box">
+        <h3>6. ¿Qué recomendaciones hay para el buen uso de Internet?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q6" value="a"> No descargar programas desconocidos</label>
+          <label><input type="radio" name="q6" value="b"> No aceptar regalos en línea</label>
+          <label><input type="radio" name="q6" value="c"> Todas las anteriores</label>
+        </div>
+      </div>
+
+      <div class="question" id="q7-box">
+        <h3>7. ¿Cuáles son los dos tipos de mantenimiento para la computadora?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q7" value="a"> Facebook y WhatsApp</label>
+          <label><input type="radio" name="q7" value="b"> Hardware y Software</label>
+        </div>
+      </div>
+
+      <div class="question" id="q8-box">
+        <h3>8. ¿Cómo se apaga correctamente una computadora?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q8" value="a"> Apagar con el interruptor directamente (nunca hacerlo)</label>
+          <label><input type="radio" name="q8" value="b"> Apagar desde Windows y esperar que cierre</label>
+          <label><input type="radio" name="q8" value="c"> Solo pararse y dejarla encendida</label>
+        </div>
+      </div>
+
+      <div class="question" id="q9-box">
+        <h3>9. ¿Qué es lo primero que debes hacer antes de limpiar un computador?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q9" value="a"> Limpiarlo mientras está encendido</label>
+          <label><input type="radio" name="q9" value="b"> Apagarlo y desconectarlo de la corriente</label>
+          <label><input type="radio" name="q9" value="c"> Mojar la pantalla</label>
+        </div>
+      </div>
+
+      <div class="question" id="q10-box">
+        <h3>10. ¿Qué elemento NO se debe usar para limpiar una computadora?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q10" value="a"> Paño de microfibra</label>
+          <label><input type="radio" name="q10" value="b"> Alcohol isopropílico</label>
+          <label><input type="radio" name="q10" value="c"> Agua directamente sobre el teclado</label>
+        </div>
+      </div>
+
+      <div class="question" id="q11-box">
+        <h3>11. ¿Por qué es importante tener un antivirus actualizado?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q11" value="a"> Para proteger contra virus y programas maliciosos</label>
+          <label><input type="radio" name="q11" value="b"> Para que el PC funcione más lento</label>
+          <label><input type="radio" name="q11" value="c"> No es importante</label>
+        </div>
+      </div>
+
+      <div class="question" id="q12-box">
+        <h3>12. ¿Qué se debe evitar al usar una laptop?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q12" value="a"> Usarla sobre una cama o almohada</label>
+          <label><input type="radio" name="q12" value="b"> Colocarla en superficie plana y ventilada</label>
+          <label><input type="radio" name="q12" value="c"> Conectarla a un regulador</label>
+        </div>
+      </div>
+
+      <div class="question" id="q13-box">
+        <h3>13. ¿Qué sucede si no actualizamos el sistema operativo?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q13" value="a"> Nada, funciona igual</label>
+          <label><input type="radio" name="q13" value="b"> Puede ser más vulnerable a ataques o errores</label>
+          <label><input type="radio" name="q13" value="c"> Se apaga automáticamente</label>
+        </div>
+      </div>
+
+      <div class="question" id="q14-box">
+        <h3>14. ¿Qué debes hacer si notas ruidos extraños o sobrecalentamiento?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q14" value="a"> Ignorarlo</label>
+          <label><input type="radio" name="q14" value="b"> Apagar y revisar o llevar a mantenimiento</label>
+          <label><input type="radio" name="q14" value="c"> Golpearlo suavemente</label>
+        </div>
+      </div>
+
+      <div class="question" id="q15-box">
+        <h3>15. ¿Cuál es una buena práctica para mantener limpio el escritorio del sistema?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q15" value="a"> Llenarlo de accesos directos</label>
+          <label><input type="radio" name="q15" value="b"> Mantener solo los accesos necesarios</label>
+          <label><input type="radio" name="q15" value="c"> No borrar nunca nada</label>
+        </div>
+      </div>
+
+      <div class="question" id="q16-box">
+        <h3>16. ¿Qué debes evitar mientras comes o bebes cerca del PC?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q16" value="a"> Comer o beber directamente sobre el teclado</label>
+          <label><input type="radio" name="q16" value="b"> Tener cuidado y poner vaso alejado</label>
+          <label><input type="radio" name="q16" value="c"> Usar cubiertos de plástico</label>
+        </div>
+      </div>
+
+      <div class="question" id="q17-box">
+        <h3>17. ¿Cada cuánto es recomendable hacer mantenimiento preventivo?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q17" value="a"> Cada semana</label>
+          <label><input type="radio" name="q17" value="b"> Cada 6 meses o según uso</label>
+          <label><input type="radio" name="q17" value="c"> Nunca</label>
+        </div>
+      </div>
+
+      <div class="question" id="q18-box">
+        <h3>18. ¿Qué ayuda a prolongar la vida útil de la batería de una laptop?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q18" value="a"> Dejarla conectada todo el tiempo</label>
+          <label><input type="radio" name="q18" value="b"> Usarla con batería y conectar solo cuando necesario</label>
+          <label><input type="radio" name="q18" value="c"> Descargarla completamente siempre</label>
+        </div>
+      </div>
+
+      <div class="question" id="q19-box">
+        <h3>19. ¿Qué debes hacer antes de abrir una caja o archivo adjunto inesperado?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q19" value="a"> Abrir inmediatamente</label>
+          <label><input type="radio" name="q19" value="b"> Verificar remitente y escanear con antivirus</label>
+          <label><input type="radio" name="q19" value="c"> Reenviarlo a todos</label>
+        </div>
+      </div>
+
+      <div class="question" id="q20-box">
+        <h3>20. ¿Qué dispositivo protege contra picos de tensión y cortes breves de energía?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q20" value="a"> Protector de sobretensiones / UPS</label>
+          <label><input type="radio" name="q20" value="b"> Cargador de teléfono</label>
+          <label><input type="radio" name="q20" value="c"> Cable HDMI</label>
+        </div>
+      </div>
+
+      <div class="question" id="q21-box">
+        <h3>21. ¿Cuál es una buena práctica para contraseñas?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q21" value="a"> Usar la misma contraseña en todos lados</label>
+          <label><input type="radio" name="q21" value="b"> Usar contraseñas fuertes y diferentes, y un gestor</label>
+          <label><input type="radio" name="q21" value="c"> Compartir contraseñas por email</label>
+        </div>
+      </div>
+
+      <div class="question" id="q22-box">
+        <h3>22. ¿Qué estrategia ayuda a recuperar datos ante fallos?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q22" value="a"> No hacer copias y confiar en el disco</label>
+          <label><input type="radio" name="q22" value="b"> Hacer backups en disco externo y nube</label>
+          <label><input type="radio" name="q22" value="c"> Borrar versiones antiguas siempre</label>
+        </div>
+      </div>
+
+      <div class="question" id="q23-box">
+        <h3>23. ¿Qué se recomienda para disipación de calor en desktop?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q23" value="a"> Tapar las salidas de aire</label>
+          <label><input type="radio" name="q23" value="b"> Mantener salidas de aire libres y limpiar polvo</label>
+          <label><input type="radio" name="q23" value="c"> Ponerlo dentro de un armario cerrado</label>
+        </div>
+      </div>
+
+      <div class="question" id="q24-box">
+        <h3>24. ¿Qué tipo de limpiador es seguro para pantalla (LCD/LED)?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q24" value="a"> Limpiador especial para pantallas o paño de microfibra ligeramente humedecido</label>
+          <label><input type="radio" name="q24" value="b"> Limpiador de vidrios con amoníaco</label>
+          <label><input type="radio" name="q24" value="c"> Agua caliente y jabón</label>
+        </div>
+      </div>
+
+      <div class="question" id="q25-box">
+        <h3>25. ¿Qué debes hacer si un programa solicita permisos extraños o te pide datos personales sin motivo?</h3>
+        <div class="answers">
+          <label><input type="radio" name="q25" value="a"> Dar permisos sin leer</label>
+          <label><input type="radio" name="q25" value="b"> Rechazar, investigar y escanear con antivirus</label>
+          <label><input type="radio" name="q25" value="c"> Compartir en redes</label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="submit-btn">Enviar respuestas</button>
+        <button type="button" id="reset-btn">Reiniciar quiz</button>
+        <div style="margin-left:auto" class="small">25 preguntas — selección bloqueada</div>
+      </div>
+    </form>
+
+    <div id="result" style="display:none"></div>
+  </div>
+
+<script>
+  // Respuestas correctas
+  const correctAnswers = {
+    q1:"d", q2:"c", q3:"b", q4:"c", q5:"b", q6:"c", q7:"b", q8:"b",
+    q9:"b", q10:"c", q11:"a", q12:"a", q13:"b", q14:"b", q15:"b", q16:"a",
+    q17:"b", q18:"b", q19:"b", q20:"a", q21:"b", q22:"b", q23:"b", q24:"a", q25:"b"
+  };
+
+  // Bloqueo al seleccionar (no se puede cambiar)
+  document.querySelectorAll('input[type="radio"]').forEach(radio=>{
+    radio.addEventListener('change',(e)=>{
+      const name = e.target.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(i=> i.disabled = true);
+    });
+  });
+
+  // Al enviar: colorea correctas (verde) y las seleccionadas incorrectas (rojo)
+  document.getElementById('submit-btn').addEventListener('click', ()=>{
+    const total = 25;
+    let score = 0;
+    let wrong = 0;
+
+    // Primero, deshabilitar submit para evitar doble envío
+    document.getElementById('submit-btn').disabled = true;
+
+    for(let i=1;i<=total;i++){
+      const qName = 'q'+i;
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      // marcar la opción correcta en verde
+      const correctInput = document.querySelector(`input[name="${qName}"][value="${correctAnswers[qName]}"]`);
+      if(correctInput){
+        const correctLabel = correctInput.closest('label');
+        correctLabel && correctLabel.classList.add('correct');
+      }
+      if(selected){
+        if(selected.value === correctAnswers[qName]){
+          score++;
+        } else {
+          wrong++;
+          // marcar la seleccionada como incorrecta en rojo
+          const selLabel = selected.closest('label');
+          selLabel && selLabel.classList.add('incorrect');
+        }
+      } else {
+        // no seleccionada = fallo
+        wrong++;
+      }
+    }
+
+    // Deshabilitar todos los radios tras enviar
+    document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
+
+    // Mensaje personalizado de 3 niveles
+    const pct = score / total;
+    let msg = '';
+    if(pct === 1) msg = '🎉 Excelente';
+    else if(pct >= 0.6) msg = '👍 Bien hecho';
+    else msg = '🔔 Necesitas mejorar';
+
+    // Mostrar resultado (solo aciertos, fallos y mensaje breve)
+    const res = document.getElementById('result');
+    res.style.display = 'block';
+    res.innerHTML = `
+      <div style="font-weight:700;font-size:1.06rem">Resultado</div>
+      <div class="small" style="margin-top:6px">✅ Aciertos: ${score} / ${total} &nbsp;&nbsp; ❌ Fallos: ${wrong}</div>
+      <div style="margin-top:8px;font-weight:600">${msg}</div>
+    `;
+    // desplazar a resultado
+    res.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+
+  // Reiniciar
+  document.getElementById('reset-btn').addEventListener('click', ()=>{
+    if(!confirm('¿Reiniciar el quiz? Se borrarán todas las respuestas seleccionadas.')) return;
+    document.querySelectorAll('input[type="radio"]').forEach(i=>{
+      i.checked = false;
+      i.disabled = false;
+      const lab = i.closest('label');
+      lab && lab.classList.remove('correct','incorrect');
+    });
+    document.querySelectorAll('.question').forEach(q=> q.classList.remove('incorrect','correct'));
+    document.getElementById('submit-btn').disabled = false;
+    const res = document.getElementById('result');
+    res.style.display = 'none';
+    res.innerHTML = '';
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+</script>
 </body>
 </html>
