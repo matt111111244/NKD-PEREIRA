@@ -40,8 +40,10 @@
   .question{
     background:var(--card); padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.02);
     transition:transform .12s ease, box-shadow .12s ease;
+    will-change: transform;
   }
-  .question:hover{transform:translateY(-3px)}
+  .question:hover{ /* keep subtle */ }
+  .question.lift{ transform:translateY(-8px); box-shadow:0 18px 40px rgba(2,8,23,0.55); }
   .question h3{margin:0 0 8px;font-size:1rem}
   .answers label{
     display:block;padding:8px 12px;border-radius:8px;margin:8px 0;cursor:pointer;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);
@@ -125,7 +127,7 @@
       </div>
 
       <div class="question" id="q6-box">
-        <h3>6. ¿hola recomendaciones hay para el buen uso de Internet?</h3>
+        <h3>6. ¿Qué recomendaciones hay para el buen uso de Internet?</h3>
         <div class="answers">
           <label><input type="radio" name="q6" value="a"> No descargar programas desconocidos</label>
           <label><input type="radio" name="q6" value="b"> No aceptar regalos en línea</label>
@@ -330,6 +332,33 @@
     });
   });
 
+  // Efecto: al apuntar a una respuesta, sube toda la pregunta
+  // Usamos listeners en labels para añadir/quitar clase 'lift' en su container .question
+  document.querySelectorAll('.answers label').forEach(label=>{
+    label.addEventListener('mouseenter', (e)=>{
+      const q = label.closest('.question');
+      if(q) q.classList.add('lift');
+      // opcional: cambiar cursor
+      label.style.cursor = 'pointer';
+    });
+    label.addEventListener('mouseleave', (e)=>{
+      const q = label.closest('.question');
+      if(q) q.classList.remove('lift');
+    });
+    // tambien para focus (accesibilidad teclado)
+    const input = label.querySelector('input[type="radio"]');
+    if(input){
+      input.addEventListener('focus', ()=> {
+        const q = input.closest('.question');
+        if(q) q.classList.add('lift');
+      });
+      input.addEventListener('blur', ()=> {
+        const q = input.closest('.question');
+        if(q) q.classList.remove('lift');
+      });
+    }
+  });
+
   // Al enviar: colorea solo las seleccionadas (verde si correcta, rojo si incorrecta)
   document.getElementById('submit-btn').addEventListener('click', ()=>{
     const total = 25;
@@ -343,14 +372,13 @@
       const qName = 'q'+i;
       const selected = document.querySelector(`input[name="${qName}"]:checked`);
       if(selected){
+        // marcar sólo la etiqueta de la opción seleccionada
         const selLabel = selected.closest('label');
         if(selected.value === correctAnswers[qName]){
           score++;
-          // Solo la opción que elegiste y que es correcta se marca verde
           selLabel && selLabel.classList.add('correct');
         } else {
           wrong++;
-          // Solo la opción que elegiste y que es incorrecta se marca rojo
           selLabel && selLabel.classList.add('incorrect');
         }
       } else {
@@ -362,6 +390,9 @@
     // Deshabilitar todos los radios tras enviar (por seguridad)
     document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
 
+    // Calcular nota sobre 5.0 con 1 decimal
+    const nota = ((score / total) * 5).toFixed(1);
+
     // Mensaje personalizado según rendimiento
     const pct = score / total;
     let msg = '';
@@ -369,12 +400,13 @@
     else if(pct >= 0.6) msg = '👍 Bien hecho';
     else msg = '🔔 Necesitas mejorar';
 
-    // Mostrar resultado (aciertos, fallos y mensaje breve)
+    // Mostrar resultado (aciertos, fallos, nota y mensaje breve)
     const res = document.getElementById('result');
     res.style.display = 'block';
     res.innerHTML = `
       <div style="font-weight:700;font-size:1.06rem">Resultado</div>
       <div class="small" style="margin-top:6px">✅ Aciertos: ${score} / ${total} &nbsp;&nbsp; ❌ Fallos: ${wrong}</div>
+      <div class="small" style="margin-top:6px">📘 Nota final: <strong>${nota} / 5.0</strong></div>
       <div style="margin-top:8px;font-weight:600">${msg}</div>
     `;
     // desplazar a resultado
