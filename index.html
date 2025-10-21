@@ -7,19 +7,27 @@
 <style>
   :root{
     --bg1:#041226; --accent:#47a7ff; --accent2:#7ee7c7;
-    --good:#c8f7c5; --bad:#f8d7da; --card:rgba(255,255,255,0.03);
+    --accent-bright: #2ee0ff;
+    --good:#dff7e8; /* verde clarito para selección */
+    --good-border: rgba(75, 210, 140, 0.18);
+    --bad:#f8d7da;
+    --card:rgba(255,255,255,0.03);
     --text:#e6eef8;
+    --glass: rgba(255,255,255,0.03);
   }
   *{box-sizing:border-box}
+  html,body{height:100%}
   body{
     margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
     background: linear-gradient(135deg,#021032 0%, #052a4a 60%);
     color:var(--text); padding:36px 12px;
+    cursor: none; /* hide default cursor because we use custom */
   }
   .wrap{
     max-width:980px; margin:0 auto; background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
     border-radius:14px; padding:26px; box-shadow:0 12px 40px rgba(2,8,23,0.6);
     border:1px solid rgba(255,255,255,0.03); backdrop-filter: blur(6px);
+    position:relative;
   }
   /* Header copyright */
   .topline{
@@ -39,18 +47,38 @@
   form{}
   .question{
     background:var(--card); padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.02);
-    transition:transform .12s ease, box-shadow .12s ease;
+    transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, background .18s ease;
     will-change: transform;
+    position:relative;
+    overflow:visible;
   }
-  .question:hover{ /* keep subtle */ }
-  .question.lift{ transform:translateY(-8px); box-shadow:0 18px 40px rgba(2,8,23,0.55); }
+  .question.lift{ transform:translateY(-10px); box-shadow:0 24px 50px rgba(2,8,23,0.6); }
   .question h3{margin:0 0 8px;font-size:1rem}
   .answers label{
-    display:block;padding:8px 12px;border-radius:8px;margin:8px 0;cursor:pointer;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);
-    transition:background .12s ease, transform .08s ease;
+    display:block;padding:10px 14px;border-radius:10px;margin:10px 0;cursor:pointer;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.03);
+    transition: background .16s ease, transform .12s ease, box-shadow .12s ease;
+    position:relative;
   }
-  .answers label:hover{background: rgba(255,255,255,0.02); transform:translateX(4px)}
+  /* Hover: ilumina la etiqueta con un suave color azul y sube la tarjeta */
+  .answers label:hover{
+    background: linear-gradient(90deg, rgba(46,224,255,0.06), rgba(71,167,255,0.04));
+    transform: translateX(4px);
+    box-shadow: 0 8px 24px rgba(46,224,255,0.04);
+  }
+  /* cuando el label está en foco (accesibilidad teclado) */
+  .answers label:focus-within{
+    outline: none;
+    box-shadow: 0 8px 24px rgba(46,224,255,0.06);
+  }
+
   .answers input{margin-right:10px;transform:translateY(1px)}
+  /* selección permanente al elegir (verde clarito con brillo) */
+  .answers label.selected{
+    background: linear-gradient(90deg, rgba(223,247,232,0.9), rgba(223,247,232,0.6));
+    border: 1px solid var(--good-border);
+    box-shadow: 0 10px 30px rgba(75,210,140,0.08), 0 0 18px rgba(46,224,255,0.03) inset;
+    color: #042916;
+  }
   .correct{background:var(--good) !important}
   .incorrect{background:var(--bad) !important}
   .actions{display:flex;gap:12px;align-items:center;margin-top:16px}
@@ -59,7 +87,51 @@
   #submit-btn:disabled{opacity:0.5;cursor:not-allowed}
   #result{margin-top:16px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(0,0,0,0.1), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02)}
   .small{font-size:0.92rem;color:rgba(230,238,248,0.85)}
-  @media (max-width:720px){header{flex-direction:column;align-items:flex-start}}
+
+  /* Custom futuristic cursor (blue electric) */
+  .custom-cursor{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 30% 30%, rgba(46,224,255,1), rgba(46,224,255,0.7) 30%, rgba(71,167,255,0.15) 60%, transparent 70%);
+    box-shadow: 0 0 14px rgba(46,224,255,0.9), 0 0 30px rgba(71,167,255,0.15);
+    z-index: 9999;
+    transition: width .12s ease, height .12s ease, background .12s ease, box-shadow .12s ease;
+    mix-blend-mode: screen;
+  }
+  /* outer glow ring */
+  .custom-cursor::after{
+    content: "";
+    position: absolute;
+    left:50%; top:50%;
+    width: 54px; height: 54px;
+    transform: translate(-50%, -50%);
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(46,224,255,0.12), transparent 40%);
+    filter: blur(8px);
+    opacity: 0.9;
+  }
+  /* enlarged state for hovering interactive elements */
+  .custom-cursor.enlarge{
+    width: 34px; height: 34px;
+    box-shadow: 0 0 20px rgba(46,224,255,1), 0 0 48px rgba(71,167,255,0.2);
+  }
+  /* smaller on click */
+  .custom-cursor.click{
+    transform: translate(-50%, -50%) scale(0.9);
+    transition: transform .06s ease;
+  }
+
+  @media (max-width:720px){
+    header{flex-direction:column;align-items:flex-start}
+    .custom-cursor{ display:none } /* hide custom cursor on touch devices */
+    body{cursor:auto}
+  }
 </style>
 </head>
 <body>
@@ -74,10 +146,10 @@
       </div>
     </header>
 
-    <form id="quizForm">
+    <form id="quizForm" autocomplete="off">
       <p class="note">Selecciona una opción por pregunta. Cada pregunta se bloqueará al seleccionar.</p>
 
-      <!-- Preguntas 1..25 -->
+      <!-- Preguntas 1..25 (idénticas a las que habías puesto) -->
       <div class="question" id="q1-box">
         <h3>1. ¿Cómo contribuir efectivamente a que el lugar de trabajo sea seguro para las personas?</h3>
         <div class="answers">
@@ -315,37 +387,90 @@
     <div id="result" style="display:none"></div>
   </div>
 
+  <!-- custom cursor element -->
+  <div class="custom-cursor" id="customCursor" aria-hidden="true"></div>
+
 <script>
-  // Respuestas correctas
+  // Respuestas correctas (igual que antes)
   const correctAnswers = {
     q1:"d", q2:"c", q3:"b", q4:"c", q5:"b", q6:"c", q7:"b", q8:"b",
     q9:"b", q10:"c", q11:"a", q12:"a", q13:"b", q14:"b", q15:"b", q16:"a",
     q17:"b", q18:"b", q19:"b", q20:"a", q21:"b", q22:"b", q23:"b", q24:"a", q25:"b"
   };
 
-  // Bloqueo al seleccionar (no se puede cambiar)
+  // --- Custom cursor logic (futuristic blue) ---
+  (function(){
+    const cursor = document.getElementById('customCursor');
+    if(!cursor) return;
+
+    let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+    let curX = mouseX, curY = mouseY;
+    const speed = 0.16; // lower = smoother lag
+
+    // track real mouse
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    }, {passive:true});
+
+    // enlarge on interactive elements
+    function setEnlarge(flag){
+      if(flag) cursor.classList.add('enlarge'); else cursor.classList.remove('enlarge');
+    }
+
+    // click feedback
+    window.addEventListener('mousedown', ()=>{ cursor.classList.add('click'); });
+    window.addEventListener('mouseup', ()=>{ cursor.classList.remove('click'); });
+
+    // interactive node detection: when hovering labels or buttons, enlarge
+    const interactiveSelector = 'button, a, label, input[type="radio"], .answers label';
+    document.addEventListener('mouseover', (e)=>{
+      if(e.target.closest(interactiveSelector)) setEnlarge(true);
+    });
+    document.addEventListener('mouseout', (e)=>{
+      if(e.target.closest(interactiveSelector) === null) setEnlarge(false);
+    });
+
+    // animate position with requestAnimationFrame for smoothness
+    function raf(){
+      curX += (mouseX - curX) * speed;
+      curY += (mouseY - curY) * speed;
+      cursor.style.left = curX + 'px';
+      cursor.style.top = curY + 'px';
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  })();
+
+  // --- Selection behavior: when choose option -> mark it selected (green tone) and lock the question ---
   document.querySelectorAll('input[type="radio"]').forEach(radio=>{
     radio.addEventListener('change',(e)=>{
       const name = e.target.name;
+      // mark selected label with 'selected' and remove selected class from siblings
+      document.querySelectorAll(`input[name="${name}"]`).forEach(i=>{
+        const lab = i.closest('label');
+        lab && lab.classList.remove('selected');
+      });
+      const selLabel = e.target.closest('label');
+      selLabel && selLabel.classList.add('selected');
+
       // Desactivar las opciones de esa pregunta para que no se puedan cambiar
       document.querySelectorAll(`input[name="${name}"]`).forEach(i=> i.disabled = true);
     });
   });
 
-  // Efecto: al apuntar a una respuesta, sube toda la pregunta
-  // Usamos listeners en labels para añadir/quitar clase 'lift' en su container .question
+  // Efecto: al apuntar a una respuesta, sube toda la pregunta (ya había, reforzamos)
   document.querySelectorAll('.answers label').forEach(label=>{
     label.addEventListener('mouseenter', (e)=>{
       const q = label.closest('.question');
       if(q) q.classList.add('lift');
-      // opcional: cambiar cursor
-      label.style.cursor = 'pointer';
+      label.style.cursor = 'none'; // hide fallback pointer because we use custom cursor
     });
     label.addEventListener('mouseleave', (e)=>{
       const q = label.closest('.question');
       if(q) q.classList.remove('lift');
     });
-    // tambien para focus (accesibilidad teclado)
+    // focus for keyboard accessibility
     const input = label.querySelector('input[type="radio"]');
     if(input){
       input.addEventListener('focus', ()=> {
@@ -359,48 +484,47 @@
     }
   });
 
-  // Al enviar: colorea solo las seleccionadas (verde si correcta, rojo si incorrecta)
+  // --- Submit logic: color only the chosen options (green if correct, red if incorrect), compute score and grade over 5.0 with 1 decimal ---
   document.getElementById('submit-btn').addEventListener('click', ()=>{
     const total = 25;
     let score = 0;
     let wrong = 0;
 
-    // Evitar doble envío
+    // Disable submit to prevent double click
     document.getElementById('submit-btn').disabled = true;
 
     for(let i=1;i<=total;i++){
       const qName = 'q'+i;
       const selected = document.querySelector(`input[name="${qName}"]:checked`);
       if(selected){
-        // marcar sólo la etiqueta de la opción seleccionada
         const selLabel = selected.closest('label');
         if(selected.value === correctAnswers[qName]){
           score++;
+          // ensure the visual shows correct (override selected look subtly)
           selLabel && selLabel.classList.add('correct');
         } else {
           wrong++;
           selLabel && selLabel.classList.add('incorrect');
         }
       } else {
-        // No seleccionada = fallo (se cuenta como fallo) pero no se marca ninguna etiqueta
+        // unanswered counts as wrong
         wrong++;
       }
     }
 
-    // Deshabilitar todos los radios tras enviar (por seguridad)
+    // For safety, disable any remaining radios
     document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
 
-    // Calcular nota sobre 5.0 con 1 decimal
+    // compute grade over 5.0, 1 decimal
     const nota = ((score / total) * 5).toFixed(1);
 
-    // Mensaje personalizado según rendimiento
+    // message
     const pct = score / total;
     let msg = '';
     if(pct === 1) msg = '🎉 Excelente';
     else if(pct >= 0.6) msg = '👍 Bien hecho';
     else msg = '🔔 Necesitas mejorar';
 
-    // Mostrar resultado (aciertos, fallos, nota y mensaje breve)
     const res = document.getElementById('result');
     res.style.display = 'block';
     res.innerHTML = `
@@ -409,18 +533,18 @@
       <div class="small" style="margin-top:6px">📘 Nota final: <strong>${nota} / 5.0</strong></div>
       <div style="margin-top:8px;font-weight:600">${msg}</div>
     `;
-    // desplazar a resultado
+    // smooth scroll to result
     res.scrollIntoView({behavior:'smooth', block:'center'});
   });
 
-  // Reiniciar
+  // --- Reiniciar ---
   document.getElementById('reset-btn').addEventListener('click', ()=>{
     if(!confirm('¿Reiniciar el quiz? Se borrarán todas las respuestas seleccionadas.')) return;
     document.querySelectorAll('input[type="radio"]').forEach(i=>{
       i.checked = false;
       i.disabled = false;
       const lab = i.closest('label');
-      lab && lab.classList.remove('correct','incorrect');
+      lab && lab.classList.remove('correct','incorrect','selected');
     });
     document.getElementById('submit-btn').disabled = false;
     const res = document.getElementById('result');
