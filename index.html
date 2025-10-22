@@ -5,137 +5,202 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Quiz Final: Cuidado y Seguridad del PC</title>
 <style>
+  /* -------- Animated theme / motion system -------- */
   :root{
     --bg1:#041226; --accent:#47a7ff; --accent2:#7ee7c7;
-    --accent-bright: #2ee0ff;
-    --good:#dff7e8; /* verde clarito para selección */
-    --good-border: rgba(75, 210, 140, 0.18);
-    --bad:#f8d7da;
-    --card:rgba(255,255,255,0.03);
-    --text:#e6eef8;
-    --glass: rgba(255,255,255,0.03);
+    --accent-bright:#2ee0ff;
+    --good:#dff7e8; --good-border: rgba(75,210,140,0.18);
+    --bad:#f8d7da; --card:rgba(255,255,255,0.03);
+    --text:#e6eef8; --glass: rgba(255,255,255,0.03);
+    --danger:#ff6b6b;
+    --motion-fast: 160ms;
+    --motion-medium: 320ms;
+    --motion-slow: 600ms;
+    --ease: cubic-bezier(.2,.9,.25,1);
   }
+
+  /* base */
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
-    background: linear-gradient(135deg,#021032 0%, #052a4a 60%);
-    color:var(--text); padding:36px 12px;
-    cursor: none; /* hide default cursor because we use custom */
-  }
-  .wrap{
-    max-width:980px; margin:0 auto; background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    border-radius:14px; padding:26px; box-shadow:0 12px 40px rgba(2,8,23,0.6);
-    border:1px solid rgba(255,255,255,0.03); backdrop-filter: blur(6px);
-    position:relative;
-  }
-  /* Header copyright */
-  .topline{
-    text-align:center;
-    font-weight:700;
-    color:rgba(210,238,248,0.9);
-    margin-bottom:12px;
-    font-size:0.98rem;
-    letter-spacing:0.3px;
+    color:var(--text); padding:36px 12px; cursor: crosshair;
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(46,224,255,0.04), transparent),
+      radial-gradient(900px 400px at 90% 90%, rgba(126,231,199,0.02), transparent),
+      linear-gradient(135deg,#021032 0%, #052a4a 60%);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    transition: background 900ms var(--ease), color 450ms var(--ease);
   }
 
-  header{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-  .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(135deg,var(--accent), #7b61ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#031026;transform:rotate(-6deg)}
-  h1{margin:0;font-size:1.4rem}
+  /* subtle page load flourish */
+  .wrap{
+    max-width:980px; margin:14px auto; padding:26px;
+    border-radius:14px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: 0 18px 48px rgba(2,8,23,0.6);
+    border:1px solid rgba(255,255,255,0.03);
+    transform-origin: center top;
+    animation: wrapEntrance 720ms var(--ease) both;
+    will-change: transform, opacity;
+  }
+  @keyframes wrapEntrance {
+    from { transform: translateY(14px) scale(.995); opacity:0 }
+    to   { transform: translateY(0) scale(1); opacity:1 }
+  }
+
+  .topline{ text-align:center; font-weight:700; color:rgba(210,238,248,0.9); margin-bottom:12px; font-size:0.98rem; letter-spacing:0.3px; }
+
+  header{display:flex;align-items:center;gap:14px;margin-bottom:12px; transform-origin:left center}
+  .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(135deg,var(--accent), #7b61ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#031026;transform:rotate(-6deg); box-shadow: 0 8px 30px rgba(71,167,255,0.08)}
+  h1{margin:0;font-size:1.4rem; letter-spacing: .2px; }
   .lead{margin:6px 0 0;color:rgba(230,238,248,0.85);font-size:0.95rem}
   .note{font-size:0.92rem;color:rgba(230,238,248,0.82);margin:10px 0 14px}
-  form{}
+
+  /* QUESTIONS: card motion and subtle micro-interactions */
   .question{
-    background:var(--card); padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.02);
-    transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, background .18s ease;
-    will-change: transform;
+    background:var(--card);
+    padding:12px;border-radius:12px;margin-bottom:14px;
+    border:1px solid rgba(255,255,255,0.02);
+    transition: transform var(--motion-medium) var(--ease), box-shadow var(--motion-medium) var(--ease), filter var(--motion-medium);
+    will-change: transform, box-shadow;
+    transform: translateZ(0);
     position:relative;
     overflow:visible;
+    opacity: 0;
+    animation: questionIn .6s var(--ease) both;
   }
-  .question.lift{ transform:translateY(-10px); box-shadow:0 24px 50px rgba(2,8,23,0.6); }
-  .question h3{margin:0 0 8px;font-size:1rem}
+  .question.enter{ /* JS will add staggered transitionDelay */ }
+  @keyframes questionIn {
+    from { opacity:0; transform: translateY(18px) scale(.996) }
+    to   { opacity:1; transform: translateY(0) scale(1) }
+  }
+  .question.lift{ transform: translateY(-12px) scale(1.01); box-shadow:0 28px 68px rgba(2,8,23,0.65); filter:brightness(1.02); }
+
+  .question h3{margin:0 0 8px;font-size:1rem; transition: color var(--motion-fast) var(--ease) }
+
   .answers label{
-    display:block;padding:10px 14px;border-radius:10px;margin:10px 0;cursor:pointer;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.03);
-    transition: background .16s ease, transform .12s ease, box-shadow .12s ease;
-    position:relative;
+    display:block; padding:12px 16px; border-radius:10px; margin:10px 0; cursor:pointer;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.002));
+    border:1px solid rgba(255,255,255,0.03);
+    transition: background var(--motion-fast) var(--ease), transform var(--motion-fast) var(--ease), box-shadow var(--motion-fast) var(--ease), border-color var(--motion-fast);
+    position:relative; user-select:none;
+    transform-origin:left center;
   }
-  /* Hover: ilumina la etiqueta con un suave color azul y sube la tarjeta */
+
+  /* hover micro-motion & sheen */
   .answers label:hover{
-    background: linear-gradient(90deg, rgba(46,224,255,0.06), rgba(71,167,255,0.04));
-    transform: translateX(4px);
-    box-shadow: 0 8px 24px rgba(46,224,255,0.04);
+    transform: translateX(8px) scale(1.01);
+    box-shadow: 0 16px 40px rgba(46,224,255,0.06);
+    background: linear-gradient(90deg, rgba(46,224,255,0.06), rgba(71,167,255,0.03));
   }
-  /* cuando el label está en foco (accesibilidad teclado) */
-  .answers label:focus-within{
-    outline: none;
-    box-shadow: 0 8px 24px rgba(46,224,255,0.06);
+  .answers label::before{
+    content:""; position:absolute; left:-6px; top:0; bottom:0; width:6px; border-top-left-radius:10px; border-bottom-left-radius:10px;
+    background: linear-gradient(180deg, rgba(46,224,255,0.14), rgba(71,167,255,0.06)); transform: scaleY(0); transform-origin:center; transition: transform var(--motion-fast);
+    pointer-events:none; opacity:0.0;
   }
+  .answers label:hover::before{ transform: scaleY(1); opacity:1; }
 
-  .answers input{margin-right:10px;transform:translateY(1px)}
-  /* selección permanente al elegir (verde clarito con brillo) */
+  /* focus support */
+  .answers label:focus-within{ outline:none; box-shadow:0 10px 30px rgba(46,224,255,0.06) }
+
+  .answers input{margin-right:12px; transform:translateY(1px); accent-color: var(--accent); }
+
+  /* selected state - bright gentle green */
   .answers label.selected{
-    background: linear-gradient(90deg, rgba(223,247,232,0.9), rgba(223,247,232,0.6));
+    background: linear-gradient(90deg, rgba(223,247,232,0.98), rgba(223,247,232,0.72));
     border: 1px solid var(--good-border);
-    box-shadow: 0 10px 30px rgba(75,210,140,0.08), 0 0 18px rgba(46,224,255,0.03) inset;
+    box-shadow: 0 12px 36px rgba(75,210,140,0.08), inset 0 0 18px rgba(46,224,255,0.02);
     color: #042916;
+    transform: translateX(2px) scale(1.005);
   }
-  .correct{background:var(--good) !important}
-  .incorrect{background:var(--bad) !important}
+
+  /* result states */
+  .correct{ background: linear-gradient(90deg, rgba(223,247,232,0.98), rgba(223,247,232,0.78)) !important; border-color: var(--good-border) !important; box-shadow:0 14px 36px rgba(75,210,140,0.08) !important; }
+  .incorrect{ background: linear-gradient(90deg, rgba(255,235,235,0.98), rgba(255,220,220,0.86)) !important; box-shadow:0 12px 36px rgba(255,107,107,0.06) !important; border-color: rgba(255,107,107,0.08) !important; }
+
+  /* small micro-animations for buttons/timer/result */
   .actions{display:flex;gap:12px;align-items:center;margin-top:16px}
-  #submit-btn{background:linear-gradient(90deg,var(--accent), #7b61ff);color:#031026;border:0;padding:12px 18px;border-radius:9px;font-size:1rem;cursor:pointer;box-shadow:0 8px 24px rgba(71,167,255,0.12)}
-  #reset-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:10px 14px;border-radius:9px;cursor:pointer}
-  #submit-btn:disabled{opacity:0.5;cursor:not-allowed}
-  #result{margin-top:16px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(0,0,0,0.1), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.02)}
-  .small{font-size:0.92rem;color:rgba(230,238,248,0.85)}
+  #submit-btn, #reset-btn{
+    padding:12px 18px; border-radius:10px; border:0; font-weight:600;
+    transition: transform var(--motion-fast) var(--ease), box-shadow var(--motion-fast);
+    will-change: transform, box-shadow;
+  }
+  #submit-btn{
+    background: linear-gradient(90deg,var(--accent), #7b61ff);
+    color:#031026; box-shadow:0 12px 40px rgba(71,167,255,0.12);
+  }
+  #submit-btn:hover{ transform: translateY(-6px) scale(1.02); box-shadow:0 26px 60px rgba(71,167,255,0.16) }
+  #submit-btn:active{ transform: translateY(-2px) scale(.995) }
+  #reset-btn{
+    background: transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text);
+  }
+  #submit-btn:disabled{ opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none }
 
-  /* Custom futuristic cursor (blue electric) */
-  .custom-cursor{
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle at 30% 30%, rgba(46,224,255,1), rgba(46,224,255,0.7) 30%, rgba(71,167,255,0.15) 60%, transparent 70%);
-    box-shadow: 0 0 14px rgba(46,224,255,0.9), 0 0 30px rgba(71,167,255,0.15);
-    z-index: 9999;
-    transition: width .12s ease, height .12s ease, background .12s ease, box-shadow .12s ease;
-    mix-blend-mode: screen;
+  #result{
+    margin-top:16px; padding:14px; border-radius:12px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.02);
+    transform-origin:center; animation: resultPop .42s var(--ease) both;
   }
-  /* outer glow ring */
-  .custom-cursor::after{
-    content: "";
-    position: absolute;
-    left:50%; top:50%;
-    width: 54px; height: 54px;
-    transform: translate(-50%, -50%);
-    border-radius:50%;
-    background: radial-gradient(circle, rgba(46,224,255,0.12), transparent 40%);
-    filter: blur(8px);
-    opacity: 0.9;
+  @keyframes resultPop { from { transform: translateY(8px) scale(.995); opacity:0 } to { transform: translateY(0) scale(1); opacity:1 } }
+
+  /* TIMER pulse */
+  .timer-row { display:flex; justify-content:center; margin-bottom:8px; }
+  #timer{
+    font-weight:700; font-size:0.98rem; padding:8px 12px; border-radius:10px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03); color:var(--text);
+    box-shadow:0 8px 24px rgba(2,8,23,0.36); min-width:110px; text-align:center;
+    transition: transform var(--motion-medium) var(--ease), box-shadow var(--motion-medium);
   }
-  /* enlarged state for hovering interactive elements */
-  .custom-cursor.enlarge{
-    width: 34px; height: 34px;
-    box-shadow: 0 0 20px rgba(46,224,255,1), 0 0 48px rgba(71,167,255,0.2);
+  #timer.warn{
+    color:var(--danger); box-shadow:0 12px 34px rgba(255,107,107,0.14);
+    animation: timerPulse 900ms ease-in-out infinite;
   }
-  /* smaller on click */
-  .custom-cursor.click{
-    transform: translate(-50%, -50%) scale(0.9);
-    transition: transform .06s ease;
+  @keyframes timerPulse {
+    0% { transform: scale(1) }
+    50% { transform: scale(1.06) rotate(-0.6deg) }
+    100% { transform: scale(1) }
   }
 
+  /* overlay animations */
+  .timeout-overlay{
+    transition: opacity var(--motion-medium) var(--ease), transform var(--motion-medium) var(--ease);
+    transform: translateY(6px);
+  }
+  .timeout-overlay.show{ transform: translateY(0); }
+
+  /* custom cursor (hidden on mobile) - small animation */
+  .custom-cursor{ display:block; position:fixed; left:0; top:0; width:14px; height:14px; border-radius:50%; background:var(--accent2); box-shadow:0 6px 18px rgba(46,224,255,0.12); pointer-events:none; transform:translate(-50%,-50%) scale(1); transition: transform 140ms var(--ease), box-shadow 160ms; z-index:9999; }
+  .custom-cursor.enlarge{ transform: translate(-50%,-50%) scale(2.2); box-shadow:0 18px 48px rgba(46,224,255,0.22); }
+  .custom-cursor.click{ transform: translate(-50%,-50%) scale(1.6); transition: transform 80ms ease-out; }
+
+  /* decorative sheen across the header logo */
+  .logo::after{
+    content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    mix-blend-mode: overlay; opacity:0.9; transform: translateX(-120%);
+    animation: sheen 2.6s linear infinite;
+  }
+  @keyframes sheen { 0% { transform: translateX(-120%) } 100% { transform: translateX(120%) } }
+
+  /* responsive adjustments */
   @media (max-width:720px){
     header{flex-direction:column;align-items:flex-start}
-    .custom-cursor{ display:none } /* hide custom cursor on touch devices */
-    body{cursor:auto}
+    .custom-cursor{ display:none } body{ cursor:auto }
+    .answers label{ padding:10px }
   }
 </style>
 </head>
 <body>
   <div class="wrap">
+    <!-- Timer above copyright -->
+    <div class="timer-row">
+      <div id="timer" aria-live="polite">04:30</div>
+    </div>
+
     <div class="topline">© Mateo — Creador | Profe Martha</div>
 
     <header>
@@ -149,7 +214,7 @@
     <form id="quizForm" autocomplete="off">
       <p class="note">Selecciona una opción por pregunta. Cada pregunta se bloqueará al seleccionar.</p>
 
-      <!-- Preguntas 1..25 (idénticas a las que habías puesto) -->
+      <!-- Preguntas 1..25 -->
       <div class="question" id="q1-box">
         <h3>1. ¿Cómo contribuir efectivamente a que el lugar de trabajo sea seguro para las personas?</h3>
         <div class="answers">
@@ -387,42 +452,99 @@
     <div id="result" style="display:none"></div>
   </div>
 
+  <!-- timeout overlay -->
+  <div class="timeout-overlay" id="timeoutOverlay" role="alert" aria-hidden="true">
+    <div class="timeout-card">
+      <div class="timeout-emoji">😢</div>
+      <div class="timeout-text">No pudiste resolverlo a tiempo...</div>
+    </div>
+  </div>
+
   <!-- custom cursor element -->
   <div class="custom-cursor" id="customCursor" aria-hidden="true"></div>
 
 <script>
-  // Respuestas correctas (igual que antes)
+  // Respuestas correctas
   const correctAnswers = {
     q1:"d", q2:"c", q3:"b", q4:"c", q5:"b", q6:"c", q7:"b", q8:"b",
     q9:"b", q10:"c", q11:"a", q12:"a", q13:"b", q14:"b", q15:"b", q16:"a",
     q17:"b", q18:"b", q19:"b", q20:"a", q21:"b", q22:"b", q23:"b", q24:"a", q25:"b"
   };
 
-  // --- Custom cursor logic (futuristic blue) ---
+  // ---- TIMER ----
+  const START_SECONDS = 270; // 4:30 = 270s
+  let timeLeft = START_SECONDS;
+  let timerInterval = null;
+  const timerEl = document.getElementById('timer');
+  const overlayEl = document.getElementById('timeoutOverlay');
+  const submitBtn = document.getElementById('submit-btn');
+
+  function formatTime(s){
+    const mm = Math.floor(s/60).toString().padStart(2,'0');
+    const ss = (s%60).toString().padStart(2,'0');
+    return `${mm}:${ss}`;
+  }
+
+  function updateTimerUI(){
+    timerEl.textContent = formatTime(timeLeft);
+    if(timeLeft <= 30){
+      timerEl.classList.add('warn');
+    } else {
+      timerEl.classList.remove('warn');
+    }
+  }
+
+  function startTimer(){
+    clearInterval(timerInterval);
+    timeLeft = START_SECONDS;
+    updateTimerUI();
+    timerInterval = setInterval(()=>{
+      timeLeft--;
+      updateTimerUI();
+      if(timeLeft <= 0){
+        clearInterval(timerInterval);
+        handleTimeUp();
+      }
+    }, 1000);
+  }
+
+  function stopTimer(){
+    clearInterval(timerInterval);
+  }
+
+  function handleTimeUp(){
+    // disable inputs and show overlay
+    document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
+    submitBtn.disabled = true;
+    overlayEl.classList.add('show');
+    overlayEl.setAttribute('aria-hidden','false');
+
+    // after 6 seconds hide overlay and reset quiz automatically
+    setTimeout(()=>{
+      overlayEl.classList.remove('show');
+      overlayEl.setAttribute('aria-hidden','true');
+      resetQuiz(true); // auto flag to avoid confirm
+    }, 6000);
+  }
+
+  // ---- Custom cursor logic ----
   (function(){
     const cursor = document.getElementById('customCursor');
     if(!cursor) return;
-
     let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
     let curX = mouseX, curY = mouseY;
-    const speed = 0.16; // lower = smoother lag
-
-    // track real mouse
+    const speed = 0.16;
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
     }, {passive:true});
 
-    // enlarge on interactive elements
     function setEnlarge(flag){
       if(flag) cursor.classList.add('enlarge'); else cursor.classList.remove('enlarge');
     }
-
-    // click feedback
     window.addEventListener('mousedown', ()=>{ cursor.classList.add('click'); });
     window.addEventListener('mouseup', ()=>{ cursor.classList.remove('click'); });
 
-    // interactive node detection: when hovering labels or buttons, enlarge
     const interactiveSelector = 'button, a, label, input[type="radio"], .answers label';
     document.addEventListener('mouseover', (e)=>{
       if(e.target.closest(interactiveSelector)) setEnlarge(true);
@@ -431,7 +553,6 @@
       if(e.target.closest(interactiveSelector) === null) setEnlarge(false);
     });
 
-    // animate position with requestAnimationFrame for smoothness
     function raf(){
       curX += (mouseX - curX) * speed;
       curY += (mouseY - curY) * speed;
@@ -442,11 +563,11 @@
     requestAnimationFrame(raf);
   })();
 
-  // --- Selection behavior: when choose option -> mark it selected (green tone) and lock the question ---
+  // ---- Selection behavior ----
   document.querySelectorAll('input[type="radio"]').forEach(radio=>{
     radio.addEventListener('change',(e)=>{
       const name = e.target.name;
-      // mark selected label with 'selected' and remove selected class from siblings
+      // remove 'selected' from all siblings
       document.querySelectorAll(`input[name="${name}"]`).forEach(i=>{
         const lab = i.closest('label');
         lab && lab.classList.remove('selected');
@@ -454,23 +575,22 @@
       const selLabel = e.target.closest('label');
       selLabel && selLabel.classList.add('selected');
 
-      // Desactivar las opciones de esa pregunta para que no se puedan cambiar
+      // lock question choices
       document.querySelectorAll(`input[name="${name}"]`).forEach(i=> i.disabled = true);
     });
   });
 
-  // Efecto: al apuntar a una respuesta, sube toda la pregunta (ya había, reforzamos)
+  // hover lifts
   document.querySelectorAll('.answers label').forEach(label=>{
     label.addEventListener('mouseenter', (e)=>{
       const q = label.closest('.question');
       if(q) q.classList.add('lift');
-      label.style.cursor = 'none'; // hide fallback pointer because we use custom cursor
+      label.style.cursor = 'none';
     });
     label.addEventListener('mouseleave', (e)=>{
       const q = label.closest('.question');
       if(q) q.classList.remove('lift');
     });
-    // focus for keyboard accessibility
     const input = label.querySelector('input[type="radio"]');
     if(input){
       input.addEventListener('focus', ()=> {
@@ -484,14 +604,17 @@
     }
   });
 
-  // --- Submit logic: color only the chosen options (green if correct, red if incorrect), compute score and grade over 5.0 with 1 decimal ---
-  document.getElementById('submit-btn').addEventListener('click', ()=>{
+  // ---- Submit logic ----
+  submitBtn.addEventListener('click', ()=>{
     const total = 25;
     let score = 0;
     let wrong = 0;
 
-    // Disable submit to prevent double click
-    document.getElementById('submit-btn').disabled = true;
+    // stop timer
+    stopTimer();
+
+    // prevent double
+    submitBtn.disabled = true;
 
     for(let i=1;i<=total;i++){
       const qName = 'q'+i;
@@ -500,25 +623,20 @@
         const selLabel = selected.closest('label');
         if(selected.value === correctAnswers[qName]){
           score++;
-          // ensure the visual shows correct (override selected look subtly)
           selLabel && selLabel.classList.add('correct');
         } else {
           wrong++;
           selLabel && selLabel.classList.add('incorrect');
         }
       } else {
-        // unanswered counts as wrong
         wrong++;
       }
     }
 
-    // For safety, disable any remaining radios
+    // disable all radios
     document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
 
-    // compute grade over 5.0, 1 decimal
     const nota = ((score / total) * 5).toFixed(1);
-
-    // message
     const pct = score / total;
     let msg = '';
     if(pct === 1) msg = '🎉 Excelente';
@@ -533,13 +651,15 @@
       <div class="small" style="margin-top:6px">📘 Nota final: <strong>${nota} / 5.0</strong></div>
       <div style="margin-top:8px;font-weight:600">${msg}</div>
     `;
-    // smooth scroll to result
     res.scrollIntoView({behavior:'smooth', block:'center'});
   });
 
-  // --- Reiniciar ---
-  document.getElementById('reset-btn').addEventListener('click', ()=>{
-    if(!confirm('¿Reiniciar el quiz? Se borrarán todas las respuestas seleccionadas.')) return;
+  // ---- Reset logic ----
+  function resetQuiz(auto=false){
+    // if auto=false, confirm
+    if(!auto){
+      if(!confirm('¿Reiniciar el quiz? Se borrarán todas las respuestas seleccionadas.')) return;
+    }
     document.querySelectorAll('input[type="radio"]').forEach(i=>{
       i.checked = false;
       i.disabled = false;
@@ -550,8 +670,22 @@
     const res = document.getElementById('result');
     res.style.display = 'none';
     res.innerHTML = '';
+    // restart timer
+    startTimer();
     window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  document.getElementById('reset-btn').addEventListener('click', ()=> resetQuiz(false));
+
+  // start timer on load
+  startTimer();
+
+  // ensure overlay hide on manual reset as well
+  // (if user resets while overlay visible)
+  const obs = new MutationObserver(()=>{
+    if(!overlayEl.classList.contains('show')) return;
   });
+  obs.observe(overlayEl, {attributes:true, attributeFilter:['class']});
 </script>
 </body>
 </html>
