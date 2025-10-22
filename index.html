@@ -527,45 +527,64 @@
     }, 6000);
   }
 
-  // ---- Custom cursor logic ----
-  (function(){
-    const cursor = document.getElementById('customCursor');
-    if(!cursor) return;
-    let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
-    let curX = mouseX, curY = mouseY;
-    const speed = 0.16;
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    }, {passive:true});
+  // --- Audio: beep corto usando WebAudio (no necesita archivos externos) ---
+  let audioCtx = null;
+  let masterGain = null;
+  function ensureAudio() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.08; // volumen general (ajusta aquí)
+    masterGain.connect(audioCtx.destination);
+  }
 
-    function setEnlarge(flag){
-      if(flag) cursor.classList.add('enlarge'); else cursor.classList.remove('enlarge');
+  function playSelectSound() {
+    try {
+      ensureAudio();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      // timbre y envolvente
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, now); // frecuencia inicial
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(1.0, now + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+
+      // conecta y reproduce breve tono
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(now);
+      osc.stop(now + 0.18);
+
+      // pequeño click extra (opcional): breve noise burst for crispness
+      // const bufferSize = 2 * audioCtx.sampleRate;
+      // const noise = audioCtx.createBufferSource();
+      // const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      // const data = buffer.getChannelData(0);
+      // for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.02;
+      // noise.buffer = buffer;
+      // const ng = audioCtx.createGain();
+      // ng.gain.setValueAtTime(0.06, now);
+      // ng.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+      // noise.connect(ng);
+      // ng.connect(masterGain);
+      // noise.start(now);
+      // noise.stop(now + 0.06);
+
+    } catch (err) {
+      // fallbacks silenciosos; evitar romper la UI si WebAudio no está disponible
+      console.warn('Audio no disponible:', err);
     }
-    window.addEventListener('mousedown', ()=>{ cursor.classList.add('click'); });
-    window.addEventListener('mouseup', ()=>{ cursor.classList.remove('click'); });
+  }
 
-    const interactiveSelector = 'button, a, label, input[type="radio"], .answers label';
-    document.addEventListener('mouseover', (e)=>{
-      if(e.target.closest(interactiveSelector)) setEnlarge(true);
-    });
-    document.addEventListener('mouseout', (e)=>{
-      if(e.target.closest(interactiveSelector) === null) setEnlarge(false);
-    });
-
-    function raf(){
-      curX += (mouseX - curX) * speed;
-      curY += (mouseY - curY) * speed;
-      cursor.style.left = curX + 'px';
-      cursor.style.top = curY + 'px';
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-  })();
-
-  // ---- Selection behavior ----
+  // ---- Selection behavior (modificado para reproducir sonido) ----
   document.querySelectorAll('input[type="radio"]').forEach(radio=>{
     radio.addEventListener('change',(e)=>{
+      // reproducir sonido al elegir (crear AudioContext en la primera interacción)
+      playSelectSound();
+
       const name = e.target.name;
       // remove 'selected' from all siblings
       document.querySelectorAll(`input[name="${name}"]`).forEach(i=>{
