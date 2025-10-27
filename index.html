@@ -1,710 +1,910 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Quiz Final: Cuidado y Seguridad del PC</title>
-<style>
-  /* -------- Animated theme / motion system -------- */
-  :root{
-    --bg1:#041226; --accent:#47a7ff; --accent2:#7ee7c7;
-    --accent-bright:#2ee0ff;
-    --good:#dff7e8; --good-border: rgba(75,210,140,0.18);
-    --bad:#f8d7da; --card:rgba(255,255,255,0.03);
-    --text:#e6eef8; --glass: rgba(255,255,255,0.03);
-    --danger:#ff6b6b;
-    --motion-fast: 160ms;
-    --motion-medium: 320ms;
-    --motion-slow: 600ms;
-    --ease: cubic-bezier(.2,.9,.25,1);
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NKD PEREIRA 🔥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
 
-  /* base */
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
-    color:var(--text); padding:36px 12px; cursor: crosshair;
-    background:
-      radial-gradient(1200px 600px at 10% 10%, rgba(46,224,255,0.04), transparent),
-      radial-gradient(900px 400px at 90% 90%, rgba(126,231,199,0.02), transparent),
-      linear-gradient(135deg,#021032 0%, #052a4a 60%);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    transition: background 900ms var(--ease), color 450ms var(--ease);
-  }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      color: #ff0000;
+      overflow-x: hidden;
+    }
 
-  /* subtle page load flourish */
-  .wrap{
-    max-width:980px; margin:14px auto; padding:26px;
-    border-radius:14px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    box-shadow: 0 18px 48px rgba(2,8,23,0.6);
-    border:1px solid rgba(255,255,255,0.03);
-    transform-origin: center top;
-    animation: wrapEntrance 720ms var(--ease) both;
-    will-change: transform, opacity;
-  }
-  @keyframes wrapEntrance {
-    from { transform: translateY(14px) scale(.995); opacity:0 }
-    to   { transform: translateY(0) scale(1); opacity:1 }
-  }
+    /* Fondo degradado animado */
+    body {
+      background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
+      background-size: 800% 800%;
+      animation: fondoAnimado 16s ease infinite;
+    }
 
-  .topline{ text-align:center; font-weight:700; color:rgba(210,238,248,0.9); margin-bottom:12px; font-size:0.98rem; letter-spacing:0.3px; }
+    @keyframes fondoAnimado {
+      0% {background-position:0% 50%}
+      50% {background-position:100% 50%}
+      100% {background-position:0% 50%}
+    }
 
-  header{display:flex;align-items:center;gap:14px;margin-bottom:12px; transform-origin:left center}
-  .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(135deg,var(--accent), #7b61ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#031026;transform:rotate(-6deg); box-shadow: 0 8px 30px rgba(71,167,255,0.08)}
-  h1{margin:0;font-size:1.4rem; letter-spacing: .2px; }
-  .lead{margin:6px 0 0;color:rgba(230,238,248,0.85);font-size:0.95rem}
-  .note{font-size:0.92rem;color:rgba(230,238,248,0.82);margin:10px 0 14px}
+    /* Efecto de resplandor en los botones */
+    .boton, .boton-modal {
+      box-shadow: 0 0 25px #ff0000, 0 0 40px #00cfff;
+      animation: glowBoton 2s ease-in-out infinite alternate;
+    }
 
-  /* QUESTIONS: card motion and subtle micro-interactions */
-  .question{
-    background:var(--card);
-    padding:12px;border-radius:12px;margin-bottom:14px;
-    border:1px solid rgba(255,255,255,0.02);
-    transition: transform var(--motion-medium) var(--ease), box-shadow var(--motion-medium) var(--ease), filter var(--motion-medium);
-    will-change: transform, box-shadow;
-    transform: translateZ(0);
-    position:relative;
-    overflow:visible;
-    opacity: 0;
-    animation: questionIn .6s var(--ease) both;
-  }
-  .question.enter{ /* JS will add staggered transitionDelay */ }
-  @keyframes questionIn {
-    from { opacity:0; transform: translateY(18px) scale(.996) }
-    to   { opacity:1; transform: translateY(0) scale(1) }
-  }
-  .question.lift{ transform: translateY(-12px) scale(1.01); box-shadow:0 28px 68px rgba(2,8,23,0.65); filter:brightness(1.02); }
+    @keyframes glowBoton {
+      from { box-shadow: 0 0 10px #ff0000, 0 0 20px #00cfff; }
+      to   { box-shadow: 0 0 40px #ff0000, 0 0 60px #00cfff; }
+    }
 
-  .question h3{margin:0 0 8px;font-size:1rem; transition: color var(--motion-fast) var(--ease) }
+    #tsparticles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
 
-  .answers label{
-    display:block; padding:12px 16px; border-radius:10px; margin:10px 0; cursor:pointer;
-    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.002));
-    border:1px solid rgba(255,255,255,0.03);
-    transition: background var(--motion-fast) var(--ease), transform var(--motion-fast) var(--ease), box-shadow var(--motion-fast) var(--ease), border-color var(--motion-fast);
-    position:relative; user-select:none;
-    transform-origin:left center;
-  }
+    header { padding: 20px 10px 10px; text-align: center; }
 
-  /* hover micro-motion & sheen */
-  .answers label:hover{
-    transform: translateX(8px) scale(1.01);
-    box-shadow: 0 16px 40px rgba(46,224,255,0.06);
-    background: linear-gradient(90deg, rgba(46,224,255,0.06), rgba(71,167,255,0.03));
-  }
-  .answers label::before{
-    content:""; position:absolute; left:-6px; top:0; bottom:0; width:6px; border-top-left-radius:10px; border-bottom-left-radius:10px;
-    background: linear-gradient(180deg, rgba(46,224,255,0.14), rgba(71,167,255,0.06)); transform: scaleY(0); transform-origin:center; transition: transform var(--motion-fast);
-    pointer-events:none; opacity:0.0;
-  }
-  .answers label:hover::before{ transform: scaleY(1); opacity:1; }
+    header h1 {
+      font-size: 3em;
+      color: #00cfff;
+      text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
+      animation: glow-celeste 2s ease-in-out infinite alternate;
+      letter-spacing: 2px;
+      margin-bottom: 0.2em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
 
-  /* focus support */
-  .answers label:focus-within{ outline:none; box-shadow:0 10px 30px rgba(46,224,255,0.06) }
+    @keyframes glow-celeste {
+      from { text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff; }
+      to   { text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff; }
+    }
 
-  .answers input{margin-right:12px; transform:translateY(1px); accent-color: var(--accent); }
+    button, input { font-family: 'Orbitron', sans-serif; }
 
-  /* selected state - bright gentle green */
-  .answers label.selected{
-    background: linear-gradient(90deg, rgba(223,247,232,0.98), rgba(223,247,232,0.72));
-    border: 1px solid var(--good-border);
-    box-shadow: 0 12px 36px rgba(75,210,140,0.08), inset 0 0 18px rgba(46,224,255,0.02);
-    color: #042916;
-    transform: translateX(2px) scale(1.005);
-  }
+    .boton, .boton-modal {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      margin: 20px;
+      background: black;
+      color: #ff0000;
+      border: 2px solid #ff0000;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff0000;
+      transition: all 0.3s ease-in-out;
+    }
 
-  /* result states */
-  .correct{ background: linear-gradient(90deg, rgba(223,247,232,0.98), rgba(223,247,232,0.78)) !important; border-color: var(--good-border) !important; box-shadow:0 14px 36px rgba(75,210,140,0.08) !important; }
-  .incorrect{ background: linear-gradient(90deg, rgba(255,235,235,0.98), rgba(255,220,220,0.86)) !important; box-shadow:0 12px 36px rgba(255,107,107,0.06) !important; border-color: rgba(255,107,107,0.08) !important; }
+    main#contenido-principal {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 60px);
+      flex-direction: column;
+      padding-top: 0;
+    }
 
-  /* small micro-animations for buttons/timer/result */
-  .actions{display:flex;gap:12px;align-items:center;margin-top:16px}
-  #submit-btn, #reset-btn{
-    padding:12px 18px; border-radius:10px; border:0; font-weight:600;
-    transition: transform var(--motion-fast) var(--ease), box-shadow var(--motion-fast);
-    will-change: transform, box-shadow;
-  }
-  #submit-btn{
-    background: linear-gradient(90deg,var(--accent), #7b61ff);
-    color:#031026; box-shadow:0 12px 40px rgba(71,167,255,0.12);
-  }
-  #submit-btn:hover{ transform: translateY(-6px) scale(1.02); box-shadow:0 26px 60px rgba(71,167,255,0.16) }
-  #submit-btn:active{ transform: translateY(-2px) scale(.995) }
-  #reset-btn{
-    background: transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text);
-  }
-  #submit-btn:disabled{ opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0; top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+    }
 
-  #result{
-    margin-top:16px; padding:14px; border-radius:12px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.02);
-    transform-origin:center; animation: resultPop .42s var(--ease) both;
-  }
-  @keyframes resultPop { from { transform: translateY(8px) scale(.995); opacity:0 } to { transform: translateY(0) scale(1); opacity:1 } }
+    .modal-content {
+      background-color: #111;
+      margin: 10% auto;
+      padding: 30px;
+      border: 2px solid red;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      color: #ff0000;
+      box-shadow: 0 0 20px #ff0000;
+      text-align: center;
+    }
 
-  /* TIMER pulse */
-  .timer-row { display:flex; justify-content:center; margin-bottom:8px; }
-  #timer{
-    font-weight:700; font-size:0.98rem; padding:8px 12px; border-radius:10px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.03); color:var(--text);
-    box-shadow:0 8px 24px rgba(2,8,23,0.36); min-width:110px; text-align:center;
-    transition: transform var(--motion-medium) var(--ease), box-shadow var(--motion-medium);
-  }
-  #timer.warn{
-    color:var(--danger); box-shadow:0 12px 34px rgba(255,107,107,0.14);
-    animation: timerPulse 900ms ease-in-out infinite;
-  }
-  @keyframes timerPulse {
-    0% { transform: scale(1) }
-    50% { transform: scale(1.06) rotate(-0.6deg) }
-    100% { transform: scale(1) }
-  }
+    .modal-content input {
+      padding: 10px;
+      width: 90%;
+      margin-top: 15px;
+      background: black;
+      border: 1px solid red;
+      color: red;
+      font-size: 1.2em;
+    }
 
-  /* overlay animations */
-  .timeout-overlay{
-    transition: opacity var(--motion-medium) var(--ease), transform var(--motion-medium) var(--ease);
-    transform: translateY(6px);
-  }
-  .timeout-overlay.show{ transform: translateY(0); }
+    .cerrar { float: right; font-size: 20px; cursor: pointer; color: red; }
+    .mensaje-error { color: red; margin-top: 10px; }
 
-  /* custom cursor (hidden on mobile) - small animation */
-  .custom-cursor{ display:block; position:fixed; left:0; top:0; width:14px; height:14px; border-radius:50%; background:var(--accent2); box-shadow:0 6px 18px rgba(46,224,255,0.12); pointer-events:none; transform:translate(-50%,-50%) scale(1); transition: transform 140ms var(--ease), box-shadow 160ms; z-index:9999; }
-  .custom-cursor.enlarge{ transform: translate(-50%,-50%) scale(2.2); box-shadow:0 18px 48px rgba(46,224,255,0.22); }
-  .custom-cursor.click{ transform: translate(-50%,-50%) scale(1.6); transition: transform 80ms ease-out; }
+    table {
+      width: 90%;
+      margin: 0 auto 30px;
+      border-collapse: collapse;
+      color: #fff;
+    }
+    th, td { border: 1px solid #ff0000; padding: 10px; text-align: center; }
+    th { background-color: #330000; }
 
-  /* decorative sheen across the header logo */
-  .logo::after{
-    content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none;
-    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    mix-blend-mode: overlay; opacity:0.9; transform: translateX(-120%);
-    animation: sheen 2.6s linear infinite;
-  }
-  @keyframes sheen { 0% { transform: translateX(-120%) } 100% { transform: translateX(120%) } }
+    .acciones button {
+      margin: 2px;
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-  /* responsive adjustments */
-  @media (max-width:720px){
-    header{flex-direction:column;align-items:flex-start}
-    .custom-cursor{ display:none } body{ cursor:auto }
-    .answers label{ padding:10px }
-  }
-</style>
+    #formulario-registro { text-align: center; margin-bottom: 20px; }
+    #formulario-registro input {
+      width: 200px;
+      margin: 5px;
+      padding: 8px;
+      background: black;
+      color: red;
+      border: 1px solid red;
+    }
+
+    .paginacion { text-align: center; margin: 10px; }
+    .paginacion button {
+      margin: 3px;
+      padding: 8px 12px;
+      background: black;
+      color: red;
+      border: 1px solid red;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .paginacion button.activo { background: red; color: black; }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.5em; }
+      main#contenido-principal { min-height: auto; padding: 10px; }
+      .boton, .boton-modal {
+        padding: 10px 15px;
+        font-size: 1em;
+        margin: 10px;
+      }
+      table, th, td { font-size: 0.9em; padding: 5px; }
+      #formulario-registro input,
+      #formulario-moto input,
+      #formulario-edicion input,
+      #formulario-edicion-moto input { width: 95%; font-size: 1em; margin: 5px 0; }
+      .modal-content { width: 98%; padding: 10px; }
+    }
+
+    /* ====== NKD BOT — Widget nuevo desde cero (estilos) ====== */
+    :root {
+      --nkd-cyan: #00cfff;
+      --nkd-cyan-2: #00eaff;
+      --nkd-red: #ff0000;
+      --nkd-bg: rgba(0,0,0,0.86);
+      --nkd-border: rgba(0,207,255,0.8);
+      --nkd-shadow: 0 0 25px var(--nkd-cyan), 0 0 40px var(--nkd-cyan-2);
+    }
+    #nkdbot-toggle {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      width: 62px; height: 62px;
+      border-radius: 50%;
+      border: 2px solid var(--nkd-cyan);
+      background: #000;
+      color: #fff;
+      font-size: 2rem;
+      box-shadow: var(--nkd-shadow);
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform .15s ease;
+      animation: nkdPulse 2s ease-in-out infinite alternate; /* ✨ animación ícono */
+    }
+    #nkdbot-toggle:active { transform: scale(.96); }
+    @keyframes nkdPulse {
+      from { box-shadow: 0 0 12px var(--nkd-cyan), 0 0 24px var(--nkd-cyan-2); transform: scale(1); }
+      to   { box-shadow: 0 0 28px var(--nkd-cyan), 0 0 48px var(--nkd-cyan-2); transform: scale(1.08); }
+    }
+
+    #nkdbot-panel {
+      position: fixed;
+      bottom: 90px; right: 20px;
+      width: 360px; max-width: 96vw; max-height: 70vh;
+      background: var(--nkd-bg);
+      border: 2px solid var(--nkd-border);
+      border-radius: 14px;
+      box-shadow: var(--nkd-shadow);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 10000;
+      transform: translateY(12px);
+      opacity: 0;
+      transition: all .25s ease;
+    }
+    #nkdbot-panel.open { display: flex; transform: translateY(0); opacity: 1; }
+    #nkdbot-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px;
+      background: linear-gradient(90deg, rgba(0,0,0,.6), rgba(0,207,255,.18));
+      border-bottom: 1px solid var(--nkd-border);
+    }
+    #nkdbot-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1rem; color: var(--nkd-cyan);
+      text-shadow: 0 0 12px var(--nkd-cyan);
+    }
+    #nkdbot-actions button {
+      background: transparent; border: none; color: var(--nkd-cyan);
+      font-size: 1.25rem; cursor: pointer; padding: 6px;
+    }
+    #nkdbot-messages {
+      padding: 12px; overflow-y: auto; flex: 1; color: #fff;
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6));
+    }
+    .nkdbot-msg {
+      margin: 8px 0; max-width: 85%; line-height: 1.35;
+      padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 0 10px rgba(0, 207, 255, .15);
+      word-break: break-word;
+    }
+    .nkdbot-user { margin-left: auto; background: #111; color: var(--nkd-cyan); }
+    .nkdbot-bot  { margin-right: auto; background: #151515; color: #fff; }
+    .nkdbot-time { display:block; font-size:.72rem; opacity:.7; margin-top:4px; }
+    #nkdbot-suggestions {
+      display:flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .nkd-chip {
+      background: #0e0e0e; color: var(--nkd-cyan);
+      border: 1px solid var(--nkd-border);
+      padding: 4px 8px; border-radius: 999px; cursor:pointer; font-size: .85rem;
+    }
+    #nkdbot-inputbar {
+      display:flex; gap:8px; padding: 10px; border-top: 1px solid var(--nkd-border);
+      background: rgba(0,0,0,.55);
+    }
+    #nkdbot-input {
+      flex:1; background:#0b0b0b; color:#fff; border:1px solid var(--nkd-border);
+      border-radius: 8px; padding: 10px; font-size: 1rem; outline:none;
+    }
+    #nkdbot-send {
+      background: #000; color: var(--nkd-cyan);
+      border: 1px solid var(--nkd-cyan); border-radius: 8px;
+      padding: 10px 12px; font-weight: 700; cursor:pointer;
+      box-shadow: 0 0 12px var(--nkd-cyan);
+    }
+    @media (max-width: 480px) {
+      #nkdbot-panel { right: 10px; bottom: 80px; width: 94vw; max-height: 70vh; }
+      #nkdbot-toggle { bottom: 12px; right: 12px; }
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- Timer above copyright -->
-    <div class="timer-row">
-      <div id="timer" aria-live="polite">06:30</div>
-    </div>
+  <script>
+    // ====== Selector de edad al cargar la página ======
+    document.addEventListener("DOMContentLoaded", function() {
+      if (localStorage.getItem("accesoEdad") === "ok") return;
 
-    <div class="topline">© Mateo — Creador</div>
-
-    <header>
-      <div class="logo">PC</div>
-      <div>
-        <h1>Quiz: Cuidado y Seguridad del PC</h1>
-        <p class="lead">25 preguntas — una vez marcada la respuesta, no se puede cambiar. Al enviar verás aciertos y fallos con colores.</p>
-      </div>
-    </header>
-
-    <form id="quizForm" autocomplete="off">
-      <p class="note">Selecciona una opción por pregunta. Cada pregunta se bloqueará al seleccionar.</p>
-
-      <!-- Preguntas 1..25 -->
-      <div class="question" id="q1-box">
-        <h3>1. ¿Cómo contribuir efectivamente a que el lugar de trabajo sea seguro para las personas?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q1" value="a"> Organizar el lugar de trabajo, no consumir alimentos o bebidas</label>
-          <label><input type="radio" name="q1" value="b"> Mantener el equipo en un lugar limpio y seco</label>
-          <label><input type="radio" name="q1" value="c"> Evitar moverse dentro de la sala</label>
-          <label><input type="radio" name="q1" value="d"> Todas las anteriores</label>
-          <label><input type="radio" name="q1" value="e"> Ninguna de las anteriores</label>
+      document.body.innerHTML = `
+        <div id="acceso-edad" style="
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          width: 100vw; height: 100vh;
+          display: flex; flex-direction: column; justify-content: center; align-items: center;
+          background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff);
+          background-size: 800% 800%;
+          animation: fondoAnimado 16s ease infinite;
+          z-index: 99999;
+        ">
+          <div style="
+            background: rgba(0,0,0,0.85);
+            border: 2px solid #00cfff;
+            border-radius: 18px;
+            box-shadow: 0 0 30px #00cfff, 0 0 60px #00eaff;
+            padding: 40px 30px; text-align: center; min-width: 270px; max-width: 90vw;
+          ">
+            <h1 style="color:#00cfff; font-size:2.2em; margin-bottom:.5em; text-shadow:0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; font-family:'Orbitron',sans-serif;">
+              Selecciona tu rango de edad
+            </h1>
+            <button id="btn-18-25" style="margin:18px 0 10px 0; padding:15px 40px; font-size:1.3em; border-radius:10px; border:2px solid #00cfff; background:#000; color:#00eaff; box-shadow:0 0 20px #00cfff; cursor:pointer; font-family:'Orbitron',sans-serif; display:block; width:100%;">
+              18 - 25 años
+            </button>
+            <button id="btn-10-17" style="margin:10px 0 0 0; padding:15px 40px; font-size:1.3em; border-radius:10px; border:2px solid #00cfff; background:#000; color:#00eaff; box-shadow:0 0 20px #00cfff; cursor:pointer; font-family:'Orbitron',sans-serif; display:block; width:100%;">
+              10 - 17 años
+            </button>
+          </div>
         </div>
-      </div>
+        <style>
+          @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+          @keyframes glow-celeste { from{ text-shadow:0 0 15px #00cfff, 0 0 30px #00eaff;} to{ text-shadow:0 0 30px #00eaff, 0 0 60px #00cfff;} }
+        </style>
+      `;
 
-      <div class="question" id="q2-box">
-        <h3>2. ¿Qué requiere la computadora para mantenerse en buen estado?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q2" value="a"> Tener a la mano productos de limpieza como límpido</label>
-          <label><input type="radio" name="q2" value="b"> Tener el escritorio lleno de íconos</label>
-          <label><input type="radio" name="q2" value="c"> Un encendido, uso adecuado y apagado correcto</label>
+      document.getElementById("btn-18-25").onclick = function() {
+        localStorage.setItem("accesoEdad", "ok");
+        location.reload();
+      };
+      document.getElementById("btn-10-17").onclick = function() {
+        localStorage.removeItem("accesoEdad");
+        document.body.innerHTML = `
+          <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+            background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite;
+            color:#00cfff; font-family:'Orbitron',sans-serif; text-align:center; z-index:99999;">
+            <h1 style="font-size: 2.5em; color: #00cfff; text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; letter-spacing: 2px; margin-bottom: .5em;">
+              🚫 Acceso Denegado 🚫
+            </h1>
+            <p style="font-size:1.5em; color:#fff; text-shadow:0 0 10px #00cfff;">
+              Esta página es solo para mayores de 18 años.<br>¡Vuelve cuando seas mayor!
+            </p>
+          </div>
+          <style>
+            @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+            @keyframes glow-celeste { from{ text-shadow:0 0 15px #00cfff, 0 0 30px #00eaff;} to{ text-shadow:0 0 30px #00eaff, 0 0 60px #00cfff;} }
+          </style>
+        `;
+      };
+    });
+  </script>
+
+  <script>
+    // ====== Bloqueo de inspección / copia ======
+    document.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+      document.body.innerHTML = `
+        <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+          background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite; z-index:99999;">
+          <h1 style="color:#fff; font-size:2em; text-align:center;">
+            🚫 Acceso bloqueado 🚫<br>No intentes copiar ni inspeccionar esta página.
+          </h1>
         </div>
-      </div>
+        <style>
+          @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        </style>
+      `;
+    });
 
-      <div class="question" id="q3-box">
-        <h3>3. ¿Qué medidas se emplean para resguardar la información?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q3" value="a"> Usar protección contra variaciones de corriente</label>
-          <label><input type="radio" name="q3" value="b"> Mantener el antivirus actualizado</label>
-          <label><input type="radio" name="q3" value="c"> Aceptar todos los regalos en línea</label>
-          <label><input type="radio" name="q3" value="d"> Todas las anteriores</label>
-        </div>
-      </div>
-
-      <div class="question" id="q4-box">
-        <h3>4. ¿Por qué es importante seguir recomendaciones para cuidar los equipos?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q4" value="a"> Para que se dañen más rápido</label>
-          <label><input type="radio" name="q4" value="b"> Detectar rápidamente sobrevoltajes</label>
-          <label><input type="radio" name="q4" value="c"> Cuidar la vida útil y aprovecharlos más tiempo</label>
-        </div>
-      </div>
-
-      <div class="question" id="q5-box">
-        <h3>5. ¿En dónde se deben usar los computadores para mantenerlos seguros?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q5" value="a"> Dejarlo en cualquier parte</label>
-          <label><input type="radio" name="q5" value="b"> En oficinas, alejándolos del polvo y corrientes de aire</label>
-          <label><input type="radio" name="q5" value="c"> Al aire libre</label>
-        </div>
-      </div>
-
-      <div class="question" id="q6-box">
-        <h3>6. ¿Qué recomendaciones hay para el buen uso de Internet?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q6" value="a"> No descargar programas desconocidos</label>
-          <label><input type="radio" name="q6" value="b"> No aceptar regalos en línea</label>
-          <label><input type="radio" name="q6" value="c"> Todas las anteriores</label>
-        </div>
-      </div>
-
-      <div class="question" id="q7-box">
-        <h3>7. ¿Cuáles son los dos tipos de mantenimiento para la computadora?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q7" value="a"> Facebook y WhatsApp</label>
-          <label><input type="radio" name="q7" value="b"> Hardware y Software</label>
-        </div>
-      </div>
-
-      <div class="question" id="q8-box">
-        <h3>8. ¿Cómo se apaga correctamente una computadora?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q8" value="a"> Apagar con el interruptor directamente (nunca hacerlo)</label>
-          <label><input type="radio" name="q8" value="b"> Apagar desde Windows y esperar que cierre</label>
-          <label><input type="radio" name="q8" value="c"> Solo pararse y dejarla encendida</label>
-        </div>
-      </div>
-
-      <div class="question" id="q9-box">
-        <h3>9. ¿Qué es lo primero que debes hacer antes de limpiar un computador?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q9" value="a"> Limpiarlo mientras está encendido</label>
-          <label><input type="radio" name="q9" value="b"> Apagarlo y desconectarlo de la corriente</label>
-          <label><input type="radio" name="q9" value="c"> Mojar la pantalla</label>
-        </div>
-      </div>
-
-      <div class="question" id="q10-box">
-        <h3>10. ¿Qué elemento NO se debe usar para limpiar una computadora?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q10" value="a"> Paño de microfibra</label>
-          <label><input type="radio" name="q10" value="b"> Alcohol isopropílico</label>
-          <label><input type="radio" name="q10" value="c"> Agua directamente sobre el teclado</label>
-        </div>
-      </div>
-
-      <div class="question" id="q11-box">
-        <h3>11. ¿Por qué es importante tener un antivirus actualizado?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q11" value="a"> Para proteger contra virus y programas maliciosos</label>
-          <label><input type="radio" name="q11" value="b"> Para que el PC funcione más lento</label>
-          <label><input type="radio" name="q11" value="c"> No es importante</label>
-        </div>
-      </div>
-
-      <div class="question" id="q12-box">
-        <h3>12. ¿Qué se debe evitar al usar una laptop?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q12" value="a"> Usarla sobre una cama o almohada</label>
-          <label><input type="radio" name="q12" value="b"> Colocarla en superficie plana y ventilada</label>
-          <label><input type="radio" name="q12" value="c"> Conectarla a un regulador</label>
-        </div>
-      </div>
-
-      <div class="question" id="q13-box">
-        <h3>13. ¿Qué sucede si no actualizamos el sistema operativo?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q13" value="a"> Nada, funciona igual</label>
-          <label><input type="radio" name="q13" value="b"> Puede ser más vulnerable a ataques o errores</label>
-          <label><input type="radio" name="q13" value="c"> Se apaga automáticamente</label>
-        </div>
-      </div>
-
-      <div class="question" id="q14-box">
-        <h3>14. ¿Qué debes hacer si notas ruidos extraños o sobrecalentamiento?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q14" value="a"> Ignorarlo</label>
-          <label><input type="radio" name="q14" value="b"> Apagar y revisar o llevar a mantenimiento</label>
-          <label><input type="radio" name="q14" value="c"> Golpearlo suavemente</label>
-        </div>
-      </div>
-
-      <div class="question" id="q15-box">
-        <h3>15. ¿Cuál es una buena práctica para mantener limpio el escritorio del sistema?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q15" value="a"> Llenarlo de accesos directos</label>
-          <label><input type="radio" name="q15" value="b"> Mantener solo los accesos necesarios</label>
-          <label><input type="radio" name="q15" value="c"> No borrar nunca nada</label>
-        </div>
-      </div>
-
-      <div class="question" id="q16-box">
-        <h3>16. ¿Qué debes evitar mientras comes o bebes cerca del PC?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q16" value="a"> Comer o beber directamente sobre el teclado</label>
-          <label><input type="radio" name="q16" value="b"> Tener cuidado y poner vaso alejado</label>
-          <label><input type="radio" name="q16" value="c"> Usar cubiertos de plástico</label>
-        </div>
-      </div>
-
-      <div class="question" id="q17-box">
-        <h3>17. ¿Cada cuánto es recomendable hacer mantenimiento preventivo?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q17" value="a"> Cada semana</label>
-          <label><input type="radio" name="q17" value="b"> Cada 6 meses o según uso</label>
-          <label><input type="radio" name="q17" value="c"> Nunca</label>
-        </div>
-      </div>
-
-      <div class="question" id="q18-box">
-        <h3>18. ¿Qué ayuda a prolongar la vida útil de la batería de una laptop?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q18" value="a"> Dejarla conectada todo el tiempo</label>
-          <label><input type="radio" name="q18" value="b"> Usarla con batería y conectar solo cuando necesario</label>
-          <label><input type="radio" name="q18" value="c"> Descargarla completamente siempre</label>
-        </div>
-      </div>
-
-      <div class="question" id="q19-box">
-        <h3>19. ¿Qué debes hacer antes de abrir una caja o archivo adjunto inesperado?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q19" value="a"> Abrir inmediatamente</label>
-          <label><input type="radio" name="q19" value="b"> Verificar remitente y escanear con antivirus</label>
-          <label><input type="radio" name="q19" value="c"> Reenviarlo a todos</label>
-        </div>
-      </div>
-
-      <div class="question" id="q20-box">
-        <h3>20. ¿Qué dispositivo protege contra picos de tensión y cortes breves de energía?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q20" value="a"> Protector de sobretensiones / UPS</label>
-          <label><input type="radio" name="q20" value="b"> Cargador de teléfono</label>
-          <label><input type="radio" name="q20" value="c"> Cable HDMI</label>
-        </div>
-      </div>
-
-      <div class="question" id="q21-box">
-        <h3>21. ¿Cuál es una buena práctica para contraseñas?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q21" value="a"> Usar la misma contraseña en todos lados</label>
-          <label><input type="radio" name="q21" value="b"> Usar contraseñas fuertes y diferentes, y un gestor</label>
-          <label><input type="radio" name="q21" value="c"> Compartir contraseñas por email</label>
-        </div>
-      </div>
-
-      <div class="question" id="q22-box">
-        <h3>22. ¿Qué estrategia ayuda a recuperar datos ante fallos?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q22" value="a"> No hacer copias y confiar en el disco</label>
-          <label><input type="radio" name="q22" value="b"> Hacer backups en disco externo y nube</label>
-          <label><input type="radio" name="q22" value="c"> Borrar versiones antiguas siempre</label>
-        </div>
-      </div>
-
-      <div class="question" id="q23-box">
-        <h3>23. ¿Qué se recomienda para disipación de calor en desktop?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q23" value="a"> Tapar las salidas de aire</label>
-          <label><input type="radio" name="q23" value="b"> Mantener salidas de aire libres y limpiar polvo</label>
-          <label><input type="radio" name="q23" value="c"> Ponerlo dentro de un armario cerrado</label>
-        </div>
-      </div>
-
-      <div class="question" id="q24-box">
-        <h3>24. ¿Qué tipo de limpiador es seguro para pantalla (LCD/LED)?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q24" value="a"> Limpiador especial para pantallas o paño de microfibra ligeramente humedecido</label>
-          <label><input type="radio" name="q24" value="b"> Limpiador de vidrios con amoníaco</label>
-          <label><input type="radio" name="q24" value="c"> Agua caliente y jabón</label>
-        </div>
-      </div>
-
-      <div class="question" id="q25-box">
-        <h3>25. ¿Qué debes hacer si un programa solicita permisos extraños o te pide datos personales sin motivo?</h3>
-        <div class="answers">
-          <label><input type="radio" name="q25" value="a"> Dar permisos sin leer</label>
-          <label><input type="radio" name="q25" value="b"> Rechazar, investigar y escanear con antivirus</label>
-          <label><input type="radio" name="q25" value="c"> Compartir en redes</label>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button type="button" id="submit-btn">Enviar respuestas</button>
-        <button type="button" id="reset-btn">Reiniciar quiz</button>
-        <div style="margin-left:auto" class="small">25 preguntas — selección bloqueada</div>
-      </div>
-    </form>
-
-    <div id="result" style="display:none"></div>
-  </div>
-
-  <!-- timeout overlay -->
-  <div class="timeout-overlay" id="timeoutOverlay" role="alert" aria-hidden="true">
-    <div class="timeout-card">
-      <div class="timeout-emoji">😢</div>
-      <div class="timeout-text">No pudiste resolverlo a tiempo...</div>
-    </div>
-  </div>
-
-  <!-- custom cursor element -->
-  <div class="custom-cursor" id="customCursor" aria-hidden="true"></div>
-
-<script>
-  // Respuestas correctas
-  const correctAnswers = {
-    q1:"d", q2:"c", q3:"b", q4:"c", q5:"b", q6:"c", q7:"b", q8:"b",
-    q9:"b", q10:"c", q11:"a", q12:"a", q13:"b", q14:"b", q15:"b", q16:"a",
-    q17:"b", q18:"b", q19:"b", q20:"a", q21:"b", q22:"b", q23:"b", q24:"a", q25:"b"
-  };
-
-  // ---- TIMER ----
-  const START_SECONDS = 270; // 4:30 = 270s
-  let timeLeft = START_SECONDS;
-  let timerInterval = null;
-  const timerEl = document.getElementById('timer');
-  const overlayEl = document.getElementById('timeoutOverlay');
-  const submitBtn = document.getElementById('submit-btn');
-
-  function formatTime(s){
-    const mm = Math.floor(s/60).toString().padStart(2,'0');
-    const ss = (s%60).toString().padStart(2,'0');
-    return `${mm}:${ss}`;
-  }
-
-  function updateTimerUI(){
-    timerEl.textContent = formatTime(timeLeft);
-    if(timeLeft <= 30){
-      timerEl.classList.add('warn');
-    } else {
-      timerEl.classList.remove('warn');
-    }
-  }
-
-  function startTimer(){
-    clearInterval(timerInterval);
-    timeLeft = START_SECONDS;
-    updateTimerUI();
-    timerInterval = setInterval(()=>{
-      timeLeft--;
-      updateTimerUI();
-      if(timeLeft <= 0){
-        clearInterval(timerInterval);
-        handleTimeUp();
+    document.addEventListener("keydown", function(e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) ||
+        (e.ctrlKey && (e.key === "U" || e.key === "S" || e.key === "C"))
+      ) {
+        e.preventDefault();
+        document.body.innerHTML = `
+          <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+            background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite; z-index:99999;">
+            <h1 style="color:#fff; font-size:2em; text-align:center;">
+              🚫 Acceso bloqueado 🚫<br>No intentes copiar ni inspeccionar esta página.
+            </h1>
+          </div>
+          <style>
+            @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+          </style>
+        `;
       }
-    }, 1000);
-  }
+    });
+  </script>
 
-  function stopTimer(){
-    clearInterval(timerInterval);
-  }
+  <div id="tsparticles"></div>
 
-  function handleTimeUp(){
-    // disable inputs and show overlay
-    document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
-    submitBtn.disabled = true;
-    overlayEl.classList.add('show');
-    overlayEl.setAttribute('aria-hidden','false');
+  <header>
+    <h1 style="font-size: 3em; color: #00cfff; text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; letter-spacing: 2px; margin-bottom: 0.2em; display: flex; justify-content: center; align-items: center; gap: 18px; flex-wrap: wrap;">
+      🔥🔥 NKD PEREIRA 🔥🔥
+    </h1>
+  </header>
 
-    // after 6 seconds hide overlay and reset quiz automatically
-    setTimeout(()=>{
-      overlayEl.classList.remove('show');
-      overlayEl.setAttribute('aria-hidden','true');
-      resetQuiz(true); // auto flag to avoid confirm
-    }, 6000);
-  }
+  <main id="contenido-principal">
+    <button class="boton" onclick="abrirModal()">ENTRADA DE CLIENTES 🔐</button>
+  </main>
 
-  // --- Audio: beep corto usando WebAudio (no necesita archivos externos) ---
-  let audioCtx = null;
-  let masterGain = null;
-  function ensureAudio() {
-    if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.08; // volumen general (ajusta aquí)
-    masterGain.connect(audioCtx.destination);
-  }
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="cerrar" onclick="cerrarModal()">✖</span>
+      <h2>🔑 Ingrese la contraseña</h2>
+      <input type="password" id="password" placeholder="********">
+      <div class="mensaje-error" id="mensaje-error"></div>
+      <button class="boton-modal" onclick="verificarPassword()">Entrar</button>
+    </div>
+  </div>
 
-  function playSelectSound() {
-    try {
-      ensureAudio();
-      const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+  <section id="seccion-secreta" style="display:none; text-align:center;">
+    <h2>✅ Acceso Autorizado</h2>
+    <button class="boton" onclick="mostrarPersonas()">👤 PERSONAS</button>
+    <button class="boton" onclick="mostrarMotosTaller()">🏍️ MOTOS/TALLER</button>
+    <button class="boton" onclick="volverAtras()">🔙 Volver atrás</button>
+  </section>
 
-      // timbre y envolvente
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, now); // frecuencia inicial
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(1.0, now + 0.006);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+  <section id="seccion-personas" style="display:none;">
+    <h2 style="text-align:center;">👤 Lista de Personas</h2>
 
-      // conecta y reproduce breve tono
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(now);
-      osc.stop(now + 0.18);
+    <div id="formulario-registro">
+      <input type="text" id="nombre" placeholder="Nombre">
+      <input type="text" id="apellido" placeholder="Apellido">
+      <input type="text" id="cedula" placeholder="Cédula">
+      <input type="text" id="telefono" placeholder="Teléfono">
+      <input type="text" id="ciudad" placeholder="Ciudad">
+      <button class="boton" onclick="registrarPersona()">Registrar</button>
+    </div>
 
-      // pequeño click extra (opcional): breve noise burst for crispness
-      // const bufferSize = 2 * audioCtx.sampleRate;
-      // const noise = audioCtx.createBufferSource();
-      // const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      // const data = buffer.getChannelData(0);
-      // for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.02;
-      // noise.buffer = buffer;
-      // const ng = audioCtx.createGain();
-      // ng.gain.setValueAtTime(0.06, now);
-      // ng.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
-      // noise.connect(ng);
-      // ng.connect(masterGain);
-      // noise.start(now);
-      // noise.stop(now + 0.06);
+    <div id="formulario-edicion" style="display:none; text-align:center;">
+      <h3>Editar Persona</h3>
+      <input type="hidden" id="edit-id">
+      <input type="text" id="edit-nombre" placeholder="Nombre">
+      <input type="text" id="edit-apellido" placeholder="Apellido">
+      <input type="text" id="edit-cedula" placeholder="Cédula">
+      <input type="text" id="edit-telefono" placeholder="Teléfono">
+      <input type="text" id="edit-ciudad" placeholder="Ciudad">
+      <button class="boton" onclick="guardarEdicion()">Guardar</button>
+      <button class="boton" onclick="cancelarEdicion()">Cancelar</button>
+    </div>
 
-    } catch (err) {
-      // fallbacks silenciosos; evitar romper la UI si WebAudio no está disponible
-      console.warn('Audio no disponible:', err);
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Apellido</th><th>Cédula</th><th>Teléfono</th><th>Ciudad</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-personas"></tbody>
+    </table>
+
+    <div class="paginacion" id="paginacion"></div>
+    <div style="text-align:center;">
+      <button class="boton" onclick="volverDesdePersonas()">🔙 Volver atrás</button>
+    </div>
+  </section>
+
+  <section id="seccion-motos-taller" style="display:none;">
+    <h2 style="text-align:center;">🏍️ Motos/Taller</h2>
+
+    <div id="formulario-moto" style="text-align:center; margin-bottom:20px;">
+      <input type="text" id="moto-nombre" placeholder="Nombre">
+      <input type="text" id="moto-apellido" placeholder="Apellido">
+      <input type="text" id="moto-cedula" placeholder="Cédula">
+      <input type="text" id="moto-telefono" placeholder="Teléfono">
+      <input type="text" id="moto-placa" placeholder="Placa">
+      <button class="boton" onclick="registrarMoto()">Registrar Moto</button>
+    </div>
+
+    <div id="formulario-edicion-moto" style="display:none; text-align:center;">
+      <h3>Editar Moto/Taller</h3>
+      <input type="hidden" id="edit-moto-id">
+      <input type="text" id="edit-moto-nombre" placeholder="Nombre">
+      <input type="text" id="edit-moto-apellido" placeholder="Apellido">
+      <input type="text" id="edit-moto-cedula" placeholder="Cédula">
+      <input type="text" id="edit-moto-telefono" placeholder="Teléfono">
+      <input type="text" id="edit-moto-placa" placeholder="Placa">
+      <button class="boton" onclick="guardarEdicionMoto()">Guardar</button>
+      <button class="boton" onclick="cancelarEdicionMoto()">Cancelar</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Apellido</th><th>Cédula</th><th>Teléfono</th><th>Placa</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-motos"></tbody>
+    </table>
+
+    <div class="paginacion" id="paginacion-motos"></div>
+    <div style="text-align:center;">
+      <button class="boton" onclick="volverDesdeMotosTaller()">🔙 Volver atrás</button>
+    </div>
+  </section>
+
+  <!-- Sonido global de clic en botones -->
+  <audio id="sonido-click" src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b6c_1.mp3"></audio>
+
+  <script>
+    // Reproduce sonido al hacer click en cualquier botón
+    document.addEventListener("DOMContentLoaded", function() {
+      const sonido = document.getElementById("sonido-click");
+      document.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          try { sonido.currentTime = 0; sonido.play(); } catch(e){}
+        });
+      });
+    });
+
+    // ====== Datos iniciales ======
+    let personas = JSON.parse(localStorage.getItem("personas")) || [
+      { id: 1, nombre: "Carlos", apellido: "Perez", cedula: "1000123456", telefono: "3210001111", ciudad: "Pereira" },
+    ];
+
+    let motos = JSON.parse(localStorage.getItem("motos")) || [
+      { id: 1, nombre: "Juan", apellido: "Gomez", cedula: "1000111111", telefono: "3221112222", placa: "ABC123" },
+    ];
+
+    let currentPage = 1, rowsPerPage = 5;
+    let currentPageMotos = 1, rowsPerPageMotos = 5;
+
+    // ====== Modal login ======
+    function abrirModal() {
+      document.getElementById("modal").style.display = "block";
+      document.getElementById("password").value = "";
+      document.getElementById("mensaje-error").textContent = "";
     }
-  }
-
-  // ---- Selection behavior (modificado para reproducir sonido) ----
-  document.querySelectorAll('input[type="radio"]').forEach(radio=>{
-    radio.addEventListener('change',(e)=>{
-      // reproducir sonido al elegir (crear AudioContext en la primera interacción)
-      playSelectSound();
-
-      const name = e.target.name;
-      // remove 'selected' from all siblings
-      document.querySelectorAll(`input[name="${name}"]`).forEach(i=>{
-        const lab = i.closest('label');
-        lab && lab.classList.remove('selected');
-      });
-      const selLabel = e.target.closest('label');
-      selLabel && selLabel.classList.add('selected');
-
-      // lock question choices
-      document.querySelectorAll(`input[name="${name}"]`).forEach(i=> i.disabled = true);
-    });
-  });
-
-  // hover lifts
-  document.querySelectorAll('.answers label').forEach(label=>{
-    label.addEventListener('mouseenter', (e)=>{
-      const q = label.closest('.question');
-      if(q) q.classList.add('lift');
-      label.style.cursor = 'none';
-    });
-    label.addEventListener('mouseleave', (e)=>{
-      const q = label.closest('.question');
-      if(q) q.classList.remove('lift');
-    });
-    const input = label.querySelector('input[type="radio"]');
-    if(input){
-      input.addEventListener('focus', ()=> {
-        const q = input.closest('.question');
-        if(q) q.classList.add('lift');
-      });
-      input.addEventListener('blur', ()=> {
-        const q = input.closest('.question');
-        if(q) q.classList.remove('lift');
-      });
-    }
-  });
-
-  // ---- Submit logic ----
-  submitBtn.addEventListener('click', ()=>{
-    const total = 25;
-    let score = 0;
-    let wrong = 0;
-
-    // stop timer
-    stopTimer();
-
-    // prevent double
-    submitBtn.disabled = true;
-
-    for(let i=1;i<=total;i++){
-      const qName = 'q'+i;
-      const selected = document.querySelector(`input[name="${qName}"]:checked`);
-      if(selected){
-        const selLabel = selected.closest('label');
-        if(selected.value === correctAnswers[qName]){
-          score++;
-          selLabel && selLabel.classList.add('correct');
-        } else {
-          wrong++;
-          selLabel && selLabel.classList.add('incorrect');
-        }
+    function cerrarModal() { document.getElementById("modal").style.display = "none"; }
+    function verificarPassword() {
+      const pass = document.getElementById("password").value;
+      if (pass === "1234") {
+        cerrarModal();
+        document.getElementById("contenido-principal").style.display = "none";
+        document.getElementById("seccion-secreta").style.display = "block";
       } else {
-        wrong++;
+        document.getElementById("mensaje-error").textContent = "❌ Contraseña incorrecta";
       }
     }
-
-    // disable all radios
-    document.querySelectorAll('input[type="radio"]').forEach(i=> i.disabled = true);
-
-    const nota = ((score / total) * 5).toFixed(1);
-    const pct = score / total;
-    let msg = '';
-    if(pct === 1) msg = '🎉 Excelente';
-    else if(pct >= 0.6) msg = '👍 Bien hecho';
-    else msg = '🔔 Necesitas mejorar';
-
-    const res = document.getElementById('result');
-    res.style.display = 'block';
-    res.innerHTML = `
-      <div style="font-weight:700;font-size:1.06rem">Resultado</div>
-      <div class="small" style="margin-top:6px">✅ Aciertos: ${score} / ${total} &nbsp;&nbsp; ❌ Fallos: ${wrong}</div>
-      <div class="small" style="margin-top:6px">📘 Nota final: <strong>${nota} / 5.0</strong></div>
-      <div style="margin-top:8px;font-weight:600">${msg}</div>
-    `;
-    res.scrollIntoView({behavior:'smooth', block:'center'});
-  });
-
-  // ---- Reset logic ----
-  function resetQuiz(auto=false){
-    // if auto=false, confirm
-    if(!auto){
-      if(!confirm('¿Reiniciar el quiz? Se borrarán todas las respuestas seleccionadas.')) return;
+    function volverAtras() {
+      document.getElementById("contenido-principal").style.display = "block";
+      document.getElementById("seccion-secreta").style.display = "none";
     }
-    document.querySelectorAll('input[type="radio"]').forEach(i=>{
-      i.checked = false;
-      i.disabled = false;
-      const lab = i.closest('label');
-      lab && lab.classList.remove('correct','incorrect','selected');
+
+    // ====== Personas ======
+    function mostrarPersonas() {
+      document.getElementById("seccion-secreta").style.display = "none";
+      document.getElementById("seccion-personas").style.display = "block";
+      renderTabla();
+    }
+    function volverDesdePersonas() {
+      document.getElementById("seccion-personas").style.display = "none";
+      document.getElementById("seccion-secreta").style.display = "block";
+    }
+    function guardarPersonas() { localStorage.setItem("personas", JSON.stringify(personas)); }
+    function registrarPersona() {
+      const nombre = document.getElementById("nombre").value.trim();
+      const apellido = document.getElementById("apellido").value.trim();
+      const cedula = document.getElementById("cedula").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const ciudad = document.getElementById("ciudad").value.trim();
+
+      if (nombre && apellido && cedula && telefono && ciudad) {
+        const nueva = { id: personas.length ? personas[personas.length - 1].id + 1 : 1, nombre, apellido, cedula, telefono, ciudad };
+        personas.push(nueva);
+        guardarPersonas();
+        limpiarFormulario();
+        renderTabla();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function limpiarFormulario() {
+      ["nombre","apellido","cedula","telefono","ciudad"].forEach(id => document.getElementById(id).value = "");
+    }
+    function renderTabla() {
+      const inicio = (currentPage - 1) * rowsPerPage;
+      const visibles = personas.slice(inicio, inicio + rowsPerPage);
+      const cuerpo = visibles.map(p => `
+        <tr>
+          <td>${p.id}</td><td>${p.nombre}</td><td>${p.apellido}</td><td>${p.cedula}</td><td>${p.telefono}</td><td>${p.ciudad}</td>
+          <td class="acciones">
+            <button onclick="editarPersona(${p.id})">Editar</button>
+            <button onclick="borrarPersona(${p.id})">Borrar</button>
+          </td>
+        </tr>`).join("");
+      document.getElementById("tabla-personas").innerHTML = cuerpo;
+      renderPaginacion();
+    }
+    function editarPersona(id) {
+      const persona = personas.find(p => p.id === id);
+      if (!persona) return;
+      document.getElementById("formulario-edicion").style.display = "block";
+      document.getElementById("formulario-registro").style.display = "none";
+      document.getElementById("edit-id").value = persona.id;
+      document.getElementById("edit-nombre").value = persona.nombre;
+      document.getElementById("edit-apellido").value = persona.apellido;
+      document.getElementById("edit-cedula").value = persona.cedula;
+      document.getElementById("edit-telefono").value = persona.telefono;
+      document.getElementById("edit-ciudad").value = persona.ciudad;
+    }
+    function guardarEdicion() {
+      const id = parseInt(document.getElementById("edit-id").value, 10);
+      const nombre = document.getElementById("edit-nombre").value.trim();
+      const apellido = document.getElementById("edit-apellido").value.trim();
+      const cedula = document.getElementById("edit-cedula").value.trim();
+      const telefono = document.getElementById("edit-telefono").value.trim();
+      const ciudad = document.getElementById("edit-ciudad").value.trim();
+      const persona = personas.find(p => p.id === id);
+      if (persona && nombre && apellido && cedula && telefono && ciudad) {
+        Object.assign(persona, { nombre, apellido, cedula, telefono, ciudad });
+        guardarPersonas();
+        document.getElementById("formulario-edicion").style.display = "none";
+        document.getElementById("formulario-registro").style.display = "block";
+        renderTabla();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function cancelarEdicion() {
+      document.getElementById("formulario-edicion").style.display = "none";
+      document.getElementById("formulario-registro").style.display = "block";
+    }
+    function borrarPersona(id) {
+      if (!confirm("¿Estás seguro de borrar esta persona?")) return;
+      personas = personas.filter(p => p.id !== id);
+      guardarPersonas();
+      renderTabla();
+    }
+    function renderPaginacion() {
+      const total = Math.ceil(personas.length / rowsPerPage);
+      let botones = "";
+      for (let i = 1; i <= total; i++) {
+        botones += `<button class="${i === currentPage ? 'activo' : ''}" onclick="cambiarPagina(${i})">${i}</button>`;
+      }
+      document.getElementById("paginacion").innerHTML = botones;
+    }
+    function cambiarPagina(pag) { currentPage = pag; renderTabla(); }
+
+    // ====== Motos/Taller ======
+    function mostrarMotosTaller() {
+      document.getElementById("seccion-secreta").style.display = "none";
+      document.getElementById("seccion-motos-taller").style.display = "block";
+      renderTablaMotos();
+    }
+    function volverDesdeMotosTaller() {
+      document.getElementById("seccion-motos-taller").style.display = "none";
+      document.getElementById("seccion-secreta").style.display = "block";
+    }
+    function guardarMotos() { localStorage.setItem("motos", JSON.stringify(motos)); }
+    function registrarMoto() {
+      const nombre = document.getElementById("moto-nombre").value.trim();
+      const apellido = document.getElementById("moto-apellido").value.trim();
+      const cedula = document.getElementById("moto-cedula").value.trim();
+      const telefono = document.getElementById("moto-telefono").value.trim();
+      const placa = document.getElementById("moto-placa").value.trim();
+      if (nombre && apellido && cedula && telefono && placa) {
+        const nueva = { id: motos.length ? motos[motos.length - 1].id + 1 : 1, nombre, apellido, cedula, telefono, placa };
+        motos.push(nueva);
+        guardarMotos();
+        limpiarFormularioMoto();
+        renderTablaMotos();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function limpiarFormularioMoto() {
+      ["moto-nombre","moto-apellido","moto-cedula","moto-telefono","moto-placa"].forEach(id => document.getElementById(id).value = "");
+    }
+    function renderTablaMotos() {
+      const inicio = (currentPageMotos - 1) * rowsPerPageMotos;
+      const visibles = motos.slice(inicio, inicio + rowsPerPageMotos);
+      const cuerpo = visibles.map(m => `
+        <tr>
+          <td>${m.id}</td><td>${m.nombre}</td><td>${m.apellido}</td><td>${m.cedula}</td><td>${m.telefono}</td><td>${m.placa}</td>
+          <td class="acciones">
+            <button onclick="editarMoto(${m.id})">Editar</button>
+            <button onclick="borrarMoto(${m.id})">Borrar</button>
+          </td>
+        </tr>`).join("");
+      document.getElementById("tabla-motos").innerHTML = cuerpo;
+      renderPaginacionMotos();
+    }
+    function editarMoto(id) {
+      const moto = motos.find(m => m.id === id);
+      if (!moto) return;
+      document.getElementById("formulario-edicion-moto").style.display = "block";
+      document.getElementById("formulario-moto").style.display = "none";
+      document.getElementById("edit-moto-id").value = moto.id;
+      document.getElementById("edit-moto-nombre").value = moto.nombre;
+      document.getElementById("edit-moto-apellido").value = moto.apellido;
+      document.getElementById("edit-moto-cedula").value = moto.cedula;
+      document.getElementById("edit-moto-telefono").value = moto.telefono;
+      document.getElementById("edit-moto-placa").value = moto.placa;
+    }
+    function guardarEdicionMoto() {
+      const id = parseInt(document.getElementById("edit-moto-id").value, 10);
+      const nombre = document.getElementById("edit-moto-nombre").value.trim();
+      const apellido = document.getElementById("edit-moto-apellido").value.trim();
+      const cedula = document.getElementById("edit-moto-cedula").value.trim();
+      const telefono = document.getElementById("edit-moto-telefono").value.trim();
+      const placa = document.getElementById("edit-moto-placa").value.trim();
+      const moto = motos.find(m => m.id === id);
+      if (moto && nombre && apellido && cedula && telefono && placa) {
+        Object.assign(moto, { nombre, apellido, cedula, telefono, placa });
+        guardarMotos();
+        document.getElementById("formulario-edicion-moto").style.display = "none";
+        document.getElementById("formulario-moto").style.display = "block";
+        renderTablaMotos();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function cancelarEdicionMoto() {
+      document.getElementById("formulario-edicion-moto").style.display = "none";
+      document.getElementById("formulario-moto").style.display = "block";
+    }
+    function borrarMoto(id) {
+      if (!confirm("¿Estás seguro de borrar esta moto/taller?")) return;
+      motos = motos.filter(m => m.id !== id);
+      guardarMotos();
+      renderTablaMotos();
+    }
+    function renderPaginacionMotos() {
+      const total = Math.ceil(motos.length / rowsPerPageMotos);
+      let botones = "";
+      for (let i = 1; i <= total; i++) {
+        botones += `<button class="${i === currentPageMotos ? 'activo' : ''}" onclick="cambiarPaginaMotos(${i})">${i}</button>`;
+      }
+      document.getElementById("paginacion-motos").innerHTML = botones;
+    }
+    function cambiarPaginaMotos(pag) { currentPageMotos = pag; renderTablaMotos(); }
+
+    // ====== Partículas ======
+    tsParticles.load("tsparticles", {
+      fpsLimit: 120,
+      background: { color: "#000000" },
+      particles: {
+        number: { value: 120, density: { enable: true, area: 800 } },
+        color: { value: ["#ff0000", "#00cfff", "#ffffff"] },
+        shape: { type: ["circle", "star"] },
+        opacity: { value: 0.7, random: true },
+        size: { value: 4, random: true },
+        links: { enable: true, distance: 120, color: "#00cfff", opacity: 0.5, width: 2 },
+        move: { enable: true, speed: 2, direction: "none", outModes: { default: "bounce" } }
+      },
+      interactivity: {
+        events: { onHover: { enable: true, mode: "repulse" }, resize: true },
+        modes: { repulse: { distance: 100 } }
+      },
+      detectRetina: true
     });
-    document.getElementById('submit-btn').disabled = false;
-    const res = document.getElementById('result');
-    res.style.display = 'none';
-    res.innerHTML = '';
-    // restart timer
-    startTimer();
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
+  </script>
 
-  document.getElementById('reset-btn').addEventListener('click', ()=> resetQuiz(false));
+  <!-- ====== NKD BOT — Widget nuevo desde cero (HTML) ====== -->
+  <button id="nkdbot-toggle" aria-label="Abrir chat de ayuda" title="Ayuda 🤖">🤖</button>
 
-  // start timer on load
-  startTimer();
+  <div id="nkdbot-panel" role="dialog" aria-label="Chat de ayuda NKD">
+    <div id="nkdbot-header">
+      <div id="nkdbot-title">🤖 <strong>NKD BOT</strong> <span style="font-size:.85em;color:#bbb;">offline</span></div>
+      <div id="nkdbot-actions">
+        <button id="nkdbot-min" title="Minimizar">▁</button>
+        <button id="nkdbot-close" title="Cerrar">✖</button>
+      </div>
+    </div>
+    <div id="nkdbot-messages"></div>
+    <div id="nkdbot-suggestions"></div>
+    <div id="nkdbot-inputbar">
+      <input id="nkdbot-input" type="text" placeholder="Escribe tu pregunta..." autocomplete="off" />
+      <button id="nkdbot-send">Enviar</button>
+    </div>
+  </div>
 
-  // ensure overlay hide on manual reset as well
-  // (if user resets while overlay visible)
-  const obs = new MutationObserver(()=>{
-    if(!overlayEl.classList.contains('show')) return;
-  });
-  obs.observe(overlayEl, {attributes:true, attributeFilter:['class']});
-</script>
+  <!-- Sonido específico de apertura del bot (además del global de botones) -->
+  <audio id="nkdbot-open" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b6c_1.mp3?filename=click-124467.mp3" preload="auto"></audio>
+
+  <!-- ====== NKD BOT — Lógica ====== -->
+  <script>
+    (function(){
+      const $ = (q) => document.querySelector(q);
+      const toggle = $("#nkdbot-toggle");
+      const panel  = $("#nkdbot-panel");
+      const btnMin = $("#nkdbot-min");
+      const btnCls = $("#nkdbot-close");
+      const msgBox = $("#nkdbot-messages");
+      const input  = $("#nkdbot-input");
+      const send   = $("#nkdbot-send");
+      const suggs  = $("#nkdbot-suggestions");
+      const openSfx = $("#nkdbot-open");
+
+      function openPanel(){
+        panel.classList.add("open");
+        panel.style.display = "flex";
+        try { openSfx.currentTime = 0; openSfx.play(); } catch(e){}
+        setTimeout(()=>input.focus(), 60);
+      }
+      function closePanel(){
+        panel.classList.remove("open");
+        setTimeout(()=>{ panel.style.display="none"; }, 200);
+      }
+      toggle.addEventListener("click", openPanel);
+      btnMin.addEventListener("click", ()=> panel.classList.toggle("open"));
+      btnCls.addEventListener("click", closePanel);
+
+      function addMsg(text, who="bot"){
+        const el = document.createElement("div");
+        el.className = "nkdbot-msg " + (who === "user" ? "nkdbot-user" : "nkdbot-bot");
+        const time = new Date();
+        const hh = String(time.getHours()).padStart(2,"0");
+        const mm = String(time.getMinutes()).padStart(2,"0");
+        el.innerHTML = text + '<span class="nkdbot-time">'+hh+':'+mm+'</span>';
+        msgBox.appendChild(el);
+        msgBox.scrollTop = msgBox.scrollHeight;
+      }
+
+      const chips = [
+        "¿Cuál es la contraseña?",
+        "¿Cómo registro una persona?",
+        "¿Dónde están las motos/taller?",
+        "¿Por qué pide edad al entrar?",
+        "¿Cómo edito o borro registros?",
+        "¿Dónde se guardan los datos?",
+        "¿Funciona en iPhone?"
+      ];
+      function renderChips(){
+        suggs.innerHTML = "";
+        chips.forEach(txt => {
+          const c = document.createElement("button");
+          c.className = "nkd-chip";
+          c.textContent = txt;
+          c.addEventListener("click", ()=> { input.value = txt; handleSend(); });
+          suggs.appendChild(c);
+        });
+      }
+
+      function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+
+      function answer(q){
+        const t = norm(q);
+
+        if (t === "/limpiar" || t === "limpiar chat") { msgBox.innerHTML = ""; return "✔️ Chat limpiado."; }
+        if (t === "/ayuda" || t.includes("ayuda") || t.includes("que puedes hacer")) {
+          return "Puedo ayudarte con: <b>contraseña</b>, <b>acceso por edad</b>, <b>registrar/editar/borrar personas</b>, <b>registrar motos</b>, secciones y dónde se guardan los datos (<code>localStorage</code>).";
+        }
+        if (t.includes("iphone") || t.includes("ios")) {
+          return "📱 Sí, funciona en iPhone/iOS. No hay bloqueos para dispositivos Apple.";
+        }
+
+        // Acceso
+        if (t.includes("contrase") || t.includes("password") || t.includes("clave"))
+          return "🔑 La contraseña por defecto es <b>1234</b>. Puedes cambiarla en <code>verificarPassword()</code>.";
+        if (t.includes("entrar") || t.includes("acceso") || t.includes("login") || t.includes("clientes"))
+          return "Para entrar: pulsa <b>ENTRADA DE CLIENTES</b>, escribe la contraseña y verás <b>PERSONAS</b> y <b>MOTOS/TALLER</b>.";
+
+        // Edad
+        if (t.includes("edad") || t.includes("mayor") || t.includes("menor"))
+          return "🔞 Al cargar la página, debes seleccionar tu rango de edad. 18-25 (mayor) habilita el acceso. 10-17 muestra denegado.";
+
+        // Personas
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("registr") || t.includes("agregar")))
+          return "👤 Completa <b>Nombre, Apellido, Cédula, Teléfono y Ciudad</b> y pulsa <b>Registrar</b>. Se guarda en <code>localStorage</code>.";
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("editar") || t.includes("modificar")))
+          return "✏️ Usa <b>Editar</b> en la tabla, cambia los campos y pulsa <b>Guardar</b>.";
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("borrar") || t.includes("eliminar")))
+          return "🗑️ Pulsa <b>Borrar</b> junto al registro y confirma.";
+
+        // Motos / Taller
+        if (t.includes("moto") || t.includes("taller")) {
+          if (t.includes("registr")) return "🏍️ En <b>Motos/Taller</b> llena los datos y pulsa <b>Registrar Moto</b>.";
+          if (t.includes("editar"))   return "🔧 Usa <b>Editar</b> en la tabla de Motos/Taller y guarda.";
+          if (t.includes("borrar") || t.includes("eliminar")) return "🗑️ Pulsa <b>Borrar</b> junto al registro y confirma.";
+          return "En <b>Motos/Taller</b> puedes registrar, editar y eliminar motos.";
+        }
+
+        // Datos
+        if (t.includes("dato") || t.includes("guardar") || t.includes("localstorage") || t.includes("se guardan"))
+          return "💾 Todo se guarda en el navegador con <code>localStorage</code>. Si borras caché, se pierde. Recomiendo exportar periódicamente.";
+
+        // Estilo / partículas / sonido
+        if (t.includes("particula") || t.includes("tsparticles")) return "✨ El fondo usa <b>tsParticles</b>. Ajusta densidad, forma y velocidad en su config.";
+        if (t.includes("sonido") || t.includes("click")) return "🔊 Los botones reproducen un clic gracias al audio global.";
+
+        return "🤔 No tengo esa respuesta aún. Prueba con: <i>contraseña</i>, <i>registrar persona</i>, <i>motos/taller</i>, <i>edad de acceso</i> o escribe <b>/ayuda</b>.";
+      }
+
+      function handleSend(){
+        const q = input.value.trim();
+        if(!q) return;
+        addMsg(q, "user");
+        input.value = "";
+        const tip = document.createElement("div");
+        tip.className = "nkdbot-msg nkdbot-bot"; tip.textContent = "Escribiendo...";
+        msgBox.appendChild(tip); msgBox.scrollTop = msgBox.scrollHeight;
+        setTimeout(()=>{ tip.remove(); addMsg(answer(q), "bot"); }, 450);
+      }
+
+      send.addEventListener("click", handleSend);
+      input.addEventListener("keydown", (e)=>{ if(e.key === "Enter"){ handleSend(); } });
+
+      addMsg("¡Hola! Soy el <b>NKD BOT</b>. Pregúntame sobre tu página: contraseña, personas, motos/taller o edad de acceso. Escribe <b>/ayuda</b> para ver más opciones.");
+      renderChips();
+    })();
+  </script>
+
+  <!-- Contenedor de partículas -->
+  <div id="tsparticles"></div>
+
 </body>
 </html>
