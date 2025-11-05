@@ -1,188 +1,458 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Página de Mateo 6-2</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: black;
-      color: #00ff00;
-      font-family: 'Courier New', Courier, monospace;
-      overflow: hidden;
-    }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-      z-index: 1;
-      position: relative;
-    }
-
-    .typing-text {
-      font-size: 2rem;
-      color: #00ff00;
-      text-shadow: 0 0 10px #00ff00;
-      border-right: 2px solid #00ff00;
-      white-space: nowrap;
-      overflow: hidden;
-      width: 0;
-      animation: typing 4s steps(30, end) infinite alternate,
-                 blink 0.7s infinite;
-    }
-
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 25ch; }
-    }
-
-    @keyframes blink {
-      50% { border-color: transparent; }
-    }
-
-    .download-btn {
-      margin-top: 20px;
-    }
-
-    .download-btn button {
-      width: 165px;
-      height: 62px;
-      cursor: pointer;
-      color: #fff;
-      font-size: 17px;
-      border-radius: 1rem;
-      border: none;
-      position: relative;
-      background: #100720;
-      transition: 0.1s;
-    }
-
-    .download-btn button::after {
-      content: '';
-      width: 100%;
-      height: 100%;
-      background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
-      filter: blur(15px);
-      z-index: -1;
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-
-    .download-btn button:active {
-      transform: scale(0.9) rotate(3deg);
-      background: radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%);
-      transition: 0.5s;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sopa de letras - Componentes de PC (Super animada)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#0f172a; --bg2:#071129; --accent:#5eead4; --accent2:#60a5fa; --card:#0b1220;
+  }
+  html,body{height:100%;margin:0;font-family:"Outfit",system-ui,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#e6eef8;overflow:hidden}
+  #particles{position:fixed;inset:0;z-index:0;pointer-events:none;mix-blend-mode:screen;opacity:0.8}
+  .wrap{position:relative;z-index:1;max-width:1150px;margin:28px auto;padding:28px;display:grid;grid-template-columns:420px 1fr;gap:22px;align-items:start;}
+  .panel{background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+  h1{margin:0 0 8px;font-size:20px;letter-spacing:0.4px}
+  p.lead{margin:0 0 12px;color:#cfe9ff90;font-size:13px}
+  .words-list{display:flex;flex-wrap:wrap;gap:8px}
+  .word-item{padding:8px 12px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:999px;font-weight:600;color:#cfe9ff;box-shadow:0 4px 18px rgba(2,6,23,0.6);transform:translateY(0);transition:all .28s;}
+  .word-item.found{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#041124;text-decoration:line-through;transform:scale(1.04);box-shadow:0 10px 30px rgba(96,165,250,0.16)}
+  .stats{display:flex;gap:12px;margin-top:12px;align-items:center}
+  .stat{background:#071426;padding:10px;border-radius:10px;font-weight:700;min-width:100px;text-align:center}
+  /* Grid */
+  .board-wrap{display:flex;flex-direction:column;gap:12px}
+  .grid{display:grid;grid-template-columns:repeat(15,1fr);gap:6px;user-select:none}
+  .cell{width:34px;height:34px;background:linear-gradient(180deg,#07162a,rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:800;color: #dbeafe;cursor:crosshair;transition:transform .12s,background .12s,box-shadow .12s}
+  .cell:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 8px 18px rgba(2,6,23,0.6)}
+  .cell.sel{background:linear-gradient(90deg,#2b6cb0,#06b6d4);color:#041124}
+  .cell.found{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#061022;box-shadow:0 10px 30px rgba(5,150,125,0.12);transform:scale(1.04)}
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  .btn{background:linear-gradient(90deg,#0ea5a4,#2563eb);color:#041124;padding:10px 14px;border-radius:10px;border:none;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(2,6,23,0.6);transition:transform .18s}
+  .btn:hover{transform:translateY(-4px) scale(1.02)}
+  .small{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#cfe9ff;padding:8px 10px;border-radius:8px}
+  .hint{font-size:13px;color:#bfe9ff88}
+  .footerline{margin-top:12px;font-size:13px;color:#9fd7ff80}
+  /* result modal */
+  .modal{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(2,6,23,0.8));z-index:5;opacity:0;pointer-events:none;transition:opacity .28s}
+  .modal.show{opacity:1;pointer-events:auto}
+  .card{background:linear-gradient(180deg,#0b1220,#071129);padding:22px;border-radius:14px;text-align:center;min-width:320px;border:1px solid rgba(255,255,255,0.04)}
+  .bignum{font-size:48px;font-weight:900;color:var(--accent);margin:8px 0}
+  .confetti{width:100%;height:120px;position:relative;overflow:hidden}
+  .confetti i{position:absolute;width:10px;height:16px;opacity:0.95;border-radius:2px;animation:fall 2.8s linear infinite}
+  @keyframes fall{
+    0%{transform:translateY(-160px) rotate(0)}
+    100%{transform:translateY(260px) rotate(720deg)}
+  }
+  /* responsive */
+  @media (max-width:980px){.wrap{grid-template-columns:1fr; padding:18px}.grid .cell{width:30px;height:30px}}
+</style>
 </head>
 <body>
-  <canvas id="matrix"></canvas>
-  <canvas id="stars"></canvas>
-  <canvas id="robot"></canvas>
+<canvas id="particles"></canvas>
 
-  <div class="container">
-    <div class="typing-text">El mejor grupo de la exposición...</div>
-    <div class="download-btn">
-      <a href="video.mp4" download>
-        <button>Descargar</button>
-      </a>
+<div class="wrap">
+  <div class="panel">
+    <h1>Sopa de letras: Componentes de PC</h1>
+    <p class="lead">Busca las 15 palabras relacionadas con hardware y accesorios. Selecciona arrastrando o haciendo clic en la primera y última letra. Animaciones y contadores al final.</p>
+
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div class="stat" id="foundStat">Buenas: 0</div>
+      <div class="stat" id="badStat">Malas: 0</div>
+      <div class="stat" id="percentStat">0%</div>
     </div>
+
+    <div class="controls">
+      <button class="btn" id="newBtn">Generar nueva sopa</button>
+      <button class="small" id="revealBtn">Mostrar palabras</button>
+      <div class="hint">Consejo: Mantén presionado y arrastra para seleccionar</div>
+    </div>
+
+    <div style="margin-top:12px">
+      <div class="words-list" id="wordsList"></div>
+    </div>
+
+    <div class="footerline">Hecho para aprender; palabras en mayúsculas.</div>
   </div>
 
-  <script>
-    // ===== MATRIX =====
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  <div class="panel board-wrap">
+    <div id="boardHolder" style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+      <div>
+        <div class="grid" id="grid"></div>
+      </div>
+      <div style="min-width:220px">
+        <h2 style="margin:0 0 8px">Instrucciones / Acciones</h2>
+        <p class="hint">Selecciona una palabra y si es correcta quedará marcada. Si no, cuenta como mala.</p>
+        <div style="display:flex;gap:8px;flex-direction:column">
+          <button class="btn" id="checkBtn">Checar resultados</button>
+          <button class="small" id="clearSel">Limpiar selección</button>
+          <button class="small" id="shuffleBtn">Reubicar palabras</button>
+        </div>
+        <div style="margin-top:12px">
+          <div class="hint">Palabras: <strong id="totalWords">15</strong></div>
+          <div class="hint" id="remaining">Restantes: 15</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    const letters = "01";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(columns).fill(1);
+<!-- resultado modal -->
+<div class="modal" id="modal">
+  <div class="card">
+    <h3>Resultados</h3>
+    <div class="bignum" id="modalPercent">0%</div>
+    <div style="font-weight:700" id="modalScore">0 buenas • 0 malas</div>
+    <div style="margin-top:10px" id="modalMsg">¡Sigue practicando!</div>
+    <div class="confetti" id="confetti"></div>
+    <div style="margin-top:12px">
+      <button class="btn" id="closeModal">Cerrar</button>
+    </div>
+  </div>
+</div>
 
-    function drawMatrix() {
-      ctx.fillStyle = "rgba(0,0,0,0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`;
-      ctx.font = fontSize + "px monospace";
-      for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
+<script>
+// ---------------- Words and grid configuration ----------------
+const WORDS = [
+  "MOTHERBOARD","PROCESSOR","GRAPHICS","MEMORY","STORAGE",
+  "HARDDRIVE","SOLIDSTATE","GPU","POWER","COOLING",
+  "HEATSINK","MONITOR","KEYBOARD","MOUSE","USB"
+];
+const SIZE = 15; // grid size
+let grid = []; // 2D array
+let placed = []; // track placed words
+let found = new Set();
+let badCount = 0;
+
+// DOM
+const gridEl = document.getElementById('grid');
+const wordsListEl = document.getElementById('wordsList');
+const foundStat = document.getElementById('foundStat');
+const badStat = document.getElementById('badStat');
+const percentStat = document.getElementById('percentStat');
+const remainingEl = document.getElementById('remaining');
+const totalWordsEl = document.getElementById('totalWords');
+const modal = document.getElementById('modal');
+const modalPercent = document.getElementById('modalPercent');
+const modalScore = document.getElementById('modalScore');
+const modalMsg = document.getElementById('modalMsg');
+const confettiHolder = document.getElementById('confetti');
+
+totalWordsEl.textContent = WORDS.length;
+
+// Utility
+const rand = (a,b)=>(Math.floor(Math.random()*(b-a+1))+a);
+const directions = [
+  [0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]
+];
+
+// initialize
+function createEmptyGrid(){
+  grid = Array.from({length:SIZE},()=>Array.from({length:SIZE},()=>""));
+}
+
+function placeWords(){
+  placed = [];
+  const words = WORDS.slice().sort((a,b)=>b.length-a.length);
+  for(const w of words){
+    const word = w.replace(/\s+/g,"").toUpperCase();
+    let placedThis=false;
+    for(let attempts=0;attempts<120 && !placedThis;attempts++){
+      const dir = directions[rand(0,directions.length-1)];
+      const row = rand(0,SIZE-1);
+      const col = rand(0,SIZE-1);
+      // check bounds
+      const endRow = row + dir[0]*(word.length-1);
+      const endCol = col + dir[1]*(word.length-1);
+      if(endRow<0 || endRow>=SIZE || endCol<0 || endCol>=SIZE) continue;
+      // check conflicts
+      let ok=true;
+      for(let i=0;i<word.length;i++){
+        const r=row+dir[0]*i,c=col+dir[1]*i;
+        const ch = grid[r][c];
+        if(ch!=="" && ch!==word[i]){ ok=false; break; }
       }
+      if(!ok) continue;
+      // place
+      for(let i=0;i<word.length;i++){
+        const r=row+dir[0]*i,c=col+dir[1]*i;
+        grid[r][c] = word[i];
+      }
+      placed.push({word, row, col, dir, len:word.length});
+      placedThis=true;
     }
-    setInterval(drawMatrix, 35);
-
-    // ===== ESTRELLAS =====
-    const starCanvas = document.getElementById("stars");
-    const sCtx = starCanvas.getContext("2d");
-    starCanvas.width = window.innerWidth;
-    starCanvas.height = window.innerHeight;
-
-    const stars = Array.from({length: 150}, () => ({
-      x: Math.random() * starCanvas.width,
-      y: Math.random() * starCanvas.height,
-      size: Math.random() * 2,
-      speed: Math.random() * 0.5 + 0.2
-    }));
-
-    function drawStars() {
-      sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-      sCtx.fillStyle = "white";
-      stars.forEach(star => {
-        sCtx.beginPath();
-        sCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        sCtx.fill();
-        star.y += star.speed;
-        if (star.y > starCanvas.height) star.y = 0;
-      });
-      requestAnimationFrame(drawStars);
+    if(!placedThis){
+      // if failed, try naive forced placement (overwrite)
+      let r = rand(0,SIZE-1), c=rand(0,SIZE-1), d = directions[rand(0,directions.length-1)];
+      for(let i=0;i<word.length;i++){ const rr=r+d[0]*i, cc=c+d[1]*i; if(rr>=0 && rr<SIZE && cc>=0 && cc<SIZE) grid[rr][cc] = word[i]; }
+      placed.push({word,row:r,col:c,dir:d,len:word.length});
     }
-    drawStars();
+  }
+}
 
-    // ===== ROBOT =====
-    const robotCanvas = document.getElementById("robot");
-    const rCtx = robotCanvas.getContext("2d");
-    robotCanvas.width = window.innerWidth;
-    robotCanvas.height = window.innerHeight;
-
-    const robot = new Image();
-    robot.src = "https://i.imgur.com/9LhPl4W.png"; // ejemplo de robot
-
-    let robotX = 0;
-    let robotY = window.innerHeight / 2 + 50;
-    let speed = 2;
-
-    function drawRobot() {
-      rCtx.clearRect(0,0,robotCanvas.width, robotCanvas.height);
-      rCtx.drawImage(robot, robotX, robotY, 100, 100);
-      robotX += speed;
-      if (robotX > window.innerWidth) robotX = -100;
-      requestAnimationFrame(drawRobot);
+function fillRandom(){
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+      if(!grid[r][c] || grid[r][c]==="") grid[r][c]=letters.charAt(rand(0,letters.length-1));
     }
-    robot.onload = drawRobot;
+  }
+}
 
-    // ===== AJUSTE RESIZE =====
-    window.addEventListener("resize", () => {
-      canvas.width = starCanvas.width = robotCanvas.width = window.innerWidth;
-      canvas.height = starCanvas.height = robotCanvas.height = window.innerHeight;
-    });
-  </script>
-</body>
-</html>
+// render UI
+function renderGrid(){
+  gridEl.innerHTML="";
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+      const cell = document.createElement('div');
+      cell.className='cell';
+      cell.dataset.r=r; cell.dataset.c=c;
+      cell.textContent = grid[r][c];
+      gridEl.appendChild(cell);
+    }
+  }
+}
+
+function renderWords(){
+  wordsListEl.innerHTML="";
+  for(const p of placed){
+    const span = document.createElement('div');
+    span.className='word-item';
+    span.dataset.word = p.word;
+    span.textContent = p.word;
+    wordsListEl.appendChild(span);
+  }
+}
+
+// selection logic
+let selecting=false;
+let selCells = []; // array of [r,c]
+let selEls = [];
+
+function clearSelection(){
+  for(const el of selEls) el.classList.remove('sel');
+  selCells=[]; selEls=[]; selecting=false;
+}
+
+function markFound(word,coords){
+  found.add(word);
+  // style cells
+  for(const [r,c] of coords){
+    const selector = `.cell[data-r="${r}"][data-c="${c}"]`;
+    const el = document.querySelector(selector);
+    if(el) el.classList.add('found');
+  }
+  // mark word in list
+  const item = [...document.querySelectorAll('.word-item')].find(x=>x.dataset.word===word);
+  if(item) item.classList.add('found');
+  updateStats();
+  // small pulse
+  setTimeout(()=>{ if(found.size===WORDS.length) showResults(); },350);
+}
+
+function coordsToString(coords){
+  return coords.map(([r,c])=>grid[r][c]).join("");
+}
+
+function checkSelection(){
+  if(selCells.length<2) return false;
+  const coords = selCells.slice();
+  const s = coordsToString(coords);
+  const rev = s.split('').reverse().join('');
+  const matched = placed.find(p => p.word===s || p.word===rev);
+  if(matched){
+    if(found.has(matched.word)) {
+      // already found, ignore
+      clearSelection();
+      return;
+    }
+    markFound(matched.word, coords);
+  } else {
+    badCount++;
+    badStat.textContent = `Malas: ${badCount}`;
+    // animate wrong selection
+    for(const el of selEls) el.style.transform = 'translateY(0) rotate(-8deg)';
+    setTimeout(()=>{ for(const el of selEls) el.style.transform=''; clearSelection(); },380);
+    return;
+  }
+  clearSelection();
+}
+
+function updateStats(){
+  foundStat.textContent = `Buenas: ${found.size}`;
+  badStat.textContent = `Malas: ${badCount}`;
+  const percent = Math.round((found.size / WORDS.length)*100);
+  percentStat.textContent = `${percent}%`;
+  remainingEl.textContent = `Restantes: ${WORDS.length - found.size}`;
+}
+
+// mouse/touch handlers
+function getCellFromEvent(e){
+  const el = e.target.closest('.cell');
+  if(!el) return null;
+  return {el, r:parseInt(el.dataset.r,10), c:parseInt(el.dataset.c,10)};
+}
+
+gridEl.addEventListener('pointerdown', (ev)=>{
+  ev.preventDefault();
+  const got = getCellFromEvent(ev);
+  if(!got) return;
+  selecting=true;
+  selCells = [[got.r,got.c]];
+  selEls = [got.el];
+  got.el.classList.add('sel');
+});
+
+gridEl.addEventListener('pointermove', (ev)=>{
+  if(!selecting) return;
+  const got = getCellFromEvent(ev);
+  if(!got) return;
+  const last = selCells[selCells.length-1];
+  // only allow straight lines: determine if new cell lies in line from first to current
+  const first = selCells[0];
+  // allow any cell visited - we will accept polyline selection (simpler)
+  const key = `${got.r},${got.c}`;
+  const exists = selCells.some(([rr,cc])=>rr===got.r && cc===got.c);
+  if(!exists){
+    selCells.push([got.r,got.c]);
+    selEls.push(got.el);
+    got.el.classList.add('sel');
+  }
+});
+
+gridEl.addEventListener('pointerup', (ev)=>{
+  if(!selecting) return;
+  checkSelection();
+});
+
+gridEl.addEventListener('pointerleave', (ev)=>{
+  if(selecting){
+    // on leaving grid, finalize
+    checkSelection();
+  }
+});
+
+// click-to-select first/last letter method
+let clickFirst = null;
+gridEl.addEventListener('click', (ev)=>{
+  if(ev.detail===0) return; // ignore synthetic
+  const got = getCellFromEvent(ev);
+  if(!got) return;
+  if(clickFirst===null){
+    clickFirst = [got.r,got.c];
+    got.el.classList.add('sel');
+    selEls = [got.el]; selCells = [[got.r,got.c]];
+    setTimeout(()=>{ // clear if no second click
+      if(clickFirst) { clearSelection(); clickFirst=null; }
+    },4500);
+  } else {
+    // compute straight line between clickFirst and this cell (bresenham-like)
+    const start = clickFirst, end = [got.r,got.c];
+    const dr = Math.sign(end[0]-start[0]), dc = Math.sign(end[1]-start[1]);
+    const len = Math.max(Math.abs(end[0]-start[0]), Math.abs(end[1]-start[1]));
+    const coords = [];
+    for(let i=0;i<=len;i++){
+      coords.push([start[0]+dr*i, start[1]+dc*i]);
+    }
+    // clear previous sel styles
+    clearSelection();
+    // apply new selection
+    selCells = coords;
+    selEls = coords.map(([r,c])=>document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`)).filter(Boolean);
+    for(const el of selEls) el.classList.add('sel');
+    checkSelection();
+    clickFirst = null;
+  }
+});
+
+// actions
+document.getElementById('newBtn').addEventListener('click', ()=>{ reset(true); });
+document.getElementById('shuffleBtn').addEventListener('click', ()=>{ reset(true); });
+document.getElementById('clearSel').addEventListener('click', ()=>{ clearSelection(); });
+document.getElementById('revealBtn').addEventListener('click', ()=>{
+  // flash all words in list
+  [...document.querySelectorAll('.word-item')].forEach(it=>{ it.classList.add('found'); setTimeout(()=>it.classList.remove('found'),1200);});
+});
+document.getElementById('checkBtn').addEventListener('click', ()=> showResults());
+document.getElementById('closeModal').addEventListener('click', ()=>{ modal.classList.remove('show'); confettiHolder.innerHTML=""; });
+
+// generate confetti
+function spawnConfetti(n=40){
+  confettiHolder.innerHTML="";
+  const colors = ["#60a5fa","#5eead4","#f472b6","#f59e0b","#34d399"];
+  for(let i=0;i<n;i++){
+    const el = document.createElement('i');
+    el.style.left = (Math.random()*100) + "%";
+    el.style.background = colors[rand(0,colors.length-1)];
+    el.style.transform = `rotate(${rand(0,360)}deg)`;
+    el.style.top = (-Math.random()*120 - 40) + "px";
+    el.style.animationDuration = (1.8+Math.random()*1.8) + "s";
+    el.style.opacity = Math.random()*0.9+0.4;
+    confettiHolder.appendChild(el);
+  }
+}
+
+// show results
+function showResults(){
+  const good = found.size;
+  const bad = badCount;
+  const pct = Math.round((good/WORDS.length)*100);
+  modalPercent.textContent = pct + "%";
+  modalScore.textContent = `${good} buenas • ${bad} malas`;
+  if(pct===100){ modalMsg.textContent = "¡Perfecto! Todas las palabras encontradas."; spawnConfetti(80); }
+  else if(pct>=70){ modalMsg.textContent = "¡Muy bien! Buen trabajo."; spawnConfetti(40); }
+  else if(pct>=40){ modalMsg.textContent = "Sigue practicando, vas por buen camino."; }
+  else { modalMsg.textContent = "Practica más. Lee las pistas y vuelve a intentarlo."; }
+  modal.classList.add('show');
+}
+
+// reset / new game
+function reset(newGrid=false){
+  createEmptyGrid();
+  placeWords();
+  fillRandom();
+  renderGrid();
+  renderWords();
+  found.clear(); badCount=0; updateStats();
+  // clear any styles
+  setTimeout(()=>{ [...document.querySelectorAll('.cell')].forEach(el=>el.classList.remove('found','sel')); },80);
+}
+
+// initial run
+reset();
+
+// ---------------- particles (simple canvas stars) ----------------
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W=innerWidth, H=innerHeight;
+canvas.width=W; canvas.height=H;
+const stars=[];
+for(let i=0;i<120;i++){
+  stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+0.3,a:Math.random()*0.8+0.2,s:Math.random()*0.02+0.005});
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(const s of stars){
+    s.y += s.s * 40;
+    s.x += Math.sin(Date.now()*0.0003+s.x)*0.2;
+    if(s.y>H+10){ s.y=-10; s.x=Math.random()*W; }
+    ctx.beginPath();
+    ctx.globalAlpha = s.a;
+    ctx.fillStyle = '#8ec5ff';
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+addEventListener('resize', ()=>{
+  W=innerWidth; H=innerHeight; canvas.width=W; canvas.height=H;
+});
+
+// keyboard shortcuts: R -> regenerate, H -> reveal, C -> check
+addEventListener('keydown',(e)=>{
+  if(e.key.toLowerCase()==='r') reset(true);
+  if(e.key.toLowerCase()==='h') [...document.querySelectorAll('.word-item')].forEach(it=>it.classList.toggle('found'));
+  if(e.key.toLowerCase()==='c') showResults();
+});
+</script>
