@@ -24,7 +24,7 @@
   .stat{background:#071426;padding:10px;border-radius:10px;font-weight:700;min-width:100px;text-align:center}
   /* Grid */
   .board-wrap{display:flex;flex-direction:column;gap:12px}
-  .grid{display:grid;grid-template-columns:repeat(15,1fr);gap:6px;user-select:none}
+  .grid{display:grid;grid-template-columns:repeat(15,1fr);gap:6px;user-select:none; cursor: none;} /* ocultar cursor del sistema solo en la grilla */
   .cell{width:34px;height:34px;background:linear-gradient(180deg,#07162a,rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:800;color: #dbeafe;cursor:crosshair;transition:transform .12s,background .12s,box-shadow .12s}
   .cell:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 8px 18px rgba(2,6,23,0.6)}
   /* SELECTED should be animated red */
@@ -68,6 +68,16 @@
   }
   /* responsive */
   @media (max-width:980px){.wrap{grid-template-columns:1fr; padding:18px}.grid .cell{width:30px;height:30px}}
+  .cursor-dot{
+  position:fixed;
+  width:10px;height:10px;border-radius:50%;
+  background:#ffffffcc; box-shadow:0 2px 8px rgba(0,0,0,0.35);
+  pointer-events:none; transform:translate(-50%,-50%) scale(1);
+  transition:transform .08s linear, background .12s, opacity .12s;
+  z-index:9999; opacity:0;
+}
+.cursor-dot.visible{ opacity:1; }
+.cursor-dot.active{ transform:translate(-50%,-50%) scale(1.25); background:#ffffff; }
 </style>
 </head>
 <body>
@@ -364,9 +374,30 @@ function markAllFound(){
 
 // mouse/touch handlers
 function getCellFromEvent(e){
-  const el = e.target.closest('.cell');
+  // localiza la .cell bajo el target o por coordenadas
+  let el = e.target && e.target.closest ? e.target.closest('.cell') : null;
+  if(!el && typeof e.clientX === 'number' && typeof e.clientY === 'number'){
+    el = document.elementFromPoint(e.clientX, e.clientY);
+    if(el) el = el.closest ? el.closest('.cell') : null;
+  }
   if(!el) return null;
-  return {el, r:parseInt(el.dataset.r,10), c:parseInt(el.dataset.c,10)};
+
+  // evitar seleccionar celdas vecinas: exigir que el puntero esté cerca del centro de la celda
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const px = (e.clientX || 0);
+  const py = (e.clientY || 0);
+  const dist = Math.hypot(px - cx, py - cy);
+
+  // umbral: la mitad del menor lado de la celda (ajusta si quieres más/menos tolerancia)
+  const threshold = Math.min(rect.width, rect.height) * 0.5;
+  if(dist > threshold) return null;
+
+  const r = parseInt(el.dataset.r,10);
+  const c = parseInt(el.dataset.c,10);
+  if(Number.isNaN(r) || Number.isNaN(c)) return null;
+  return { el, r, c };
 }
 
 gridEl.addEventListener('pointerdown', (ev)=>{
@@ -383,23 +414,38 @@ gridEl.addEventListener('pointermove', (ev)=>{
   if(!selecting) return;
   const got = getCellFromEvent(ev);
   if(!got) return;
-  const key = `${got.r},${got.c}`;
-  const exists = selCells.some(([rr,cc])=>rr===got.r && cc===got.c);
-  if(!exists){
-    selCells.push([got.r,got.c]);
-    selEls.push(got.el);
-    got.el.classList.add('sel');
+
+  const last = selCells[selCells.length-1];
+  const existsIndex = selCells.findIndex(([rr,cc])=> rr===got.r && cc===got.c);
+
+  if(existsIndex === -1){
+    // nuevo: añadir solo si es adyacente al último para evitar "saltos"
+    if(!last || Math.max(Math.abs(got.r - last[0]), Math.abs(got.c - last[1])) <= 1){
+      selCells.push([got.r,got.c]);
+      selEls.push(got.el);
+      got.el.classList.add('sel');
+    }
+  } else {
+    // si el usuario retrocede (backtrack), quitar las celdas finales hasta llegar a existsIndex
+    for(let i = selCells.length - 1; i > existsIndex; i--){
+      const removedEl = selEls.pop();
+      if(removedEl) removedEl.classList.remove('sel');
+      selCells.pop();
+    }
   }
 });
 
 gridEl.addEventListener('pointerup', (ev)=>{
   if(!selecting) return;
+  // checar la selección y luego limpiar siempre la visual
   checkSelection();
+  clearSelection();
 });
 
 gridEl.addEventListener('pointerleave', (ev)=>{
   if(selecting){
     checkSelection();
+    clearSelection();
   }
 });
 
@@ -542,6 +588,36 @@ addEventListener('keydown',(e)=>{
   if(e.key.toLowerCase()==='h') [...document.querySelectorAll('.word-item')].forEach(it=>it.classList.toggle('found'));
   if(e.key.toLowerCase()==='c') showResults();
 });
+
+// crear dot cursor y lógica para seguir el puntero dentro de la grilla
+const cursorDot = document.createElement('div');
+cursorDot.className = 'cursor-dot';
+document.body.appendChild(cursorDot);
+
+function moveCursorDot(e){
+  // actualizar posición del dot
+  cursorDot.style.left = (e.clientX || 0) + 'px';
+  cursorDot.style.top  = (e.clientY || 0) + 'px';
+}
+
+gridEl.addEventListener('pointerenter', (e)=>{
+  cursorDot.classList.add('visible');
+  moveCursorDot(e);
+});
+gridEl.addEventListener('pointermove', (e)=>{
+  moveCursorDot(e);
+});
+gridEl.addEventListener('pointerleave', ()=>{
+  cursorDot.classList.remove('visible');
+});
+
+// animación pequeña al presionar/soltar para feedback
+gridEl.addEventListener('pointerdown', ()=> cursorDot.classList.add('active'));
+window.addEventListener('pointerup', ()=> cursorDot.classList.remove('active'));
+
+// Opcional: si quieres que el dot siga siempre, aunque fuera de la grilla,
+// puedes descomentar la línea siguiente:
+// window.addEventListener('pointermove', moveCursorDot);
 </script>
 </body>
 </html>
