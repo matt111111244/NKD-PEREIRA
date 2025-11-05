@@ -619,5 +619,131 @@ window.addEventListener('pointerup', ()=> cursorDot.classList.remove('active'));
 // puedes descomentar la línea siguiente:
 // window.addEventListener('pointermove', moveCursorDot);
 </script>
+
+<!-- NUEVAS FUNCIONES: Pantalla de inicio, Cronómetro, Trofeo y Leaderboard -->
+<style>
+  /* Pantalla inicial */
+  #startScreen {
+    position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a, #071129);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    color: white; font-family: "Outfit", sans-serif; z-index: 99999;
+  }
+  #startScreen input {
+    padding: 10px 16px; border-radius: 8px; border: none; margin-top: 12px; width: 240px;
+    text-align: center; font-size: 16px;
+  }
+  #startScreen button {
+    margin-top: 14px; padding: 10px 20px; font-weight: 700;
+    background: linear-gradient(90deg, #ffd700, #ffb800); border: none;
+    border-radius: 8px; cursor: pointer; color: #222;
+  }
+  /* Cronómetro */
+  #timerDisplay {
+    position: fixed; top: 12px; left: 18px; font-weight: 800; font-size: 18px;
+    color: #ffd700; background: rgba(0,0,0,0.4); padding: 6px 12px; border-radius: 8px;
+    z-index: 10000;
+  }
+  /* Trofeo dorado */
+  #trophyBtn {
+    position: fixed; top: 12px; right: 18px; width: 50px; height: 50px;
+    background: url('https://cdn-icons-png.flaticon.com/512/616/616490.png') no-repeat center/contain;
+    cursor: pointer; z-index: 10000; transition: transform .2s;
+  }
+  #trophyBtn:hover { transform: scale(1.15); }
+  /* Leaderboard */
+  #leaderboardModal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    display: none; align-items: center; justify-content: center; z-index: 10001;
+  }
+  #leaderboard {
+    background: linear-gradient(180deg,#0b1220,#071129);
+    border: 2px solid gold; border-radius: 16px; padding: 20px;
+    color: white; width: 320px; text-align: center;
+  }
+  #leaderboard h2 { color: gold; margin-bottom: 10px; }
+  #leaderboard ol { text-align: left; max-height: 400px; overflow-y: auto; padding-left: 20px; }
+  #leaderboard li { margin-bottom: 6px; color: #e6eef8; }
+</style>
+
+<div id="startScreen">
+  <h1>Ingresa tu nombre</h1>
+  <input type="text" id="playerNameInput" placeholder="Tu nombre...">
+  <button id="startBtn">Entrar</button>
+</div>
+<div id="timerDisplay" style="display:none;">Tiempo: 0.0s</div>
+<div id="trophyBtn" title="Ver leaderboard"></div>
+
+<div id="leaderboardModal">
+  <div id="leaderboard">
+    <h2>🏆 Leaderboard</h2>
+    <ol id="leaderboardList"></ol>
+    <button onclick="document.getElementById('leaderboardModal').style.display='none'" class="btn" style="margin-top:10px;">Cerrar</button>
+  </div>
+</div>
+
+<script>
+let playerName = "";
+let startTime, timerInterval;
+const timerDisplay = document.getElementById("timerDisplay");
+const leaderboardModal = document.getElementById("leaderboardModal");
+const leaderboardList = document.getElementById("leaderboardList");
+
+// Mostrar pantalla inicial
+const startScreen = document.getElementById("startScreen");
+document.getElementById("startBtn").onclick = () => {
+  const input = document.getElementById("playerNameInput");
+  if (!input.value.trim()) return alert("Por favor, escribe tu nombre");
+  playerName = input.value.trim();
+  startScreen.style.display = "none";
+  timerDisplay.style.display = "block";
+  startTimer();
+};
+
+function startTimer(){
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = ((Date.now() - startTime)/1000).toFixed(1);
+    timerDisplay.textContent = "Tiempo: " + elapsed + "s";
+  }, 100);
+}
+
+function stopTimer(){
+  clearInterval(timerInterval);
+  return ((Date.now() - startTime)/1000).toFixed(1);
+}
+
+// Interceptar cuando gana
+const originalShowResults = showResults;
+showResults = function(){
+  const elapsed = stopTimer();
+  originalShowResults();
+  saveLeaderboard(playerName, elapsed);
+};
+
+function saveLeaderboard(name, time){
+  let board = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  board.push({name, time: parseFloat(time)});
+  board.sort((a,b)=>a.time-b.time);
+  if(board.length > 100) board = board.slice(0,100);
+  localStorage.setItem("leaderboard", JSON.stringify(board));
+}
+
+// Mostrar leaderboard manualmente
+document.getElementById("trophyBtn").onclick = () => {
+  let board = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  leaderboardList.innerHTML = "";
+  if(board.length === 0){
+    leaderboardList.innerHTML = "<li>No hay registros aún</li>";
+  } else {
+    board.forEach((p,i)=>{
+      const li = document.createElement("li");
+      li.textContent = (i+1) + ". " + p.name + " — " + p.time.toFixed(1) + "s";
+      leaderboardList.appendChild(li);
+    });
+  }
+  leaderboardModal.style.display = "flex";
+};
+</script>
+
 </body>
 </html>
