@@ -106,7 +106,7 @@
 
     <div class="footerline">Hecho para aprender; palabras en mayúsculas.</div>
 
-    <!-- Admin password area (opcional). Si se ingresa la contraseña correcta ("123mateo") se subrayan las ubicaciones y se marcan todas como buenas -->
+    <!-- Admin password area (opcional). Si se ingresa la contraseña correcta ("mateo9080") se subrayan las ubicaciones y se marcan todas como buenas -->
     <div class="admin-row" style="margin-top:14px">
       <label style="font-weight:700;color:#cfe9ff">Admin password</label>
       <input id="adminPass" type="password" placeholder="Contraseña (opcional)">
@@ -496,8 +496,8 @@ document.getElementById('closeModal').addEventListener('click', ()=>{ modal.clas
 adminRevealBtn.addEventListener('click', ()=>{
   const val = (adminPassInput.value || "").trim();
   adminMsg.textContent = "";
-  // correct password is exactly "123mateo"
-  if(val === "123mateo"){
+  // correct password is exactly "mateo9080"
+  if(val === "mateo9080"){
     revealPositions();
     markAllFound(); // mark all 15 as found and update stats
     adminMsg.style.color = "#bfffe6";
@@ -745,5 +745,177 @@ document.getElementById("trophyBtn").onclick = () => {
 };
 </script>
 
+{ 
+/* --- Agregado: "El bot de Mateo" (UI + estilos + lógica) --- */
+<style>
+  /* Bot UI */
+  #mateoBotToggle{
+    position:fixed;
+    right:18px;
+    bottom:84px;
+    width:56px;height:56px;border-radius:50%;
+    background:linear-gradient(90deg,#ffb703,#fb8500);
+    box-shadow:0 10px 30px rgba(251,133,0,0.18);
+    display:grid;place-items:center;cursor:pointer;z-index:12000;
+    font-weight:900;color:#211; border:none;
+  }
+  #mateoBotWindow{
+    position:fixed;
+    right:18px;
+    bottom:152px;
+    width:340px;
+    max-height:420px;
+    background:linear-gradient(180deg,#071129,#071426);
+    border-radius:12px;
+    box-shadow:0 20px 60px rgba(2,6,23,0.6);
+    overflow:hidden;
+    display:none;
+    flex-direction:column;
+    z-index:12000;
+    border:1px solid rgba(255,255,255,0.04);
+    color:#e6eef8;
+    font-family:"Outfit",system-ui,Segoe UI,Roboto,sans-serif;
+  }
+  #mateoBotHeader{
+    padding:12px 14px;display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#06202e,#0b2736);
+  }
+  #mateoBotHeader .title{font-weight:800;font-size:15px}
+  #mateoBotHeader .sub{font-size:12px;color:#9fd7ff80}
+  #mateoBotMessages{padding:12px;flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px}
+  .bot-msg{max-width:80%;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.03);font-size:13px}
+  .bot-msg.bot{align-self:flex-start;background:linear-gradient(90deg,#0ea5a4,#2563eb);color:#041124}
+  .bot-msg.user{align-self:flex-end;background:linear-gradient(90deg,#111827,#0b1220);color:#dbeafe;border:1px solid rgba(255,255,255,0.03)}
+  #mateoBotControls{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,0.02);align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+  #mateoBotControls input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;outline:none}
+  #mateoBotControls button{padding:8px 10px;border-radius:8px;border:none;background:#ffd166;color:#111;font-weight:800;cursor:pointer}
+  #mateoBotSuggestions{display:flex;gap:6px;padding:8px 12px 14px;flex-wrap:wrap;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.04));border-top:1px solid rgba(255,255,255,0.01)}
+  .bot-sug{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+  .bot-footer-note{font-size:12px;color:#9fd7ff80;padding:8px 12px 14px}
+  @media (max-width:480px){
+    #mateoBotWindow{ right:10px; left:10px; width:auto; bottom:100px; }
+    #mateoBotToggle{ right:12px; bottom:40px; }
+  }
+</style>
+
+<!-- Bot toggle + window -->
+<button id="mateoBotToggle" title="El bot de Mateo">BM</button>
+
+<div id="mateoBotWindow" role="dialog" aria-label="El bot de Mateo">
+  <div id="mateoBotHeader">
+    <div style="display:flex;flex-direction:column">
+      <div class="title">El bot de Mateo</div>
+      <div class="sub">Preguntas rápidas sobre componentes y ayuda</div>
+    </div>
+  </div>
+
+  <div id="mateoBotMessages" aria-live="polite">
+    <div class="bot-msg bot">¡Hola! Soy El bot de Mateo. Prueba con sugerencias o escribe tu duda (ej.: "¿Dónde está la GPU?").</div>
+  </div>
+
+  <div id="mateoBotSuggestions" aria-hidden="false">
+    <div class="bot-sug">¿Dónde está la GPU?</div>
+    <div class="bot-sug">Cómo instalar RAM</div>
+    <div class="bot-sug">Diferencia HDD vs SSD</div>
+    <div class="bot-sug">Qué es la motherboard</div>
+    <div class="bot-sug">¿Qué es PSU?</div>
+  </div>
+
+  <div id="mateoBotControls">
+    <input id="mateoBotInput" type="text" placeholder="Escribe tu pregunta..." aria-label="Escribe tu pregunta"/>
+    <button id="mateoBotSend">Enviar</button>
+  </div>
+  <div class="bot-footer-note">Respuestas automáticas basadas en info predefinida — no obliga a usar la contraseña del admin.</div>
+</div>
+
+<script>
+  // Lógica simple del bot con respuestas predefinidas
+  (function(){
+    const toggle = document.getElementById('mateoBotToggle');
+    const win = document.getElementById('mateoBotWindow');
+    const msgs = document.getElementById('mateoBotMessages');
+    const input = document.getElementById('mateoBotInput');
+    const send = document.getElementById('mateoBotSend');
+    const suggestions = document.querySelectorAll('.bot-sug');
+
+    // Base de respuestas (preguntas comunes)
+    const QA = [
+      { q:["motherboard","placa base","placa madre"], a:"MOTHERBOARD — Placa base que conecta y comunica todos los componentes del PC (CPU, RAM, GPU y puertos)." },
+      { q:["processor","cpu","procesador"], a:"PROCESSOR — CPU: unidad central que ejecuta instrucciones y controla el sistema." },
+      { q:["graphics","gráfica","tarjeta gráfica","graphics card"], a:"GRAPHICS — Subsistema gráfico; normalmente refiere a la tarjeta gráfica que procesa imágenes y video." },
+      { q:["memory","ram","memoria"], a:"MEMORY — Memoria RAM: almacenamiento volátil usado por el sistema para datos y programas en ejecución." },
+      { q:["storage","almacenamiento"], a:"STORAGE — Almacenamiento permanente (HDD, SSD) donde se guardan archivos y el sistema operativo." },
+      { q:["harddrive","hdd","hardrive","disco duro"], a:"HARDDRIVE — HDD: disco duro mecánico, mayor capacidad y menor velocidad que un SSD." },
+      { q:["solidstate","ssd","solid state","unidad estado solido"], a:"SOLIDSTATE — SSD: unidad de estado sólido, almacenamiento rápido sin partes móviles." },
+      { q:["gpu","tarjeta gráfica","gpu"], a:"GPU — Unidad de procesamiento gráfico; acelera renderizado de imágenes, video y cómputo paralelo." },
+      { q:["power","psu","fuente","fuente de poder"], a:"POWER / PSU — Fuente de alimentación: suministra y regula la energía eléctrica a los componentes; se mide en vatios (W)." },
+      { q:["cooling","refrigeración","ventilador"], a:"COOLING — Sistema de refrigeración (ventiladores, radiadores) para mantener temperaturas seguras." },
+      { q:["heatsink","disipador"], a:"HEATSINK — Disipador: pieza metálica que extrae calor de componentes (CPU/GPU) para facilitar su disipación." },
+      { q:["monitor","pantalla"], a:"MONITOR — Pantalla que muestra la salida visual del ordenador." },
+      { q:["keyboard","teclado"], a:"KEYBOARD — Teclado: periférico de entrada para escribir y controlar el equipo." },
+      { q:["mouse","ratón"], a:"MOUSE — Ratón: periférico de entrada para mover el cursor y hacer selecciones." },
+      { q:["usb","puerto usb"], a:"USB — Estándar de conexión para periféricos y almacenamiento; existen variantes (A, C) y velocidades (2.0, 3.0, etc.)." }
+    ];
+
+    function addMessage(text, who='bot'){
+      const d = document.createElement('div');
+      d.className = 'bot-msg ' + (who==='bot' ? 'bot' : 'user');
+      d.textContent = text;
+      msgs.appendChild(d);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function answerFor(text){
+      const t = text.toLowerCase();
+      for(const item of QA){
+        for(const k of item.q){
+          if(t.includes(k)) return item.a;
+        }
+      }
+      // fallback suggestions
+      return "Lo siento, no entiendo exactamente. Prueba: '¿Dónde está la GPU?', 'Cómo instalar RAM' o 'Diferencia HDD vs SSD'.";
+    }
+
+    // toggle show/hide
+    toggle.addEventListener('click', ()=>{
+      if(win.style.display === 'flex'){
+        win.style.display = 'none';
+      } else {
+        win.style.display = 'flex';
+      }
+    });
+
+    // send via click or Enter
+    send.addEventListener('click', handleSend);
+    input.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter') handleSend();
+    });
+
+    function handleSend(){
+      const v = input.value.trim();
+      if(!v) return;
+      addMessage(v, 'user');
+      input.value = '';
+      // small delay to simulate typing
+      setTimeout(()=> {
+        const resp = answerFor(v);
+        addMessage(resp, 'bot');
+      }, 350 + Math.random()*300);
+    }
+
+    // suggestion buttons
+    suggestions.forEach(s=>{
+      s.addEventListener('click', ()=>{
+        const txt = s.textContent;
+        addMessage(txt, 'user');
+        setTimeout(()=> addMessage(answerFor(txt), 'bot'), 300);
+      });
+    });
+
+    // keep bot accessible on mobile: double-tap toggle
+    toggle.addEventListener('dblclick', ()=> { win.style.display='flex'; });
+
+  })();
+</script>
+}
 </body>
 </html>
