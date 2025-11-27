@@ -1,921 +1,910 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sopa de letras - Componentes de PC (Super animada)</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg1:#0f172a; --bg2:#071129; --accent:#5eead4; --accent2:#60a5fa; --card:#0b1220;
-  }
-  html,body{height:100%;margin:0;font-family:"Outfit",system-ui,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#e6eef8;overflow:hidden}
-  #particles{position:fixed;inset:0;z-index:0;pointer-events:none;mix-blend-mode:screen;opacity:0.8}
-  .wrap{position:relative;z-index:1;max-width:1150px;margin:28px auto;padding:28px;display:grid;grid-template-columns:420px 1fr;gap:22px;align-items:start;}
-  .panel{background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
-  h1{margin:0 0 8px;font-size:20px;letter-spacing:0.4px}
-  p.lead{margin:0 0 12px;color:#cfe9ff90;font-size:13px}
-  .words-list{display:flex;flex-wrap:wrap;gap:8px}
-  .word-item{padding:8px 12px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:999px;font-weight:600;color:#cfe9ff;box-shadow:0 4px 18px rgba(2,6,23,0.6);transform:translateY(0);transition:all .28s;}
-  .word-item.found{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#041124;text-decoration:line-through;transform:scale(1.04);box-shadow:0 10px 30px rgba(96,165,250,0.16)}
-  /* NEW: underline style when admin reveals locations */
-  .word-item.underlined{ text-decoration: underline; background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); color:#fff; box-shadow:0 8px 26px rgba(0,0,0,0.4); transform:scale(1.02); }
-  .stats{display:flex;gap:12px;margin-top:12px;align-items:center}
-  .stat{background:#071426;padding:10px;border-radius:10px;font-weight:700;min-width:100px;text-align:center}
-  /* Grid */
-  .board-wrap{display:flex;flex-direction:column;gap:12px}
-  .grid{display:grid;grid-template-columns:repeat(15,1fr);gap:6px;user-select:none; cursor: none;} /* ocultar cursor del sistema solo en la grilla */
-  .cell{width:34px;height:34px;background:linear-gradient(180deg,#07162a,rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:800;color: #dbeafe;cursor:crosshair;transition:transform .12s,background .12s,box-shadow .12s}
-  .cell:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 8px 18px rgba(2,6,23,0.6)}
-  /* SELECTED should be animated red */
-  .cell.sel{
-    background: linear-gradient(90deg,#ff6b6b,#ff2e2e);
-    color:#fff;
-    animation: selPulse 0.8s ease-in-out infinite alternate;
-    box-shadow: 0 6px 22px rgba(255,60,60,0.24);
-  }
-  @keyframes selPulse{
-    from { transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 16px rgba(255,60,60,0.18); }
-    to   { transform: translateY(-8px) scale(1.08); box-shadow: 0 18px 40px rgba(255,40,40,0.36); }
-  }
-  .cell.found{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#061022;box-shadow:0 10px 30px rgba(5,150,125,0.12);transform:scale(1.04)}
-  /* NEW: revealed cells when admin password is correct */
-  .cell.revealed{ text-decoration: underline; background: linear-gradient(90deg, rgba(92,234,212,0.12), rgba(96,165,250,0.10)); color:#e6fff8; box-shadow:0 10px 30px rgba(60,130,200,0.12); transform:scale(1.03); transition: all .28s; animation: revealGlow .9s ease-in-out 1; }
-  @keyframes revealGlow {
-    from { box-shadow: 0 4px 10px rgba(96,165,250,0.06); transform:scale(0.98); }
-    to   { box-shadow: 0 18px 40px rgba(96,165,250,0.18); transform:scale(1.03); }
-  }
-  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
-  .btn{background:linear-gradient(90deg,#0ea5a4,#2563eb);color:#041124;padding:10px 14px;border-radius:10px;border:none;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(2,6,23,0.6);transition:transform .18s}
-  .btn:hover{transform:translateY(-4px) scale(1.02)}
-  .small{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#cfe9ff;padding:8px 10px;border-radius:8px}
-  .hint{font-size:13px;color:#bfe9ff88}
-  .footerline{margin-top:12px;font-size:13px;color:#9fd7ff80}
-  /* admin password UI */
-  .admin-row{display:flex;gap:8px;align-items:center;margin-top:12px}
-  .admin-row input{background:#071426;border:1px solid rgba(255,255,255,0.04);color:#dff7f3;padding:8px 10px;border-radius:8px;outline:none}
-  .admin-msg{font-size:13px;color:#ffb0b0;margin-top:8px;min-height:18px}
-  /* result modal */
-  .modal{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(2,6,23,0.8));z-index:5;opacity:0;pointer-events:none;transition:opacity .28s}
-  .modal.show{opacity:1;pointer-events:auto}
-  .card{background:linear-gradient(180deg,#0b1220,#071129);padding:22px;border-radius:14px;text-align:center;min-width:320px;border:1px solid rgba(255,255,255,0.04)}
-  .bignum{font-size:48px;font-weight:900;color:var(--accent);margin:8px 0}
-  .confetti{width:100%;height:120px;position:relative;overflow:hidden}
-  .confetti i{position:absolute;width:10px;height:16px;opacity:0.95;border-radius:2px;animation:fall 2.8s linear infinite}
-  @keyframes fall{
-    0%{transform:translateY(-160px) rotate(0)}
-    100%{transform:translateY(260px) rotate(720deg)}
-  }
-  /* responsive */
-  @media (max-width:980px){.wrap{grid-template-columns:1fr; padding:18px}.grid .cell{width:30px;height:30px}}
-  .cursor-dot{
-  position:fixed;
-  width:10px;height:10px;border-radius:50%;
-  background:#ffffffcc; box-shadow:0 2px 8px rgba(0,0,0,0.35);
-  pointer-events:none; transform:translate(-50%,-50%) scale(1);
-  transition:transform .08s linear, background .12s, opacity .12s;
-  z-index:9999; opacity:0;
-}
-.cursor-dot.visible{ opacity:1; }
-.cursor-dot.active{ transform:translate(-50%,-50%) scale(1.25); background:#ffffff; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NKD PEREIRA 🔥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      color: #ff0000;
+      overflow-x: hidden;
+    }
+
+    /* Fondo degradado animado */
+    body {
+      background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff);
+      background-size: 800% 800%;
+      animation: fondoAnimado 16s ease infinite;
+    }
+
+    @keyframes fondoAnimado {
+      0% {background-position:0% 50%}
+      50% {background-position:100% 50%}
+      100% {background-position:0% 50%}
+    }
+
+    /* Efecto de resplandor en los botones */
+    .boton, .boton-modal {
+      box-shadow: 0 0 25px #ff0000, 0 0 40px #00cfff;
+      animation: glowBoton 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowBoton {
+      from { box-shadow: 0 0 10px #ff0000, 0 0 20px #00cfff; }
+      to   { box-shadow: 0 0 40px #ff0000, 0 0 60px #00cfff; }
+    }
+
+    #tsparticles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    header { padding: 20px 10px 10px; text-align: center; }
+
+    header h1 {
+      font-size: 3em;
+      color: #00cfff;
+      text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff;
+      animation: glow-celeste 2s ease-in-out infinite alternate;
+      letter-spacing: 2px;
+      margin-bottom: 0.2em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @keyframes glow-celeste {
+      from { text-shadow: 0 0 15px #00cfff, 0 0 30px #00eaff; }
+      to   { text-shadow: 0 0 30px #00eaff, 0 0 60px #00cfff; }
+    }
+
+    button, input { font-family: 'Orbitron', sans-serif; }
+
+    .boton, .boton-modal {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      margin: 20px;
+      background: black;
+      color: #ff0000;
+      border: 2px solid #ff0000;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff0000;
+      transition: all 0.3s ease-in-out;
+    }
+
+    main#contenido-principal {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 60px);
+      flex-direction: column;
+      padding-top: 0;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0; top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    .modal-content {
+      background-color: #111;
+      margin: 10% auto;
+      padding: 30px;
+      border: 2px solid red;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      color: #ff0000;
+      box-shadow: 0 0 20px #ff0000;
+      text-align: center;
+    }
+
+    .modal-content input {
+      padding: 10px;
+      width: 90%;
+      margin-top: 15px;
+      background: black;
+      border: 1px solid red;
+      color: red;
+      font-size: 1.2em;
+    }
+
+    .cerrar { float: right; font-size: 20px; cursor: pointer; color: red; }
+    .mensaje-error { color: red; margin-top: 10px; }
+
+    table {
+      width: 90%;
+      margin: 0 auto 30px;
+      border-collapse: collapse;
+      color: #fff;
+    }
+    th, td { border: 1px solid #ff0000; padding: 10px; text-align: center; }
+    th { background-color: #330000; }
+
+    .acciones button {
+      margin: 2px;
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #formulario-registro { text-align: center; margin-bottom: 20px; }
+    #formulario-registro input {
+      width: 200px;
+      margin: 5px;
+      padding: 8px;
+      background: black;
+      color: red;
+      border: 1px solid red;
+    }
+
+    .paginacion { text-align: center; margin: 10px; }
+    .paginacion button {
+      margin: 3px;
+      padding: 8px 12px;
+      background: black;
+      color: red;
+      border: 1px solid red;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .paginacion button.activo { background: red; color: black; }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.5em; }
+      main#contenido-principal { min-height: auto; padding: 10px; }
+      .boton, .boton-modal {
+        padding: 10px 15px;
+        font-size: 1em;
+        margin: 10px;
+      }
+      table, th, td { font-size: 0.9em; padding: 5px; }
+      #formulario-registro input,
+      #formulario-moto input,
+      #formulario-edicion input,
+      #formulario-edicion-moto input { width: 95%; font-size: 1em; margin: 5px 0; }
+      .modal-content { width: 98%; padding: 10px; }
+    }
+
+    /* ====== NKD BOT — Widget nuevo desde cero (estilos) ====== */
+    :root {
+      --nkd-cyan: #00cfff;
+      --nkd-cyan-2: #00eaff;
+      --nkd-red: #ff0000;
+      --nkd-bg: rgba(0,0,0,0.86);
+      --nkd-border: rgba(0,207,255,0.8);
+      --nkd-shadow: 0 0 25px var(--nkd-cyan), 0 0 40px var(--nkd-cyan-2);
+    }
+    #nkdbot-toggle {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      width: 62px; height: 62px;
+      border-radius: 50%;
+      border: 2px solid var(--nkd-cyan);
+      background: #000;
+      color: #fff;
+      font-size: 2rem;
+      box-shadow: var(--nkd-shadow);
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform .15s ease;
+      animation: nkdPulse 2s ease-in-out infinite alternate; /* ✨ animación ícono */
+    }
+    #nkdbot-toggle:active { transform: scale(.96); }
+    @keyframes nkdPulse {
+      from { box-shadow: 0 0 12px var(--nkd-cyan), 0 0 24px var(--nkd-cyan-2); transform: scale(1); }
+      to   { box-shadow: 0 0 28px var(--nkd-cyan), 0 0 48px var(--nkd-cyan-2); transform: scale(1.08); }
+    }
+
+    #nkdbot-panel {
+      position: fixed;
+      bottom: 90px; right: 20px;
+      width: 360px; max-width: 96vw; max-height: 70vh;
+      background: var(--nkd-bg);
+      border: 2px solid var(--nkd-border);
+      border-radius: 14px;
+      box-shadow: var(--nkd-shadow);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 10000;
+      transform: translateY(12px);
+      opacity: 0;
+      transition: all .25s ease;
+    }
+    #nkdbot-panel.open { display: flex; transform: translateY(0); opacity: 1; }
+    #nkdbot-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px;
+      background: linear-gradient(90deg, rgba(0,0,0,.6), rgba(0,207,255,.18));
+      border-bottom: 1px solid var(--nkd-border);
+    }
+    #nkdbot-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1rem; color: var(--nkd-cyan);
+      text-shadow: 0 0 12px var(--nkd-cyan);
+    }
+    #nkdbot-actions button {
+      background: transparent; border: none; color: var(--nkd-cyan);
+      font-size: 1.25rem; cursor: pointer; padding: 6px;
+    }
+    #nkdbot-messages {
+      padding: 12px; overflow-y: auto; flex: 1; color: #fff;
+      background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6));
+    }
+    .nkdbot-msg {
+      margin: 8px 0; max-width: 85%; line-height: 1.35;
+      padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 0 10px rgba(0, 207, 255, .15);
+      word-break: break-word;
+    }
+    .nkdbot-user { margin-left: auto; background: #111; color: var(--nkd-cyan); }
+    .nkdbot-bot  { margin-right: auto; background: #151515; color: #fff; }
+    .nkdbot-time { display:block; font-size:.72rem; opacity:.7; margin-top:4px; }
+    #nkdbot-suggestions {
+      display:flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .nkd-chip {
+      background: #0e0e0e; color: var(--nkd-cyan);
+      border: 1px solid var(--nkd-border);
+      padding: 4px 8px; border-radius: 999px; cursor:pointer; font-size: .85rem;
+    }
+    #nkdbot-inputbar {
+      display:flex; gap:8px; padding: 10px; border-top: 1px solid var(--nkd-border);
+      background: rgba(0,0,0,.55);
+    }
+    #nkdbot-input {
+      flex:1; background:#0b0b0b; color:#fff; border:1px solid var(--nkd-border);
+      border-radius: 8px; padding: 10px; font-size: 1rem; outline:none;
+    }
+    #nkdbot-send {
+      background: #000; color: var(--nkd-cyan);
+      border: 1px solid var(--nkd-cyan); border-radius: 8px;
+      padding: 10px 12px; font-weight: 700; cursor:pointer;
+      box-shadow: 0 0 12px var(--nkd-cyan);
+    }
+    @media (max-width: 480px) {
+      #nkdbot-panel { right: 10px; bottom: 80px; width: 94vw; max-height: 70vh; }
+      #nkdbot-toggle { bottom: 12px; right: 12px; }
+    }
+  </style>
 </head>
 <body>
-<canvas id="particles"></canvas>
+  <script>
+    // ====== Selector de edad al cargar la página ======
+    document.addEventListener("DOMContentLoaded", function() {
+      if (localStorage.getItem("accesoEdad") === "ok") return;
 
-<div class="wrap">
-  <div class="panel">
-    <h1>Sopa de letras: Componentes de PC</h1>
-    <p class="lead">Busca las 15 palabras relacionadas con hardware y accesorios. Selecciona arrastrando o haciendo clic en la primera y última letra. Animaciones y contadores al final.</p>
-
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-      <div class="stat" id="foundStat">Buenas: 0</div>
-      <div class="stat" id="badStat">Malas: 0</div>
-      <div class="stat" id="percentStat">0%</div>
-    </div>
-
-    <div class="controls">
-      <button class="btn" id="newBtn">Generar nueva sopa</button>
-      <button class="small" id="revealBtn">Mostrar palabras</button>
-      <div class="hint">Consejo: Mantén presionado y arrastra para seleccionar</div>
-    </div>
-
-    <div style="margin-top:12px">
-      <div class="words-list" id="wordsList"></div>
-    </div>
-
-    <div class="footerline">Hecho para aprender; palabras en mayúsculas.</div>
-
-    <!-- Admin password area (opcional). Si se ingresa la contraseña correcta ("mateo9080") se subrayan las ubicaciones y se marcan todas como buenas -->
-    <div class="admin-row" style="margin-top:14px">
-      <label style="font-weight:700;color:#cfe9ff">Admin password</label>
-      <input id="adminPass" type="password" placeholder="Contraseña (opcional)">
-      <button class="small" id="adminRevealBtn">Mostrar ubicaciones</button>
-    </div>
-    <div class="admin-msg" id="adminMsg"></div>
-  </div>
-
-  <div class="panel board-wrap">
-    <div id="boardHolder" style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
-      <div>
-        <div class="grid" id="grid"></div>
-      </div>
-      <div style="min-width:220px">
-        <h2 style="margin:0 0 8px">Instrucciones / Acciones</h2>
-        <p class="hint">Selecciona una palabra y si es correcta quedará marcada. Si no, cuenta como mala.</p>
-        <div style="display:flex;gap:8px;flex-direction:column">
-          <button class="btn" id="checkBtn">Checar resultados</button>
-          <button class="small" id="clearSel">Limpiar selección</button>
-          <button class="small" id="shuffleBtn">Reubicar palabras</button>
+      document.body.innerHTML = `
+        <div id="acceso-edad" style="
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          width: 100vw; height: 100vh;
+          display: flex; flex-direction: column; justify-content: center; align-items: center;
+          background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff);
+          background-size: 800% 800%;
+          animation: fondoAnimado 16s ease infinite;
+          z-index: 99999;
+        ">
+          <div style="
+            background: rgba(0,0,0,0.85);
+            border: 2px solid #00cfff;
+            border-radius: 18px;
+            box-shadow: 0 0 30px #00cfff, 0 0 60px #00eaff;
+            padding: 40px 30px; text-align: center; min-width: 270px; max-width: 90vw;
+          ">
+            <h1 style="color:#00cfff; font-size:2.2em; margin-bottom:.5em; text-shadow:0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; font-family:'Orbitron',sans-serif;">
+              Selecciona tu rango de edad
+            </h1>
+            <button id="btn-18-25" style="margin:18px 0 10px 0; padding:15px 40px; font-size:1.3em; border-radius:10px; border:2px solid #00cfff; background:#000; color:#00eaff; box-shadow:0 0 20px #00cfff; cursor:pointer; font-family:'Orbitron',sans-serif; display:block; width:100%;">
+              18 - 25 años
+            </button>
+            <button id="btn-10-17" style="margin:10px 0 0 0; padding:15px 40px; font-size:1.3em; border-radius:10px; border:2px solid #00cfff; background:#000; color:#00eaff; box-shadow:0 0 20px #00cfff; cursor:pointer; font-family:'Orbitron',sans-serif; display:block; width:100%;">
+              10 - 17 años
+            </button>
+          </div>
         </div>
-        <div style="margin-top:12px">
-          <div class="hint">Palabras: <strong id="totalWords">15</strong></div>
-          <div class="hint" id="remaining">Restantes: 15</div>
+        <style>
+          @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+          @keyframes glow-celeste { from{ text-shadow:0 0 15px #00cfff, 0 0 30px #00eaff;} to{ text-shadow:0 0 30px #00eaff, 0 0 60px #00cfff;} }
+        </style>
+      `;
+
+      document.getElementById("btn-18-25").onclick = function() {
+        localStorage.setItem("accesoEdad", "ok");
+        location.reload();
+      };
+      document.getElementById("btn-10-17").onclick = function() {
+        localStorage.removeItem("accesoEdad");
+        document.body.innerHTML = `
+          <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+            background: linear-gradient(270deg, #000000, #1a1a1a, #00cfff, #00eaff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite;
+            color:#00cfff; font-family:'Orbitron',sans-serif; text-align:center; z-index:99999;">
+            <h1 style="font-size: 2.5em; color: #00cfff; text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; letter-spacing: 2px; margin-bottom: .5em;">
+              🚫 Acceso Denegado 🚫
+            </h1>
+            <p style="font-size:1.5em; color:#fff; text-shadow:0 0 10px #00cfff;">
+              Esta página es solo para mayores de 18 años.<br>¡Vuelve cuando seas mayor!
+            </p>
+          </div>
+          <style>
+            @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+            @keyframes glow-celeste { from{ text-shadow:0 0 15px #00cfff, 0 0 30px #00eaff;} to{ text-shadow:0 0 30px #00eaff, 0 0 60px #00cfff;} }
+          </style>
+        `;
+      };
+    });
+  </script>
+
+  <script>
+    // ====== Bloqueo de inspección / copia ======
+    document.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+      document.body.innerHTML = `
+        <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+          background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite; z-index:99999;">
+          <h1 style="color:#fff; font-size:2em; text-align:center;">
+            🚫 Acceso bloqueado 🚫<br>No intentes copiar ni inspeccionar esta página.
+          </h1>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- resultado modal -->
-<div class="modal" id="modal">
-  <div class="card">
-    <h3>Resultados</h3>
-    <div class="bignum" id="modalPercent">0%</div>
-    <div style="font-weight:700" id="modalScore">0 buenas • 0 malas</div>
-    <div style="margin-top:10px" id="modalMsg">¡Sigue practicando!</div>
-    <div class="confetti" id="confetti"></div>
-    <div style="margin-top:12px">
-      <button class="btn" id="closeModal">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ---------------- Words and grid configuration ----------------
-const WORDS = [
-  "MOTHERBOARD","PROCESSOR","GRAPHICS","MEMORY","STORAGE",
-  "HARDDRIVE","SOLIDSTATE","GPU","POWER","COOLING",
-  "HEATSINK","MONITOR","KEYBOARD","MOUSE","USB"
-];
-const SIZE = 15; // grid size
-let grid = []; // 2D array
-let placed = []; // track placed words
-let found = new Set();
-let badCount = 0;
-
-// DOM
-const gridEl = document.getElementById('grid');
-const wordsListEl = document.getElementById('wordsList');
-const foundStat = document.getElementById('foundStat');
-const badStat = document.getElementById('badStat');
-const percentStat = document.getElementById('percentStat');
-const remainingEl = document.getElementById('remaining');
-const totalWordsEl = document.getElementById('totalWords');
-const modal = document.getElementById('modal');
-const modalPercent = document.getElementById('modalPercent');
-const modalScore = document.getElementById('modalScore');
-const modalMsg = document.getElementById('modalMsg');
-const confettiHolder = document.getElementById('confetti');
-
-const adminPassInput = document.getElementById('adminPass');
-const adminRevealBtn = document.getElementById('adminRevealBtn');
-const adminMsg = document.getElementById('adminMsg');
-
-totalWordsEl.textContent = WORDS.length;
-
-// Utility
-const rand = (a,b)=>(Math.floor(Math.random()*(b-a+1))+a);
-const directions = [
-  [0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]
-];
-
-// initialize
-function createEmptyGrid(){
-  grid = Array.from({length:SIZE},()=>Array.from({length:SIZE},()=>""));
-}
-
-function placeWords(){
-  placed = [];
-  const words = WORDS.slice().sort((a,b)=>b.length-a.length);
-  for(const w of words){
-    const word = w.replace(/\s+/g,"").toUpperCase();
-    let placedThis=false;
-    for(let attempts=0;attempts<120 && !placedThis;attempts++){
-      const dir = directions[rand(0,directions.length-1)];
-      const row = rand(0,SIZE-1);
-      const col = rand(0,SIZE-1);
-      // check bounds
-      const endRow = row + dir[0]*(word.length-1);
-      const endCol = col + dir[1]*(word.length-1);
-      if(endRow<0 || endRow>=SIZE || endCol<0 || endCol>=SIZE) continue;
-      // check conflicts
-      let ok=true;
-      for(let i=0;i<word.length;i++){
-        const r=row+dir[0]*i,c=col+dir[1]*i;
-        const ch = grid[r][c];
-        if(ch!=="" && ch!==word[i]){ ok=false; break; }
-      }
-      if(!ok) continue;
-      // place
-      for(let i=0;i<word.length;i++){
-        const r=row+dir[0]*i,c=col+dir[1]*i;
-        grid[r][c] = word[i];
-      }
-      placed.push({word, row, col, dir, len:word.length});
-      placedThis=true;
-    }
-    if(!placedThis){
-      // if failed, try naive forced placement (overwrite)
-      let r = rand(0,SIZE-1), c=rand(0,SIZE-1), d = directions[rand(0,directions.length-1)];
-      for(let i=0;i<word.length;i++){ const rr=r+d[0]*i, cc=c+d[1]*i; if(rr>=0 && rr<SIZE && cc>=0 && cc<SIZE) grid[rr][cc] = word[i]; }
-      placed.push({word,row:r,col:c,dir:d,len:word.length});
-    }
-  }
-}
-
-function fillRandom(){
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  for(let r=0;r<SIZE;r++){
-    for(let c=0;c<SIZE;c++){
-      if(!grid[r][c] || grid[r][c]==="") grid[r][c]=letters.charAt(rand(0,letters.length-1));
-    }
-  }
-}
-
-// render UI
-function renderGrid(){
-  gridEl.innerHTML="";
-  for(let r=0;r<SIZE;r++){
-    for(let c=0;c<SIZE;c++){
-      const cell = document.createElement('div');
-      cell.className='cell';
-      cell.dataset.r=r; cell.dataset.c=c;
-      cell.textContent = grid[r][c];
-      gridEl.appendChild(cell);
-    }
-  }
-}
-
-function renderWords(){
-  wordsListEl.innerHTML="";
-  for(const p of placed){
-    const span = document.createElement('div');
-    span.className='word-item';
-    span.dataset.word = p.word;
-    span.textContent = p.word;
-    wordsListEl.appendChild(span);
-  }
-}
-
-// selection logic
-let selecting=false;
-let selCells = []; // array of [r,c]
-let selEls = [];
-
-function clearSelection(){
-  for(const el of selEls) el.classList.remove('sel');
-  selCells=[]; selEls=[]; selecting=false;
-}
-
-function markFound(word,coords){
-  found.add(word);
-  // style cells
-  for(const [r,c] of coords){
-    const selector = `.cell[data-r="${r}"][data-c="${c}"]`;
-    const el = document.querySelector(selector);
-    if(el) el.classList.add('found');
-  }
-  // mark word in list
-  const item = [...document.querySelectorAll('.word-item')].find(x=>x.dataset.word===word);
-  if(item) item.classList.add('found');
-  updateStats();
-  // small pulse
-  setTimeout(()=>{ if(found.size===WORDS.length) showResults(); },350);
-}
-
-function coordsToString(coords){
-  return coords.map(([r,c])=>grid[r][c]).join("");
-}
-
-function checkSelection(){
-  if(selCells.length<2) return false;
-  const coords = selCells.slice();
-  const s = coordsToString(coords);
-  const rev = s.split('').reverse().join('');
-  const matched = placed.find(p => p.word===s || p.word===rev);
-  if(matched){
-    if(found.has(matched.word)) {
-      // already found, ignore
-      clearSelection();
-      return;
-    }
-    markFound(matched.word, coords);
-  } else {
-    badCount++;
-    badStat.textContent = `Malas: ${badCount}`;
-    // animate wrong selection (red shake)
-    for(const el of selEls){
-      el.style.transform = 'translateX(-8px) rotate(-6deg)';
-      el.style.transition = 'transform .12s';
-    }
-    setTimeout(()=>{ for(const el of selEls) el.style.transform=''; clearSelection(); },380);
-    return;
-  }
-  clearSelection();
-}
-
-function updateStats(){
-  foundStat.textContent = `Buenas: ${found.size}`;
-  badStat.textContent = `Malas: ${badCount}`;
-  const percent = Math.round((found.size / WORDS.length)*100);
-  percentStat.textContent = `${percent}%`;
-  remainingEl.textContent = `Restantes: ${WORDS.length - found.size}`;
-}
-
-// NEW: reveal positions (but only if correct admin password)
-function revealPositions(){ // underline every cell that is part of any placed word and underline words in list
-  // underline grid
-  for(const p of placed){
-    for(let i=0;i<p.len;i++){
-      const r = p.row + p.dir[0]*i;
-      const c = p.col + p.dir[1]*i;
-      const selector = `.cell[data-r="${r}"][data-c="${c}"]`;
-      const el = document.querySelector(selector);
-      if(el) el.classList.add('revealed');
-    }
-    // underline word list entry (without marking as found)
-    const item = [...document.querySelectorAll('.word-item')].find(x=>x.dataset.word===p.word);
-    if(item) item.classList.add('underlined');
-  }
-}
-
-// helper: mark all words as found (used when admin password correct)
-function markAllFound(){
-  for(const p of placed){
-    found.add(p.word);
-    // mark cells
-    for(let i=0;i<p.len;i++){
-      const r = p.row + p.dir[0]*i;
-      const c = p.col + p.dir[1]*i;
-      const selector = `.cell[data-r="${r}"][data-c="${c}"]`;
-      const el = document.querySelector(selector);
-      if(el) el.classList.add('found');
-    }
-    // mark list
-    const item = [...document.querySelectorAll('.word-item')].find(x=>x.dataset.word===p.word);
-    if(item) item.classList.add('found');
-  }
-  badCount = 0;
-  updateStats();
-  // show results immediately
-  setTimeout(()=>{ showResults(); }, 250);
-}
-
-// mouse/touch handlers
-function getCellFromEvent(e){
-  // localiza la .cell bajo el target o por coordenadas
-  let el = e.target && e.target.closest ? e.target.closest('.cell') : null;
-  if(!el && typeof e.clientX === 'number' && typeof e.clientY === 'number'){
-    el = document.elementFromPoint(e.clientX, e.clientY);
-    if(el) el = el.closest ? el.closest('.cell') : null;
-  }
-  if(!el) return null;
-
-  // evitar seleccionar celdas vecinas: exigir que el puntero esté cerca del centro de la celda
-  const rect = el.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-  const px = (e.clientX || 0);
-  const py = (e.clientY || 0);
-  const dist = Math.hypot(px - cx, py - cy);
-
-  // umbral: la mitad del menor lado de la celda (ajusta si quieres más/menos tolerancia)
-  const threshold = Math.min(rect.width, rect.height) * 0.5;
-  if(dist > threshold) return null;
-
-  const r = parseInt(el.dataset.r,10);
-  const c = parseInt(el.dataset.c,10);
-  if(Number.isNaN(r) || Number.isNaN(c)) return null;
-  return { el, r, c };
-}
-
-gridEl.addEventListener('pointerdown', (ev)=>{
-  ev.preventDefault();
-  const got = getCellFromEvent(ev);
-  if(!got) return;
-  selecting=true;
-  selCells = [[got.r,got.c]];
-  selEls = [got.el];
-  got.el.classList.add('sel');
-});
-
-gridEl.addEventListener('pointermove', (ev)=>{
-  if(!selecting) return;
-  const got = getCellFromEvent(ev);
-  if(!got) return;
-
-  const last = selCells[selCells.length-1];
-  const existsIndex = selCells.findIndex(([rr,cc])=> rr===got.r && cc===got.c);
-
-  if(existsIndex === -1){
-    // nuevo: añadir solo si es adyacente al último para evitar "saltos"
-    if(!last || Math.max(Math.abs(got.r - last[0]), Math.abs(got.c - last[1])) <= 1){
-      selCells.push([got.r,got.c]);
-      selEls.push(got.el);
-      got.el.classList.add('sel');
-    }
-  } else {
-    // si el usuario retrocede (backtrack), quitar las celdas finales hasta llegar a existsIndex
-    for(let i = selCells.length - 1; i > existsIndex; i--){
-      const removedEl = selEls.pop();
-      if(removedEl) removedEl.classList.remove('sel');
-      selCells.pop();
-    }
-  }
-});
-
-gridEl.addEventListener('pointerup', (ev)=>{
-  if(!selecting) return;
-  // checar la selección y luego limpiar siempre la visual
-  checkSelection();
-  clearSelection();
-});
-
-gridEl.addEventListener('pointerleave', (ev)=>{
-  if(selecting){
-    checkSelection();
-    clearSelection();
-  }
-});
-
-// click-to-select first/last letter method
-let clickFirst = null;
-gridEl.addEventListener('click', (ev)=>{
-  if(ev.detail===0) return; // ignore synthetic
-  const got = getCellFromEvent(ev);
-  if(!got) return;
-  if(clickFirst===null){
-    clickFirst = [got.r,got.c];
-    got.el.classList.add('sel');
-    selEls = [got.el]; selCells = [[got.r,got.c]];
-    setTimeout(()=>{ // clear if no second click
-      if(clickFirst) { clearSelection(); clickFirst=null; }
-    },4500);
-  } else {
-    // compute straight line between clickFirst and this cell (bresenham-like)
-    const start = clickFirst, end = [got.r,got.c];
-    const dr = Math.sign(end[0]-start[0]), dc = Math.sign(end[1]-start[1]);
-    const len = Math.max(Math.abs(end[0]-start[0]), Math.abs(end[1]-start[1]));
-    const coords = [];
-    for(let i=0;i<=len;i++){
-      coords.push([start[0]+dr*i, start[1]+dc*i]);
-    }
-    // clear previous sel styles
-    clearSelection();
-    // apply new selection
-    selCells = coords;
-    selEls = coords.map(([r,c])=>document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`)).filter(Boolean);
-    for(const el of selEls) el.classList.add('sel');
-    checkSelection();
-    clickFirst = null;
-  }
-});
-
-// actions
-document.getElementById('newBtn').addEventListener('click', ()=>{ reset(true); });
-document.getElementById('shuffleBtn').addEventListener('click', ()=>{ reset(true); });
-document.getElementById('clearSel').addEventListener('click', ()=>{ clearSelection(); });
-document.getElementById('revealBtn').addEventListener('click', ()=>{ // flash all words in list
-  [...document.querySelectorAll('.word-item')].forEach(it=>{ it.classList.add('found'); setTimeout(()=>it.classList.remove('found'),1200);});
-});
-document.getElementById('checkBtn').addEventListener('click', ()=> showResults());
-document.getElementById('closeModal').addEventListener('click', ()=>{ modal.classList.remove('show'); confettiHolder.innerHTML=""; });
-
-// Admin reveal button behavior (optional password)
-adminRevealBtn.addEventListener('click', ()=>{
-  const val = (adminPassInput.value || "").trim();
-  adminMsg.textContent = "";
-  // correct password is exactly "mateo9080"
-  if(val === "mateo9080"){
-    revealPositions();
-    markAllFound(); // mark all 15 as found and update stats
-    adminMsg.style.color = "#bfffe6";
-    adminMsg.textContent = "Contraseña correcta: todas las palabras marcadas como buenas y ubicaciones subrayadas.";
-  } else {
-    adminMsg.style.color = "#ffb0b0";
-    adminMsg.textContent = "Contraseña incorrecta o no proporcionada. No se muestran ubicaciones.";
-    setTimeout(()=>{ adminMsg.textContent = ""; },2800);
-  }
-});
-
-// generate confetti
-function spawnConfetti(n=40){
-  confettiHolder.innerHTML="";
-  const colors = ["#60a5fa","#5eead4","#f472b6","#f59e0b","#34d399"];
-  for(let i=0;i<n;i++){
-    const el = document.createElement('i');
-    el.style.left = (Math.random()*100) + "%";
-    el.style.background = colors[rand(0,colors.length-1)];
-    el.style.transform = `rotate(${rand(0,360)}deg)`;
-    el.style.top = (-Math.random()*120 - 40) + "px";
-    el.style.animationDuration = (1.8+Math.random()*1.8) + "s";
-    el.style.opacity = Math.random()*0.9+0.4;
-    confettiHolder.appendChild(el);
-  }
-}
-
-// show results
-function showResults(){
-  const good = found.size;
-  const bad = badCount;
-  const pct = Math.round((good/WORDS.length)*100);
-  modalPercent.textContent = pct + "%";
-  modalScore.textContent = `${good} buenas • ${bad} malas`;
-  if(pct===100){ modalMsg.textContent = "¡Perfecto! Todas las palabras encontradas."; spawnConfetti(80); }
-  else if(pct>=70){ modalMsg.textContent = "¡Muy bien! Buen trabajo."; spawnConfetti(40); }
-  else if(pct>=40){ modalMsg.textContent = "Sigue practicando, vas por buen camino."; }
-  else { modalMsg.textContent = "Practica más. Lee las pistas y vuelve a intentarlo."; }
-  modal.classList.add('show');
-}
-
-// reset / new game
-function reset(newGrid=false){
-  createEmptyGrid();
-  placeWords();
-  fillRandom();
-  renderGrid();
-  renderWords();
-  found.clear(); badCount=0; updateStats();
-  // clear any styles
-  setTimeout(()=>{ [...document.querySelectorAll('.cell')].forEach(el=>el.classList.remove('found','sel','revealed')); [...document.querySelectorAll('.word-item')].forEach(it=>it.classList.remove('underlined','found')); },80);
-}
-
-// initial run
-reset();
-
-// ---------------- particles (simple canvas stars) ----------------
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let W=innerWidth, H=innerHeight;
-canvas.width=W; canvas.height=H;
-const stars=[];
-for(let i=0;i<120;i++){
-  stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+0.3,a:Math.random()*0.8+0.2,s:Math.random()*0.02+0.005});
-}
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  for(const s of stars){
-    s.y += s.s * 40;
-    s.x += Math.sin(Date.now()*0.0003+s.x)*0.2;
-    if(s.y>H+10){ s.y=-10; s.x=Math.random()*W; }
-    ctx.beginPath();
-    ctx.globalAlpha = s.a;
-    ctx.fillStyle = '#8ec5ff';
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fill();
-  }
-  requestAnimationFrame(draw);
-}
-draw();
-addEventListener('resize', ()=>{
-  W=innerWidth; H=innerHeight; canvas.width=W; canvas.height=H;
-});
-
-// keyboard shortcuts: R -> regenerate, H -> reveal (toggle), C -> check
-addEventListener('keydown',(e)=>{
-  if(e.key.toLowerCase()==='r') reset(true);
-  if(e.key.toLowerCase()==='h') [...document.querySelectorAll('.word-item')].forEach(it=>it.classList.toggle('found'));
-  if(e.key.toLowerCase()==='c') showResults();
-});
-
-// crear dot cursor y lógica para seguir el puntero dentro de la grilla
-const cursorDot = document.createElement('div');
-cursorDot.className = 'cursor-dot';
-document.body.appendChild(cursorDot);
-
-function moveCursorDot(e){
-  // actualizar posición del dot
-  cursorDot.style.left = (e.clientX || 0) + 'px';
-  cursorDot.style.top  = (e.clientY || 0) + 'px';
-}
-
-gridEl.addEventListener('pointerenter', (e)=>{
-  cursorDot.classList.add('visible');
-  moveCursorDot(e);
-});
-gridEl.addEventListener('pointermove', (e)=>{
-  moveCursorDot(e);
-});
-gridEl.addEventListener('pointerleave', ()=>{
-  cursorDot.classList.remove('visible');
-});
-
-// animación pequeña al presionar/soltar para feedback
-gridEl.addEventListener('pointerdown', ()=> cursorDot.classList.add('active'));
-window.addEventListener('pointerup', ()=> cursorDot.classList.remove('active'));
-
-// Opcional: si quieres que el dot siga siempre, aunque fuera de la grilla,
-// puedes descomentar la línea siguiente:
-// window.addEventListener('pointermove', moveCursorDot);
-</script>
-
-<!-- NUEVAS FUNCIONES: Pantalla de inicio, Cronómetro, Trofeo y Leaderboard -->
-<style>
-  /* Pantalla inicial */
-  #startScreen {
-    position: fixed; inset: 0; background: linear-gradient(135deg, #0f172a, #071129);
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    color: white; font-family: "Outfit", sans-serif; z-index: 99999;
-  }
-  #startScreen input {
-    padding: 10px 16px; border-radius: 8px; border: none; margin-top: 12px; width: 240px;
-    text-align: center; font-size: 16px;
-  }
-  #startScreen button {
-    margin-top: 14px; padding: 10px 20px; font-weight: 700;
-    background: linear-gradient(90deg, #ffd700, #ffb800); border: none;
-    border-radius: 8px; cursor: pointer; color: #222;
-  }
-  /* Cronómetro */
-  #timerDisplay {
-    position: fixed; top: 12px; left: 18px; font-weight: 800; font-size: 18px;
-    color: #ffd700; background: rgba(0,0,0,0.4); padding: 6px 12px; border-radius: 8px;
-    z-index: 10000;
-  }
-  /* Trofeo dorado */
-  #trophyBtn {
-    position: fixed; top: 12px; right: 18px; width: 50px; height: 50px;
-    background: url('https://cdn-icons-png.flaticon.com/512/616/616490.png') no-repeat center/contain;
-    cursor: pointer; z-index: 10000; transition: transform .2s;
-  }
-  #trophyBtn:hover { transform: scale(1.15); }
-  /* Leaderboard */
-  #leaderboardModal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-    display: none; align-items: center; justify-content: center; z-index: 10001;
-  }
-  #leaderboard {
-    background: linear-gradient(180deg,#0b1220,#071129);
-    border: 2px solid gold; border-radius: 16px; padding: 20px;
-    color: white; width: 320px; text-align: center;
-  }
-  #leaderboard h2 { color: gold; margin-bottom: 10px; }
-  #leaderboard ol { text-align: left; max-height: 400px; overflow-y: auto; padding-left: 20px; }
-  #leaderboard li { margin-bottom: 6px; color: #e6eef8; }
-</style>
-
-<div id="startScreen">
-  <h1>Ingresa tu nombre</h1>
-  <input type="text" id="playerNameInput" placeholder="Tu nombre...">
-  <button id="startBtn">Entrar</button>
-</div>
-<div id="timerDisplay" style="display:none;">Tiempo: 0.0s</div>
-<div id="trophyBtn" title="Ver leaderboard"></div>
-
-<div id="leaderboardModal">
-  <div id="leaderboard">
-    <h2>🏆 Leaderboard</h2>
-    <ol id="leaderboardList"></ol>
-    <button onclick="document.getElementById('leaderboardModal').style.display='none'" class="btn" style="margin-top:10px;">Cerrar</button>
-  </div>
-</div>
-
-<script>
-let playerName = "";
-let startTime, timerInterval;
-const timerDisplay = document.getElementById("timerDisplay");
-const leaderboardModal = document.getElementById("leaderboardModal");
-const leaderboardList = document.getElementById("leaderboardList");
-
-// Mostrar pantalla inicial
-const startScreen = document.getElementById("startScreen");
-document.getElementById("startBtn").onclick = () => {
-  const input = document.getElementById("playerNameInput");
-  if (!input.value.trim()) return alert("Por favor, escribe tu nombre");
-  playerName = input.value.trim();
-  startScreen.style.display = "none";
-  timerDisplay.style.display = "block";
-  startTimer();
-};
-
-function startTimer(){
-  startTime = Date.now();
-  timerInterval = setInterval(() => {
-    const elapsed = ((Date.now() - startTime)/1000).toFixed(1);
-    timerDisplay.textContent = "Tiempo: " + elapsed + "s";
-  }, 100);
-}
-
-function stopTimer(){
-  clearInterval(timerInterval);
-  return ((Date.now() - startTime)/1000).toFixed(1);
-}
-
-// Interceptar cuando gana
-const originalShowResults = showResults;
-showResults = function(){
-  const elapsed = stopTimer();
-  originalShowResults();
-  saveLeaderboard(playerName, elapsed);
-};
-
-function saveLeaderboard(name, time){
-  let board = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-  board.push({name, time: parseFloat(time)});
-  board.sort((a,b)=>a.time-b.time);
-  if(board.length > 100) board = board.slice(0,100);
-  localStorage.setItem("leaderboard", JSON.stringify(board));
-}
-
-// Mostrar leaderboard manualmente
-document.getElementById("trophyBtn").onclick = () => {
-  let board = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-  leaderboardList.innerHTML = "";
-  if(board.length === 0){
-    leaderboardList.innerHTML = "<li>No hay registros aún</li>";
-  } else {
-    board.forEach((p,i)=>{
-      const li = document.createElement("li");
-      li.textContent = (i+1) + ". " + p.name + " — " + p.time.toFixed(1) + "s";
-      leaderboardList.appendChild(li);
+        <style>
+          @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        </style>
+      `;
     });
-  }
-  leaderboardModal.style.display = "flex";
-};
-</script>
 
-{ 
-/* --- Agregado: "El bot de Mateo" (UI + estilos + lógica) --- */
-<style>
-  /* Bot UI */
-  #mateoBotToggle{
-    position:fixed;
-    right:18px;
-    bottom:84px;
-    width:56px;height:56px;border-radius:50%;
-    background:linear-gradient(90deg,#ffb703,#fb8500);
-    box-shadow:0 10px 30px rgba(251,133,0,0.18);
-    display:grid;place-items:center;cursor:pointer;z-index:12000;
-    font-weight:900;color:#211; border:none;
-  }
-  #mateoBotWindow{
-    position:fixed;
-    right:18px;
-    bottom:152px;
-    width:340px;
-    max-height:420px;
-    background:linear-gradient(180deg,#071129,#071426);
-    border-radius:12px;
-    box-shadow:0 20px 60px rgba(2,6,23,0.6);
-    overflow:hidden;
-    display:none;
-    flex-direction:column;
-    z-index:12000;
-    border:1px solid rgba(255,255,255,0.04);
-    color:#e6eef8;
-    font-family:"Outfit",system-ui,Segoe UI,Roboto,sans-serif;
-  }
-  #mateoBotHeader{
-    padding:12px 14px;display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#06202e,#0b2736);
-  }
-  #mateoBotHeader .title{font-weight:800;font-size:15px}
-  #mateoBotHeader .sub{font-size:12px;color:#9fd7ff80}
-  #mateoBotMessages{padding:12px;flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px}
-  .bot-msg{max-width:80%;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.03);font-size:13px}
-  .bot-msg.bot{align-self:flex-start;background:linear-gradient(90deg,#0ea5a4,#2563eb);color:#041124}
-  .bot-msg.user{align-self:flex-end;background:linear-gradient(90deg,#111827,#0b1220);color:#dbeafe;border:1px solid rgba(255,255,255,0.03)}
-  #mateoBotControls{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,0.02);align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
-  #mateoBotControls input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;outline:none}
-  #mateoBotControls button{padding:8px 10px;border-radius:8px;border:none;background:#ffd166;color:#111;font-weight:800;cursor:pointer}
-  #mateoBotSuggestions{display:flex;gap:6px;padding:8px 12px 14px;flex-wrap:wrap;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.04));border-top:1px solid rgba(255,255,255,0.01)}
-  .bot-sug{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px;cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
-  .bot-footer-note{font-size:12px;color:#9fd7ff80;padding:8px 12px 14px}
-  @media (max-width:480px){
-    #mateoBotWindow{ right:10px; left:10px; width:auto; bottom:100px; }
-    #mateoBotToggle{ right:12px; bottom:40px; }
-  }
-</style>
+    document.addEventListener("keydown", function(e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) ||
+        (e.ctrlKey && (e.key === "U" || e.key === "S" || e.key === "C"))
+      ) {
+        e.preventDefault();
+        document.body.innerHTML = `
+          <div style="position:fixed; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center;
+            background: linear-gradient(270deg, #000000, #1a1a1a, #ff0000, #00cfff); background-size:800% 800%; animation:fondoAnimado 16s ease infinite; z-index:99999;">
+            <h1 style="color:#fff; font-size:2em; text-align:center;">
+              🚫 Acceso bloqueado 🚫<br>No intentes copiar ni inspeccionar esta página.
+            </h1>
+          </div>
+          <style>
+            @keyframes fondoAnimado { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+          </style>
+        `;
+      }
+    });
+  </script>
 
-<!-- Bot toggle + window -->
-<button id="mateoBotToggle" title="El bot de Mateo">BM</button>
+  <div id="tsparticles"></div>
 
-<div id="mateoBotWindow" role="dialog" aria-label="El bot de Mateo">
-  <div id="mateoBotHeader">
-    <div style="display:flex;flex-direction:column">
-      <div class="title">El bot de Mateo</div>
-      <div class="sub">Preguntas rápidas sobre componentes y ayuda</div>
+  <header>
+    <h1 style="font-size: 3em; color: #00cfff; text-shadow: 0 0 25px #00cfff, 0 0 40px #00cfff; animation: glow-celeste 2s ease-in-out infinite alternate; letter-spacing: 2px; margin-bottom: 0.2em; display: flex; justify-content: center; align-items: center; gap: 18px; flex-wrap: wrap;">
+      🔥🔥 NKD PEREIRA 🔥🔥
+    </h1>
+  </header>
+
+  <main id="contenido-principal">
+    <button class="boton" onclick="abrirModal()">ENTRADA DE CLIENTES 🔐</button>
+  </main>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="cerrar" onclick="cerrarModal()">✖</span>
+      <h2>🔑 Ingrese la contraseña</h2>
+      <input type="password" id="password" placeholder="********">
+      <div class="mensaje-error" id="mensaje-error"></div>
+      <button class="boton-modal" onclick="verificarPassword()">Entrar</button>
     </div>
   </div>
 
-  <div id="mateoBotMessages" aria-live="polite">
-    <div class="bot-msg bot">¡Hola! Soy El bot de Mateo. Prueba con sugerencias o escribe tu duda (ej.: "¿Dónde está la GPU?").</div>
-  </div>
+  <section id="seccion-secreta" style="display:none; text-align:center;">
+    <h2>✅ Acceso Autorizado</h2>
+    <button class="boton" onclick="mostrarPersonas()">👤 PERSONAS</button>
+    <button class="boton" onclick="mostrarMotosTaller()">🏍️ MOTOS/TALLER</button>
+    <button class="boton" onclick="volverAtras()">🔙 Volver atrás</button>
+  </section>
 
-  <div id="mateoBotSuggestions" aria-hidden="false">
-    <div class="bot-sug">¿Dónde está la GPU?</div>
-    <div class="bot-sug">Cómo instalar RAM</div>
-    <div class="bot-sug">Diferencia HDD vs SSD</div>
-    <div class="bot-sug">Qué es la motherboard</div>
-    <div class="bot-sug">¿Qué es PSU?</div>
-  </div>
+  <section id="seccion-personas" style="display:none;">
+    <h2 style="text-align:center;">👤 Lista de Personas</h2>
 
-  <div id="mateoBotControls">
-    <input id="mateoBotInput" type="text" placeholder="Escribe tu pregunta..." aria-label="Escribe tu pregunta"/>
-    <button id="mateoBotSend">Enviar</button>
-  </div>
-  <div class="bot-footer-note">Respuestas automáticas basadas en info predefinida — no obliga a usar la contraseña del admin.</div>
-</div>
+    <div id="formulario-registro">
+      <input type="text" id="nombre" placeholder="Nombre">
+      <input type="text" id="apellido" placeholder="Apellido">
+      <input type="text" id="cedula" placeholder="Cédula">
+      <input type="text" id="telefono" placeholder="Teléfono">
+      <input type="text" id="ciudad" placeholder="Ciudad">
+      <button class="boton" onclick="registrarPersona()">Registrar</button>
+    </div>
 
-<script>
-  // Lógica simple del bot con respuestas predefinidas
-  (function(){
-    const toggle = document.getElementById('mateoBotToggle');
-    const win = document.getElementById('mateoBotWindow');
-    const msgs = document.getElementById('mateoBotMessages');
-    const input = document.getElementById('mateoBotInput');
-    const send = document.getElementById('mateoBotSend');
-    const suggestions = document.querySelectorAll('.bot-sug');
+    <div id="formulario-edicion" style="display:none; text-align:center;">
+      <h3>Editar Persona</h3>
+      <input type="hidden" id="edit-id">
+      <input type="text" id="edit-nombre" placeholder="Nombre">
+      <input type="text" id="edit-apellido" placeholder="Apellido">
+      <input type="text" id="edit-cedula" placeholder="Cédula">
+      <input type="text" id="edit-telefono" placeholder="Teléfono">
+      <input type="text" id="edit-ciudad" placeholder="Ciudad">
+      <button class="boton" onclick="guardarEdicion()">Guardar</button>
+      <button class="boton" onclick="cancelarEdicion()">Cancelar</button>
+    </div>
 
-    // Base de respuestas (preguntas comunes)
-    const QA = [
-      { q:["motherboard","placa base","placa madre"], a:"MOTHERBOARD — Placa base que conecta y comunica todos los componentes del PC (CPU, RAM, GPU y puertos)." },
-      { q:["processor","cpu","procesador"], a:"PROCESSOR — CPU: unidad central que ejecuta instrucciones y controla el sistema." },
-      { q:["graphics","gráfica","tarjeta gráfica","graphics card"], a:"GRAPHICS — Subsistema gráfico; normalmente refiere a la tarjeta gráfica que procesa imágenes y video." },
-      { q:["memory","ram","memoria"], a:"MEMORY — Memoria RAM: almacenamiento volátil usado por el sistema para datos y programas en ejecución." },
-      { q:["storage","almacenamiento"], a:"STORAGE — Almacenamiento permanente (HDD, SSD) donde se guardan archivos y el sistema operativo." },
-      { q:["harddrive","hdd","hardrive","disco duro"], a:"HARDDRIVE — HDD: disco duro mecánico, mayor capacidad y menor velocidad que un SSD." },
-      { q:["solidstate","ssd","solid state","unidad estado solido"], a:"SOLIDSTATE — SSD: unidad de estado sólido, almacenamiento rápido sin partes móviles." },
-      { q:["gpu","tarjeta gráfica","gpu"], a:"GPU — Unidad de procesamiento gráfico; acelera renderizado de imágenes, video y cómputo paralelo." },
-      { q:["power","psu","fuente","fuente de poder"], a:"POWER / PSU — Fuente de alimentación: suministra y regula la energía eléctrica a los componentes; se mide en vatios (W)." },
-      { q:["cooling","refrigeración","ventilador"], a:"COOLING — Sistema de refrigeración (ventiladores, radiadores) para mantener temperaturas seguras." },
-      { q:["heatsink","disipador"], a:"HEATSINK — Disipador: pieza metálica que extrae calor de componentes (CPU/GPU) para facilitar su disipación." },
-      { q:["monitor","pantalla"], a:"MONITOR — Pantalla que muestra la salida visual del ordenador." },
-      { q:["keyboard","teclado"], a:"KEYBOARD — Teclado: periférico de entrada para escribir y controlar el equipo." },
-      { q:["mouse","ratón"], a:"MOUSE — Ratón: periférico de entrada para mover el cursor y hacer selecciones." },
-      { q:["usb","puerto usb"], a:"USB — Estándar de conexión para periféricos y almacenamiento; existen variantes (A, C) y velocidades (2.0, 3.0, etc.)." }
-    ];
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Apellido</th><th>Cédula</th><th>Teléfono</th><th>Ciudad</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-personas"></tbody>
+    </table>
 
-    function addMessage(text, who='bot'){
-      const d = document.createElement('div');
-      d.className = 'bot-msg ' + (who==='bot' ? 'bot' : 'user');
-      d.textContent = text;
-      msgs.appendChild(d);
-      msgs.scrollTop = msgs.scrollHeight;
-    }
+    <div class="paginacion" id="paginacion"></div>
+    <div style="text-align:center;">
+      <button class="boton" onclick="volverDesdePersonas()">🔙 Volver atrás</button>
+    </div>
+  </section>
 
-    function answerFor(text){
-      const t = text.toLowerCase();
-      for(const item of QA){
-        for(const k of item.q){
-          if(t.includes(k)) return item.a;
-        }
-      }
-      // fallback suggestions
-      return "Lo siento, no entiendo exactamente. Prueba: '¿Dónde está la GPU?', 'Cómo instalar RAM' o 'Diferencia HDD vs SSD'.";
-    }
+  <section id="seccion-motos-taller" style="display:none;">
+    <h2 style="text-align:center;">🏍️ Motos/Taller</h2>
 
-    // toggle show/hide
-    toggle.addEventListener('click', ()=>{
-      if(win.style.display === 'flex'){
-        win.style.display = 'none';
-      } else {
-        win.style.display = 'flex';
-      }
-    });
+    <div id="formulario-moto" style="text-align:center; margin-bottom:20px;">
+      <input type="text" id="moto-nombre" placeholder="Nombre">
+      <input type="text" id="moto-apellido" placeholder="Apellido">
+      <input type="text" id="moto-cedula" placeholder="Cédula">
+      <input type="text" id="moto-telefono" placeholder="Teléfono">
+      <input type="text" id="moto-placa" placeholder="Placa">
+      <button class="boton" onclick="registrarMoto()">Registrar Moto</button>
+    </div>
 
-    // send via click or Enter
-    send.addEventListener('click', handleSend);
-    input.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter') handleSend();
-    });
+    <div id="formulario-edicion-moto" style="display:none; text-align:center;">
+      <h3>Editar Moto/Taller</h3>
+      <input type="hidden" id="edit-moto-id">
+      <input type="text" id="edit-moto-nombre" placeholder="Nombre">
+      <input type="text" id="edit-moto-apellido" placeholder="Apellido">
+      <input type="text" id="edit-moto-cedula" placeholder="Cédula">
+      <input type="text" id="edit-moto-telefono" placeholder="Teléfono">
+      <input type="text" id="edit-moto-placa" placeholder="Placa">
+      <button class="boton" onclick="guardarEdicionMoto()">Guardar</button>
+      <button class="boton" onclick="cancelarEdicionMoto()">Cancelar</button>
+    </div>
 
-    function handleSend(){
-      const v = input.value.trim();
-      if(!v) return;
-      addMessage(v, 'user');
-      input.value = '';
-      // small delay to simulate typing
-      setTimeout(()=> {
-        const resp = answerFor(v);
-        addMessage(resp, 'bot');
-      }, 350 + Math.random()*300);
-    }
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Apellido</th><th>Cédula</th><th>Teléfono</th><th>Placa</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-motos"></tbody>
+    </table>
 
-    // suggestion buttons
-    suggestions.forEach(s=>{
-      s.addEventListener('click', ()=>{
-        const txt = s.textContent;
-        addMessage(txt, 'user');
-        setTimeout(()=> addMessage(answerFor(txt), 'bot'), 300);
+    <div class="paginacion" id="paginacion-motos"></div>
+    <div style="text-align:center;">
+      <button class="boton" onclick="volverDesdeMotosTaller()">🔙 Volver atrás</button>
+    </div>
+  </section>
+
+  <!-- Sonido global de clic en botones -->
+  <audio id="sonido-click" src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b6c_1.mp3"></audio>
+
+  <script>
+    // Reproduce sonido al hacer click en cualquier botón
+    document.addEventListener("DOMContentLoaded", function() {
+      const sonido = document.getElementById("sonido-click");
+      document.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          try { sonido.currentTime = 0; sonido.play(); } catch(e){}
+        });
       });
     });
 
-    // keep bot accessible on mobile: double-tap toggle
-    toggle.addEventListener('dblclick', ()=> { win.style.display='flex'; });
+    // ====== Datos iniciales ======
+    let personas = JSON.parse(localStorage.getItem("personas")) || [
+      { id: 1, nombre: "Carlos", apellido: "Perez", cedula: "1000123456", telefono: "3210001111", ciudad: "Pereira" },
+    ];
 
-  })();
-</script>
-}
+    let motos = JSON.parse(localStorage.getItem("motos")) || [
+      { id: 1, nombre: "Juan", apellido: "Gomez", cedula: "1000111111", telefono: "3221112222", placa: "ABC123" },
+    ];
+
+    let currentPage = 1, rowsPerPage = 5;
+    let currentPageMotos = 1, rowsPerPageMotos = 5;
+
+    // ====== Modal login ======
+    function abrirModal() {
+      document.getElementById("modal").style.display = "block";
+      document.getElementById("password").value = "";
+      document.getElementById("mensaje-error").textContent = "";
+    }
+    function cerrarModal() { document.getElementById("modal").style.display = "none"; }
+    function verificarPassword() {
+      const pass = document.getElementById("password").value;
+      if (pass === "1234") {
+        cerrarModal();
+        document.getElementById("contenido-principal").style.display = "none";
+        document.getElementById("seccion-secreta").style.display = "block";
+      } else {
+        document.getElementById("mensaje-error").textContent = "❌ Contraseña incorrecta";
+      }
+    }
+    function volverAtras() {
+      document.getElementById("contenido-principal").style.display = "block";
+      document.getElementById("seccion-secreta").style.display = "none";
+    }
+
+    // ====== Personas ======
+    function mostrarPersonas() {
+      document.getElementById("seccion-secreta").style.display = "none";
+      document.getElementById("seccion-personas").style.display = "block";
+      renderTabla();
+    }
+    function volverDesdePersonas() {
+      document.getElementById("seccion-personas").style.display = "none";
+      document.getElementById("seccion-secreta").style.display = "block";
+    }
+    function guardarPersonas() { localStorage.setItem("personas", JSON.stringify(personas)); }
+    function registrarPersona() {
+      const nombre = document.getElementById("nombre").value.trim();
+      const apellido = document.getElementById("apellido").value.trim();
+      const cedula = document.getElementById("cedula").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const ciudad = document.getElementById("ciudad").value.trim();
+
+      if (nombre && apellido && cedula && telefono && ciudad) {
+        const nueva = { id: personas.length ? personas[personas.length - 1].id + 1 : 1, nombre, apellido, cedula, telefono, ciudad };
+        personas.push(nueva);
+        guardarPersonas();
+        limpiarFormulario();
+        renderTabla();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function limpiarFormulario() {
+      ["nombre","apellido","cedula","telefono","ciudad"].forEach(id => document.getElementById(id).value = "");
+    }
+    function renderTabla() {
+      const inicio = (currentPage - 1) * rowsPerPage;
+      const visibles = personas.slice(inicio, inicio + rowsPerPage);
+      const cuerpo = visibles.map(p => `
+        <tr>
+          <td>${p.id}</td><td>${p.nombre}</td><td>${p.apellido}</td><td>${p.cedula}</td><td>${p.telefono}</td><td>${p.ciudad}</td>
+          <td class="acciones">
+            <button onclick="editarPersona(${p.id})">Editar</button>
+            <button onclick="borrarPersona(${p.id})">Borrar</button>
+          </td>
+        </tr>`).join("");
+      document.getElementById("tabla-personas").innerHTML = cuerpo;
+      renderPaginacion();
+    }
+    function editarPersona(id) {
+      const persona = personas.find(p => p.id === id);
+      if (!persona) return;
+      document.getElementById("formulario-edicion").style.display = "block";
+      document.getElementById("formulario-registro").style.display = "none";
+      document.getElementById("edit-id").value = persona.id;
+      document.getElementById("edit-nombre").value = persona.nombre;
+      document.getElementById("edit-apellido").value = persona.apellido;
+      document.getElementById("edit-cedula").value = persona.cedula;
+      document.getElementById("edit-telefono").value = persona.telefono;
+      document.getElementById("edit-ciudad").value = persona.ciudad;
+    }
+    function guardarEdicion() {
+      const id = parseInt(document.getElementById("edit-id").value, 10);
+      const nombre = document.getElementById("edit-nombre").value.trim();
+      const apellido = document.getElementById("edit-apellido").value.trim();
+      const cedula = document.getElementById("edit-cedula").value.trim();
+      const telefono = document.getElementById("edit-telefono").value.trim();
+      const ciudad = document.getElementById("edit-ciudad").value.trim();
+      const persona = personas.find(p => p.id === id);
+      if (persona && nombre && apellido && cedula && telefono && ciudad) {
+        Object.assign(persona, { nombre, apellido, cedula, telefono, ciudad });
+        guardarPersonas();
+        document.getElementById("formulario-edicion").style.display = "none";
+        document.getElementById("formulario-registro").style.display = "block";
+        renderTabla();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function cancelarEdicion() {
+      document.getElementById("formulario-edicion").style.display = "none";
+      document.getElementById("formulario-registro").style.display = "block";
+    }
+    function borrarPersona(id) {
+      if (!confirm("¿Estás seguro de borrar esta persona?")) return;
+      personas = personas.filter(p => p.id !== id);
+      guardarPersonas();
+      renderTabla();
+    }
+    function renderPaginacion() {
+      const total = Math.ceil(personas.length / rowsPerPage);
+      let botones = "";
+      for (let i = 1; i <= total; i++) {
+        botones += `<button class="${i === currentPage ? 'activo' : ''}" onclick="cambiarPagina(${i})">${i}</button>`;
+      }
+      document.getElementById("paginacion").innerHTML = botones;
+    }
+    function cambiarPagina(pag) { currentPage = pag; renderTabla(); }
+
+    // ====== Motos/Taller ======
+    function mostrarMotosTaller() {
+      document.getElementById("seccion-secreta").style.display = "none";
+      document.getElementById("seccion-motos-taller").style.display = "block";
+      renderTablaMotos();
+    }
+    function volverDesdeMotosTaller() {
+      document.getElementById("seccion-motos-taller").style.display = "none";
+      document.getElementById("seccion-secreta").style.display = "block";
+    }
+    function guardarMotos() { localStorage.setItem("motos", JSON.stringify(motos)); }
+    function registrarMoto() {
+      const nombre = document.getElementById("moto-nombre").value.trim();
+      const apellido = document.getElementById("moto-apellido").value.trim();
+      const cedula = document.getElementById("moto-cedula").value.trim();
+      const telefono = document.getElementById("moto-telefono").value.trim();
+      const placa = document.getElementById("moto-placa").value.trim();
+      if (nombre && apellido && cedula && telefono && placa) {
+        const nueva = { id: motos.length ? motos[motos.length - 1].id + 1 : 1, nombre, apellido, cedula, telefono, placa };
+        motos.push(nueva);
+        guardarMotos();
+        limpiarFormularioMoto();
+        renderTablaMotos();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function limpiarFormularioMoto() {
+      ["moto-nombre","moto-apellido","moto-cedula","moto-telefono","moto-placa"].forEach(id => document.getElementById(id).value = "");
+    }
+    function renderTablaMotos() {
+      const inicio = (currentPageMotos - 1) * rowsPerPageMotos;
+      const visibles = motos.slice(inicio, inicio + rowsPerPageMotos);
+      const cuerpo = visibles.map(m => `
+        <tr>
+          <td>${m.id}</td><td>${m.nombre}</td><td>${m.apellido}</td><td>${m.cedula}</td><td>${m.telefono}</td><td>${m.placa}</td>
+          <td class="acciones">
+            <button onclick="editarMoto(${m.id})">Editar</button>
+            <button onclick="borrarMoto(${m.id})">Borrar</button>
+          </td>
+        </tr>`).join("");
+      document.getElementById("tabla-motos").innerHTML = cuerpo;
+      renderPaginacionMotos();
+    }
+    function editarMoto(id) {
+      const moto = motos.find(m => m.id === id);
+      if (!moto) return;
+      document.getElementById("formulario-edicion-moto").style.display = "block";
+      document.getElementById("formulario-moto").style.display = "none";
+      document.getElementById("edit-moto-id").value = moto.id;
+      document.getElementById("edit-moto-nombre").value = moto.nombre;
+      document.getElementById("edit-moto-apellido").value = moto.apellido;
+      document.getElementById("edit-moto-cedula").value = moto.cedula;
+      document.getElementById("edit-moto-telefono").value = moto.telefono;
+      document.getElementById("edit-moto-placa").value = moto.placa;
+    }
+    function guardarEdicionMoto() {
+      const id = parseInt(document.getElementById("edit-moto-id").value, 10);
+      const nombre = document.getElementById("edit-moto-nombre").value.trim();
+      const apellido = document.getElementById("edit-moto-apellido").value.trim();
+      const cedula = document.getElementById("edit-moto-cedula").value.trim();
+      const telefono = document.getElementById("edit-moto-telefono").value.trim();
+      const placa = document.getElementById("edit-moto-placa").value.trim();
+      const moto = motos.find(m => m.id === id);
+      if (moto && nombre && apellido && cedula && telefono && placa) {
+        Object.assign(moto, { nombre, apellido, cedula, telefono, placa });
+        guardarMotos();
+        document.getElementById("formulario-edicion-moto").style.display = "none";
+        document.getElementById("formulario-moto").style.display = "block";
+        renderTablaMotos();
+      } else { alert("Por favor completa todos los campos."); }
+    }
+    function cancelarEdicionMoto() {
+      document.getElementById("formulario-edicion-moto").style.display = "none";
+      document.getElementById("formulario-moto").style.display = "block";
+    }
+    function borrarMoto(id) {
+      if (!confirm("¿Estás seguro de borrar esta moto/taller?")) return;
+      motos = motos.filter(m => m.id !== id);
+      guardarMotos();
+      renderTablaMotos();
+    }
+    function renderPaginacionMotos() {
+      const total = Math.ceil(motos.length / rowsPerPageMotos);
+      let botones = "";
+      for (let i = 1; i <= total; i++) {
+        botones += `<button class="${i === currentPageMotos ? 'activo' : ''}" onclick="cambiarPaginaMotos(${i})">${i}</button>`;
+      }
+      document.getElementById("paginacion-motos").innerHTML = botones;
+    }
+    function cambiarPaginaMotos(pag) { currentPageMotos = pag; renderTablaMotos(); }
+
+    // ====== Partículas ======
+    tsParticles.load("tsparticles", {
+      fpsLimit: 120,
+      background: { color: "#000000" },
+      particles: {
+        number: { value: 120, density: { enable: true, area: 800 } },
+        color: { value: ["#ff0000", "#00cfff", "#ffffff"] },
+        shape: { type: ["circle", "star"] },
+        opacity: { value: 0.7, random: true },
+        size: { value: 4, random: true },
+        links: { enable: true, distance: 120, color: "#00cfff", opacity: 0.5, width: 2 },
+        move: { enable: true, speed: 2, direction: "none", outModes: { default: "bounce" } }
+      },
+      interactivity: {
+        events: { onHover: { enable: true, mode: "repulse" }, resize: true },
+        modes: { repulse: { distance: 100 } }
+      },
+      detectRetina: true
+    });
+  </script>
+
+  <!-- ====== NKD BOT — Widget nuevo desde cero (HTML) ====== -->
+  <button id="nkdbot-toggle" aria-label="Abrir chat de ayuda" title="Ayuda 🤖">🤖</button>
+
+  <div id="nkdbot-panel" role="dialog" aria-label="Chat de ayuda NKD">
+    <div id="nkdbot-header">
+      <div id="nkdbot-title">🤖 <strong>NKD BOT</strong> <span style="font-size:.85em;color:#bbb;">offline</span></div>
+      <div id="nkdbot-actions">
+        <button id="nkdbot-min" title="Minimizar">▁</button>
+        <button id="nkdbot-close" title="Cerrar">✖</button>
+      </div>
+    </div>
+    <div id="nkdbot-messages"></div>
+    <div id="nkdbot-suggestions"></div>
+    <div id="nkdbot-inputbar">
+      <input id="nkdbot-input" type="text" placeholder="Escribe tu pregunta..." autocomplete="off" />
+      <button id="nkdbot-send">Enviar</button>
+    </div>
+  </div>
+
+  <!-- Sonido específico de apertura del bot (además del global de botones) -->
+  <audio id="nkdbot-open" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b6c_1.mp3?filename=click-124467.mp3" preload="auto"></audio>
+
+  <!-- ====== NKD BOT — Lógica ====== -->
+  <script>
+    (function(){
+      const $ = (q) => document.querySelector(q);
+      const toggle = $("#nkdbot-toggle");
+      const panel  = $("#nkdbot-panel");
+      const btnMin = $("#nkdbot-min");
+      const btnCls = $("#nkdbot-close");
+      const msgBox = $("#nkdbot-messages");
+      const input  = $("#nkdbot-input");
+      const send   = $("#nkdbot-send");
+      const suggs  = $("#nkdbot-suggestions");
+      const openSfx = $("#nkdbot-open");
+
+      function openPanel(){
+        panel.classList.add("open");
+        panel.style.display = "flex";
+        try { openSfx.currentTime = 0; openSfx.play(); } catch(e){}
+        setTimeout(()=>input.focus(), 60);
+      }
+      function closePanel(){
+        panel.classList.remove("open");
+        setTimeout(()=>{ panel.style.display="none"; }, 200);
+      }
+      toggle.addEventListener("click", openPanel);
+      btnMin.addEventListener("click", ()=> panel.classList.toggle("open"));
+      btnCls.addEventListener("click", closePanel);
+
+      function addMsg(text, who="bot"){
+        const el = document.createElement("div");
+        el.className = "nkdbot-msg " + (who === "user" ? "nkdbot-user" : "nkdbot-bot");
+        const time = new Date();
+        const hh = String(time.getHours()).padStart(2,"0");
+        const mm = String(time.getMinutes()).padStart(2,"0");
+        el.innerHTML = text + '<span class="nkdbot-time">'+hh+':'+mm+'</span>';
+        msgBox.appendChild(el);
+        msgBox.scrollTop = msgBox.scrollHeight;
+      }
+
+      const chips = [
+        "¿Cuál es la contraseña?",
+        "¿Cómo registro una persona?",
+        "¿Dónde están las motos/taller?",
+        "¿Por qué pide edad al entrar?",
+        "¿Cómo edito o borro registros?",
+        "¿Dónde se guardan los datos?",
+        "¿Funciona en iPhone?"
+      ];
+      function renderChips(){
+        suggs.innerHTML = "";
+        chips.forEach(txt => {
+          const c = document.createElement("button");
+          c.className = "nkd-chip";
+          c.textContent = txt;
+          c.addEventListener("click", ()=> { input.value = txt; handleSend(); });
+          suggs.appendChild(c);
+        });
+      }
+
+      function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+
+      function answer(q){
+        const t = norm(q);
+
+        if (t === "/limpiar" || t === "limpiar chat") { msgBox.innerHTML = ""; return "✔️ Chat limpiado."; }
+        if (t === "/ayuda" || t.includes("ayuda") || t.includes("que puedes hacer")) {
+          return "Puedo ayudarte con: <b>contraseña</b>, <b>acceso por edad</b>, <b>registrar/editar/borrar personas</b>, <b>registrar motos</b>, secciones y dónde se guardan los datos (<code>localStorage</code>).";
+        }
+        if (t.includes("iphone") || t.includes("ios")) {
+          return "📱 Sí, funciona en iPhone/iOS. No hay bloqueos para dispositivos Apple.";
+        }
+
+        // Acceso
+        if (t.includes("contrase") || t.includes("password") || t.includes("clave"))
+          return "🔑 La contraseña por defecto es <b>1234</b>. Puedes cambiarla en <code>verificarPassword()</code>.";
+        if (t.includes("entrar") || t.includes("acceso") || t.includes("login") || t.includes("clientes"))
+          return "Para entrar: pulsa <b>ENTRADA DE CLIENTES</b>, escribe la contraseña y verás <b>PERSONAS</b> y <b>MOTOS/TALLER</b>.";
+
+        // Edad
+        if (t.includes("edad") || t.includes("mayor") || t.includes("menor"))
+          return "🔞 Al cargar la página, debes seleccionar tu rango de edad. 18-25 (mayor) habilita el acceso. 10-17 muestra denegado.";
+
+        // Personas
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("registr") || t.includes("agregar")))
+          return "👤 Completa <b>Nombre, Apellido, Cédula, Teléfono y Ciudad</b> y pulsa <b>Registrar</b>. Se guarda en <code>localStorage</code>.";
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("editar") || t.includes("modificar")))
+          return "✏️ Usa <b>Editar</b> en la tabla, cambia los campos y pulsa <b>Guardar</b>.";
+        if ((t.includes("persona") || t.includes("personas")) && (t.includes("borrar") || t.includes("eliminar")))
+          return "🗑️ Pulsa <b>Borrar</b> junto al registro y confirma.";
+
+        // Motos / Taller
+        if (t.includes("moto") || t.includes("taller")) {
+          if (t.includes("registr")) return "🏍️ En <b>Motos/Taller</b> llena los datos y pulsa <b>Registrar Moto</b>.";
+          if (t.includes("editar"))   return "🔧 Usa <b>Editar</b> en la tabla de Motos/Taller y guarda.";
+          if (t.includes("borrar") || t.includes("eliminar")) return "🗑️ Pulsa <b>Borrar</b> junto al registro y confirma.";
+          return "En <b>Motos/Taller</b> puedes registrar, editar y eliminar motos.";
+        }
+
+        // Datos
+        if (t.includes("dato") || t.includes("guardar") || t.includes("localstorage") || t.includes("se guardan"))
+          return "💾 Todo se guarda en el navegador con <code>localStorage</code>. Si borras caché, se pierde. Recomiendo exportar periódicamente.";
+
+        // Estilo / partículas / sonido
+        if (t.includes("particula") || t.includes("tsparticles")) return "✨ El fondo usa <b>tsParticles</b>. Ajusta densidad, forma y velocidad en su config.";
+        if (t.includes("sonido") || t.includes("click")) return "🔊 Los botones reproducen un clic gracias al audio global.";
+
+        return "🤔 No tengo esa respuesta aún. Prueba con: <i>contraseña</i>, <i>registrar persona</i>, <i>motos/taller</i>, <i>edad de acceso</i> o escribe <b>/ayuda</b>.";
+      }
+
+      function handleSend(){
+        const q = input.value.trim();
+        if(!q) return;
+        addMsg(q, "user");
+        input.value = "";
+        const tip = document.createElement("div");
+        tip.className = "nkdbot-msg nkdbot-bot"; tip.textContent = "Escribiendo...";
+        msgBox.appendChild(tip); msgBox.scrollTop = msgBox.scrollHeight;
+        setTimeout(()=>{ tip.remove(); addMsg(answer(q), "bot"); }, 450);
+      }
+
+      send.addEventListener("click", handleSend);
+      input.addEventListener("keydown", (e)=>{ if(e.key === "Enter"){ handleSend(); } });
+
+      addMsg("¡Hola! Soy el <b>NKD BOT</b>. Pregúntame sobre tu página: contraseña, personas, motos/taller o edad de acceso. Escribe <b>/ayuda</b> para ver más opciones.");
+      renderChips();
+    })();
+  </script>
+
+  <!-- Contenedor de partículas -->
+  <div id="tsparticles"></div>
+
 </body>
 </html>
