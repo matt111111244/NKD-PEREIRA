@@ -6,123 +6,102 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== FONDO ===== */
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
-    color: #333;
-    overflow-x: hidden;
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(180deg,#0f2027,#203a43,#2c5364);
+    overflow-x:hidden;
+    color:#333;
 }
-
-/* ===== ESTRELLAS ===== */
-.estrellas {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+.estrellas{
+    position:fixed;
+    width:100%;
+    height:100%;
+    pointer-events:none;
 }
-.estrella {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: white;
-    opacity: 0.8;
-    animation: caer linear infinite;
+.estrella{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    opacity:.8;
+    animation:caer linear infinite;
 }
-@keyframes caer {
-    from { transform: translateY(-10px); }
-    to { transform: translateY(110vh); }
+@keyframes caer{
+    from{transform:translateY(-10px)}
+    to{transform:translateY(110vh)}
 }
-
-/* ===== TITULO ===== */
-h1 {
-    text-align: center;
-    color: white;
-    margin: 20px;
+h1{
+    text-align:center;
+    color:white;
+    margin:20px;
 }
-
-/* ===== DASHBOARD ===== */
-.dashboard {
-    max-width: 1000px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-    gap: 15px;
+.dashboard{
+    max-width:1000px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
 }
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    animation: aparecer 1s ease;
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.3);
 }
-.card h3 { margin: 0; font-size: 14px; color: #555; }
-.card p { font-size: 22px; font-weight: bold; margin-top: 10px; }
-
-@keyframes aparecer {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+.card h3{margin:0;font-size:14px;color:#555}
+.card p{font-size:22px;font-weight:bold;margin-top:10px}
+.contenedor{
+    max-width:1000px;
+    margin:30px auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
 }
-
-/* ===== CONTENEDOR ===== */
-.contenedor {
-    max-width: 1000px;
-    margin: 30px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
+label{font-weight:bold}
+input,select{
+    width:100%;
+    padding:12px;
+    margin:10px 0 20px;
+    border-radius:8px;
+    border:1px solid #ccc;
 }
-
-/* ===== FORM ===== */
-label { font-weight: bold; }
-input, select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0 20px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+.botones{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
 }
-
-/* ===== BOTONES ===== */
-.botones {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+button{
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
 }
-button {
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
+.agregar{background:#27ae60;color:white}
+.excel{background:#16a085;color:white}
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:25px;
 }
-.agregar { background: #27ae60; color: white; }
-.excel { background: #16a085; color: white; }
-
-/* ===== TABLA ===== */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 25px;
+th,td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
 }
-th, td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
+th{
+    background:#2c3e50;
+    color:white;
 }
-th {
-    background: #2c3e50;
-    color: white;
+.acciones button{
+    padding:6px 10px;
+    margin:0 3px;
+    border-radius:5px;
 }
-.acciones button {
-    padding: 6px 10px;
-    margin: 0 3px;
-    border-radius: 5px;
-}
-.editar { background: #f39c12; color: white; }
-.borrar { background: #e74c3c; color: white; }
+.editar{background:#f39c12;color:white}
+.borrar{background:#e74c3c;color:white}
 </style>
 </head>
 
@@ -149,53 +128,52 @@ th {
 
 <div class="contenedor">
 
-    <label>Tipo</label>
-    <select id="tipo">
-        <option value="material">Material (19%)</option>
-        <option value="mano">Mano de obra (0%)</option>
-        <option value="servicio">Servicio (19%)</option>
-    </select>
+<label>Tipo</label>
+<select id="tipo">
+    <option value="material">Material (19%)</option>
+    <option value="mano">Mano de obra (0%)</option>
+    <option value="servicio">Servicio (19%)</option>
+</select>
 
-    <label>Monto base ($ COP)</label>
-    <input type="number" id="monto">
+<label>Monto base ($ COP)</label>
+<input type="number" id="monto">
 
-    <div class="botones">
-        <button class="agregar" onclick="agregar()">Agregar</button>
-        <button class="excel" onclick="exportarExcel()">Exportar Excel</button>
-    </div>
+<div class="botones">
+    <button class="agregar" onclick="agregar()">Agregar</button>
+    <button class="excel" onclick="exportarExcel()">Exportar Excel</button>
+</div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Tipo</th>
-                <th>Base</th>
-                <th>IVA</th>
-                <th>Total</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="tabla"></tbody>
-    </table>
+<table>
+<thead>
+<tr>
+    <th>Tipo</th>
+    <th>Base</th>
+    <th>IVA</th>
+    <th>Total</th>
+    <th>Acciones</th>
+</tr>
+</thead>
+<tbody id="tabla"></tbody>
+</table>
 
 </div>
 
 <script>
 let datos = JSON.parse(localStorage.getItem("cuentasLuis")) || [];
 
-/* FORMATO */
 function f(n){ return n.toLocaleString('es-CO'); }
 
-/* GUARDAR */
 function guardar(){
     localStorage.setItem("cuentasLuis", JSON.stringify(datos));
     recalcular();
 }
 
-/* RECALCULAR */
 function recalcular(){
     let b=0,i=0,t=0;
     datos.forEach(d=>{
-        b+=d.base; i+=d.iva; t+=d.total;
+        b+=d.base;
+        i+=d.iva;
+        t+=d.total;
     });
     totalBase.innerText="$ "+f(b);
     totalIVA.innerText="$ "+f(i);
@@ -203,7 +181,6 @@ function recalcular(){
     render();
 }
 
-/* RENDER */
 function render(){
     tabla.innerHTML="";
     datos.forEach((d,idx)=>{
@@ -221,39 +198,36 @@ function render(){
     });
 }
 
-/* AGREGAR */
 function agregar(){
-    let tipo=tipoEl.value;
-    let base=+monto.value;
-    if(!base) return;
+    let tipo = document.getElementById("tipo").value;
+    let base = parseFloat(document.getElementById("monto").value);
+    if(!base || base<=0) return alert("Monto inválido");
 
-    let ivaP=(tipo==="mano")?0:19;
-    let iva=base*ivaP/100;
-    let total=base+iva;
+    let ivaP = (tipo==="mano") ? 0 : 19;
+    let iva = base * ivaP / 100;
+    let total = base + iva;
 
     datos.push({tipo,base,iva,total});
     guardar();
-    monto.value="";
+    document.getElementById("monto").value="";
 }
 
-/* BORRAR */
 function borrar(i){
     datos.splice(i,1);
     guardar();
 }
 
-/* EDITAR */
 function editar(i){
-    let nuevo=prompt("Nuevo monto:", datos[i].base);
+    let nuevo = prompt("Nuevo monto:", datos[i].base);
     if(!nuevo) return;
-    datos[i].base=+nuevo;
-    let ivaP=(datos[i].tipo==="mano")?0:19;
-    datos[i].iva=datos[i].base*ivaP/100;
-    datos[i].total=datos[i].base+datos[i].iva;
+    nuevo = parseFloat(nuevo);
+    let ivaP = (datos[i].tipo==="mano") ? 0 : 19;
+    datos[i].base = nuevo;
+    datos[i].iva = nuevo * ivaP / 100;
+    datos[i].total = datos[i].base + datos[i].iva;
     guardar();
 }
 
-/* EXCEL */
 function exportarExcel(){
     let html=document.querySelector("table").outerHTML;
     let blob=new Blob([html],{type:'application/vnd.ms-excel'});
@@ -263,7 +237,6 @@ function exportarExcel(){
     a.click();
 }
 
-/* ESTRELLAS */
 for(let i=0;i<70;i++){
     let s=document.createElement("div");
     s.className="estrella";
@@ -272,7 +245,6 @@ for(let i=0;i<70;i++){
     estrellas.appendChild(s);
 }
 
-/* INIT */
 recalcular();
 </script>
 
