@@ -6,85 +6,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== FONDO Y ESTRELLAS ===== */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
-    overflow-x: hidden;
+    color: #333;
 }
 
-.estrellas {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    top: 0;
-    left: 0;
-}
-
-.estrella {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: white;
-    animation: caer linear infinite;
-    opacity: 0.8;
-}
-
-@keyframes caer {
-    from {
-        transform: translateY(-10px);
-    }
-    to {
-        transform: translateY(110vh);
-    }
-}
-
-/* ===== CONTENEDOR ===== */
 h1 {
     text-align: center;
     color: white;
-    margin-top: 20px;
-    letter-spacing: 2px;
+    margin: 20px 0;
 }
 
+/* ===== DASHBOARD ===== */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 15px;
+    max-width: 900px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.card p {
+    margin: 10px 0 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* ===== CONTENEDOR ===== */
 .contenedor {
-    max-width: 750px;
+    max-width: 900px;
     margin: 30px auto;
-    background: rgba(255,255,255,0.95);
+    background: white;
     padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    animation: aparecer 1s ease;
 }
 
-@keyframes aparecer {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== FORMULARIO ===== */
+/* ===== FORM ===== */
 label {
     font-weight: bold;
 }
 
-input {
+input, select {
     width: 100%;
     padding: 12px;
     margin: 10px 0 20px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    font-size: 15px;
 }
 
-input:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-/* ===== BOTONES ===== */
 .botones {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -97,12 +82,6 @@ button {
     font-size: 16px;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
 }
 
 .agregar {
@@ -110,8 +89,8 @@ button:hover {
     color: white;
 }
 
-.word {
-    background: #2980b9;
+.excel {
+    background: #16a085;
     color: white;
 }
 
@@ -132,37 +111,50 @@ th {
     background: #2c3e50;
     color: white;
 }
-
-tbody tr:hover {
-    background: #f2f6f8;
-    transition: 0.3s;
-}
 </style>
 </head>
 <body>
 
-<!-- ESTRELLAS -->
-<div class="estrellas" id="estrellas"></div>
-
 <h1>Página de Luis</h1>
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+    <div class="card">
+        <h3>Total Base</h3>
+        <p id="totalBase">$ 0</p>
+    </div>
+    <div class="card">
+        <h3>Total IVA</h3>
+        <p id="totalIVA">$ 0</p>
+    </div>
+    <div class="card">
+        <h3>Total General</h3>
+        <p id="totalGeneral">$ 0</p>
+    </div>
+</div>
 
 <div class="contenedor">
 
-    <label>Monto base ($ COP)</label>
-    <input type="number" id="monto" placeholder="Ej: 1500000">
+    <label>Tipo</label>
+    <select id="tipo">
+        <option value="material">Materiales (19%)</option>
+        <option value="mano">Mano de obra (0%)</option>
+        <option value="servicio">Servicios (19%)</option>
+    </select>
 
-    <label>IVA (%)</label>
-    <input type="number" id="iva" value="19">
+    <label>Monto base ($ COP)</label>
+    <input type="number" id="monto" placeholder="Ej: 1200000">
 
     <div class="botones">
-        <button class="agregar" onclick="agregarCuenta()">Agregar cuenta</button>
-        <button class="word" onclick="descargarWord()">Descargar Word</button>
+        <button class="agregar" onclick="agregarCuenta()">Agregar</button>
+        <button class="excel" onclick="exportarExcel()">Exportar Excel</button>
     </div>
 
     <table id="tablaCompleta">
         <thead>
             <tr>
-                <th>Monto Base</th>
+                <th>Tipo</th>
+                <th>Base</th>
                 <th>IVA</th>
                 <th>Total</th>
             </tr>
@@ -173,64 +165,51 @@ tbody tr:hover {
 </div>
 
 <script>
-/* ===== FORMATO COLOMBIANO ===== */
-function formatoCOP(num) {
+let totalBase = 0;
+let totalIVA = 0;
+let totalGeneral = 0;
+
+function formato(num) {
     return num.toLocaleString('es-CO');
 }
 
-/* ===== AGREGAR CUENTA ===== */
 function agregarCuenta() {
+    const tipo = document.getElementById("tipo").value;
     const monto = parseFloat(document.getElementById("monto").value);
-    const ivaPorcentaje = parseFloat(document.getElementById("iva").value);
 
-    if (isNaN(monto) || isNaN(ivaPorcentaje)) {
-        alert("Ingresa valores válidos");
-        return;
-    }
+    if (isNaN(monto)) return alert("Ingresa un monto válido");
 
-    const iva = monto * (ivaPorcentaje / 100);
-    const total = monto + iva;
+    let ivaPorcentaje = (tipo === "mano") ? 0 : 19;
+    let iva = monto * ivaPorcentaje / 100;
+    let total = monto + iva;
 
-    const fila = `
+    totalBase += monto;
+    totalIVA += iva;
+    totalGeneral += total;
+
+    document.getElementById("tabla").innerHTML += `
         <tr>
-            <td>$ ${formatoCOP(monto)}</td>
-            <td>$ ${formatoCOP(iva)}</td>
-            <td>$ ${formatoCOP(total)}</td>
+            <td>${tipo}</td>
+            <td>$ ${formato(monto)}</td>
+            <td>$ ${formato(iva)}</td>
+            <td>$ ${formato(total)}</td>
         </tr>
     `;
 
-    document.getElementById("tabla").innerHTML += fila;
+    document.getElementById("totalBase").innerText = "$ " + formato(totalBase);
+    document.getElementById("totalIVA").innerText = "$ " + formato(totalIVA);
+    document.getElementById("totalGeneral").innerText = "$ " + formato(totalGeneral);
+
     document.getElementById("monto").value = "";
 }
 
-/* ===== DESCARGAR WORD ===== */
-function descargarWord() {
-    const contenido = `
-        <h2>Página de Luis</h2>
-        <p>Resumen de cuentas con IVA - Colombia</p>
-        ${document.getElementById("tablaCompleta").outerHTML}
-    `;
-
-    const blob = new Blob(['<html><body>' + contenido + '</body></html>'], {
-        type: 'application/msword'
-    });
-
-    const link = document.createElement('a');
+function exportarExcel() {
+    let tabla = document.getElementById("tablaCompleta").outerHTML;
+    let blob = new Blob([tabla], { type: 'application/vnd.ms-excel' });
+    let link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = 'Pagina_de_Luis.doc';
+    link.download = "Pagina_de_Luis.xls";
     link.click();
-}
-
-/* ===== GENERAR ESTRELLAS ===== */
-const contenedor = document.getElementById("estrellas");
-
-for (let i = 0; i < 60; i++) {
-    const estrella = document.createElement("div");
-    estrella.className = "estrella";
-    estrella.style.left = Math.random() * 100 + "vw";
-    estrella.style.animationDuration = (3 + Math.random() * 5) + "s";
-    estrella.style.opacity = Math.random();
-    contenedor.appendChild(estrella);
 }
 </script>
 
