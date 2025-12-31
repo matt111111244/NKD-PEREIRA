@@ -2,28 +2,29 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cuentas de Luis</title>
+    <title>Página de Luis</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(120deg, #2c3e50, #3498db);
             padding: 20px;
+            color: #333;
         }
 
         h1 {
             text-align: center;
-            color: #2c3e50;
+            color: white;
         }
 
         .contenedor {
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         label {
@@ -32,22 +33,30 @@
 
         input {
             width: 100%;
-            padding: 8px;
-            margin: 8px 0 15px;
+            padding: 10px;
+            margin: 10px 0 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
         }
 
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: #27ae60;
             color: white;
             border: none;
-            cursor: pointer;
             font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 5px;
         }
 
         button:hover {
             background: #219150;
+        }
+
+        .word {
+            background: #2980b9;
         }
 
         table {
@@ -58,7 +67,7 @@
 
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 10px;
             text-align: center;
         }
 
@@ -70,19 +79,20 @@
 </head>
 <body>
 
-<h1>Cuentas de Luis</h1>
+<h1>Página de Luis</h1>
 
 <div class="contenedor">
 
-    <label>Monto base ($)</label>
-    <input type="number" id="monto" placeholder="Ej: 1000">
+    <label>Monto base ($ COP)</label>
+    <input type="number" id="monto" placeholder="Ej: 1200000">
 
     <label>IVA (%)</label>
-    <input type="number" id="iva" value="16">
+    <input type="number" id="iva" value="19">
 
     <button onclick="agregarCuenta()">Agregar cuenta</button>
+    <button class="word" onclick="descargarWord()">Descargar en Word</button>
 
-    <table>
+    <table id="tablaCompleta">
         <thead>
             <tr>
                 <th>Monto Base</th>
@@ -97,6 +107,10 @@
 </div>
 
 <script>
+    function formatoColombiano(numero) {
+        return numero.toLocaleString('es-CO');
+    }
+
     function agregarCuenta() {
         const monto = parseFloat(document.getElementById("monto").value);
         const ivaPorcentaje = parseFloat(document.getElementById("iva").value);
@@ -111,15 +125,31 @@
 
         const fila = `
             <tr>
-                <td>$${monto.toFixed(2)}</td>
-                <td>$${iva.toFixed(2)}</td>
-                <td>$${total.toFixed(2)}</td>
+                <td>$ ${formatoColombiano(monto)}</td>
+                <td>$ ${formatoColombiano(iva)}</td>
+                <td>$ ${formatoColombiano(total)}</td>
             </tr>
         `;
 
         document.getElementById("tabla").innerHTML += fila;
-
         document.getElementById("monto").value = "";
+    }
+
+    function descargarWord() {
+        const contenido = `
+            <h2>Página de Luis</h2>
+            <p>Resumen de cuentas con IVA</p>
+            ${document.getElementById("tablaCompleta").outerHTML}
+        `;
+
+        const blob = new Blob(['<html><body>' + contenido + '</body></html>'], {
+            type: 'application/msword'
+        });
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'Pagina_de_Luis.doc';
+        link.click();
     }
 </script>
 
