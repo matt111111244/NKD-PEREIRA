@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Página de Luis - Formato Numérico</title>
+<title>Página de Luis - Calculadora de IVA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -367,7 +367,7 @@ tr:hover{
 <div class="onda-fondo"></div>
 <div class="contenedor-elementos" id="contenedorElementos"></div>
 
-<h1>Página de Luis</h1>
+<h1>Página de Luis - Calculadora de IVA</h1>
 
 <div class="dashboard">
     <div class="card">
@@ -393,7 +393,7 @@ tr:hover{
     </select>
 
     <label>Monto Base ($ COP)</label>
-    <input type="text" id="monto" placeholder="Ingresa el valor sin IVA" inputmode="numeric">
+    <input type="text" id="monto" placeholder="Ej: 100000" inputmode="numeric">
 
     <div class="botones">
         <button class="agregar" onclick="agregar()">Agregar Concepto</button>
@@ -416,20 +416,24 @@ tr:hover{
 
 <script>
 // === VARIABLES GLOBALES ===
-const contenedorElementos = document.getElementById('contenedorElementos');
-const colores = ['var(--color-principal)', 'var(--color-secundario)', 'var(--color-terciario)'];
 const inputMonto = document.getElementById('monto');
 const tabla = document.getElementById('tabla');
 const totalBaseElement = document.getElementById('totalBase');
 const totalIVAElement = document.getElementById('totalIVA');
 const totalGeneralElement = document.getElementById('totalGeneral');
-let datos = JSON.parse(localStorage.getItem("cuentasLuis")) || [];
+let datos = [];
 
-// --- FUNCIÓN PARA FORMATEAR NÚMEROS CON PUNTOS DE MILES ---
+// --- FORMATEAR NÚMEROS CON PUNTOS ---
 function formatearNumero(numero) {
-    if (numero === 0 || numero === null || numero === undefined) return "0";
-    const numeroString = numero.toString().replace(/\D/g, '');
-    return numeroString.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    if (isNaN(numero) || numero === 0) return "0";
+    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
-//
+// --- LIMPIAR FORMATO PARA CALCULAR ---
+function limpiarFormato(texto) {
+    const valor = parseFloat(texto.replace(/\./g, '').replace(/\D/g, ''));
+    return isNaN(valor) ? 0 : valor;
+}
+
+// --- FORMATEO EN TIEMPO REAL DEL INPUT ---
+inputMonto.addEventListener('input', function() {
