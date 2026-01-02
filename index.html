@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Página de Luis - Interactiva</title>
+<title>Página de Luis - Formato Numérico</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -393,7 +393,7 @@ tr:hover{
     </select>
 
     <label>Monto Base ($ COP)</label>
-    <input type="number" id="monto" min="0.01" step="0.01" placeholder="Ingresa el valor sin IVA">
+    <input type="text" id="monto" placeholder="Ingresa el valor sin IVA">
 
     <div class="botones">
         <button class="agregar" onclick="agregar()">Agregar Concepto</button>
@@ -437,5 +437,3 @@ function crearEstrella(x, y, color) {
     estrella.style.left = x + 'px';
     estrella.style.top = y + 'px';
     estrella.style.width = (3 + Math.random() * 8) + 'px';
-    estrella.style.height = estrella.style.width;
-    estrella.style.borderColor = color
