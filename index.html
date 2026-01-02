@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Página de Luis - Calculadora de IVA</title>
+<title>Página de Luis - Interactiva</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -367,7 +367,7 @@ tr:hover{
 <div class="onda-fondo"></div>
 <div class="contenedor-elementos" id="contenedorElementos"></div>
 
-<h1>Página de Luis - Calculadora de IVA</h1>
+<h1>Página de Luis</h1>
 
 <div class="dashboard">
     <div class="card">
@@ -393,7 +393,7 @@ tr:hover{
     </select>
 
     <label>Monto Base ($ COP)</label>
-    <input type="text" id="monto" placeholder="Ej: 100000" inputmode="numeric">
+    <input type="number" id="monto" min="0.01" step="0.01" placeholder="Ingresa el valor sin IVA">
 
     <div class="botones">
         <button class="agregar" onclick="agregar()">Agregar Concepto</button>
@@ -415,25 +415,27 @@ tr:hover{
 </div>
 
 <script>
-// === VARIABLES GLOBALES ===
-const inputMonto = document.getElementById('monto');
-const tabla = document.getElementById('tabla');
-const totalBaseElement = document.getElementById('totalBase');
-const totalIVAElement = document.getElementById('totalIVA');
-const totalGeneralElement = document.getElementById('totalGeneral');
-let datos = [];
+// === FUNCIONALIDAD INTERACTIVA ===
+const contenedorElementos = document.getElementById('contenedorElementos');
+const colores = ['var(--color-principal)', 'var(--color-secundario)', 'var(--color-terciario)'];
 
-// --- FORMATEAR NÚMEROS CON PUNTOS ---
-function formatearNumero(numero) {
-    if (isNaN(numero) || numero === 0) return "0";
-    return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+// Crear estrellas iniciales
+function crearEstrellasIniciales() {
+    for(let i=0; i<50; i++) {
+        crearEstrella(
+            Math.random() * window.innerWidth,
+            Math.random() * window.innerHeight,
+            colores[Math.floor(Math.random() * colores.length)]
+        );
+    }
 }
 
-// --- LIMPIAR FORMATO PARA CALCULAR ---
-function limpiarFormato(texto) {
-    const valor = parseFloat(texto.replace(/\./g, '').replace(/\D/g, ''));
-    return isNaN(valor) ? 0 : valor;
-}
-
-// --- FORMATEO EN TIEMPO REAL DEL INPUT ---
-inputMonto.addEventListener('input', function() {
+// Crear estrella en posición específica
+function crearEstrella(x, y, color) {
+    const estrella = document.createElement('div');
+    estrella.className = 'estrella-interactiva';
+    estrella.style.left = x + 'px';
+    estrella.style.top = y + 'px';
+    estrella.style.width = (3 + Math.random() * 8) + 'px';
+    estrella.style.height = estrella.style.width;
+    estrella.style.borderColor = color
