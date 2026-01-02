@@ -393,7 +393,7 @@ tr:hover{
     </select>
 
     <label>Monto Base ($ COP)</label>
-    <input type="text" id="monto" placeholder="Ingresa el valor sin IVA">
+    <input type="text" id="monto" placeholder="Ingresa el valor sin IVA" inputmode="numeric">
 
     <div class="botones">
         <button class="agregar" onclick="agregar()">Agregar Concepto</button>
@@ -436,4 +436,4 @@ function crearEstrella(x, y, color) {
     estrella.className = 'estrella-interactiva';
     estrella.style.left = x + 'px';
     estrella.style.top = y + 'px';
-    estrella.style.width = (3 + Math.random() * 8) + 'px';
+    estrella.style
