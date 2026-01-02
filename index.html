@@ -393,7 +393,7 @@ tr:hover{
     </select>
 
     <label>Monto Base ($ COP)</label>
-    <input type="text" id="monto" placeholder="Ingresa el valor sin IVA">
+    <input type="text" id="monto" placeholder="Ingresa el valor sin IVA" inputmode="numeric">
 
     <div class="botones">
         <button class="agregar" onclick="agregar()">Agregar Concepto</button>
@@ -415,25 +415,21 @@ tr:hover{
 </div>
 
 <script>
-// === FUNCIONALIDAD INTERACTIVA ===
+// === VARIABLES GLOBALES ===
 const contenedorElementos = document.getElementById('contenedorElementos');
 const colores = ['var(--color-principal)', 'var(--color-secundario)', 'var(--color-terciario)'];
+const inputMonto = document.getElementById('monto');
+const tabla = document.getElementById('tabla');
+const totalBaseElement = document.getElementById('totalBase');
+const totalIVAElement = document.getElementById('totalIVA');
+const totalGeneralElement = document.getElementById('totalGeneral');
+let datos = JSON.parse(localStorage.getItem("cuentasLuis")) || [];
 
-// Crear estrellas iniciales
-function crearEstrellasIniciales() {
-    for(let i=0; i<50; i++) {
-        crearEstrella(
-            Math.random() * window.innerWidth,
-            Math.random() * window.innerHeight,
-            colores[Math.floor(Math.random() * colores.length)]
-        );
-    }
+// --- FUNCIÓN PARA FORMATEAR NÚMEROS CON PUNTOS DE MILES ---
+function formatearNumero(numero) {
+    if (numero === 0 || numero === null || numero === undefined) return "0";
+    const numeroString = numero.toString().replace(/\D/g, '');
+    return numeroString.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
-// Crear estrella en posición específica
-function crearEstrella(x, y, color) {
-    const estrella = document.createElement('div');
-    estrella.className = 'estrella-interactiva';
-    estrella.style.left = x + 'px';
-    estrella.style.top = y + 'px';
-    estrella.style.width = (3 + Math.random() * 8) + 'px';
+//
