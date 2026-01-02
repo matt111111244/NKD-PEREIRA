@@ -116,7 +116,7 @@ body{
 }
 
 .onda-fondo:nth-child(3) {
-    background: radial-gradient(circle, rgba(229,255,0.05) 0%, rgba(0,0,0,0) 70%);
+    background: radial-gradient(circle, rgba(229,255,0,0.05) 0%, rgba(0,0,0,0) 70%);
     animation-duration: 100s;
 }
 
@@ -415,20 +415,22 @@ tr:hover{
 </div>
 
 <script>
-// === FUNCIONALIDAD INTERACTIVA ===
+// === VARIABLES GLOBALES ===
 const contenedorElementos = document.getElementById('contenedorElementos');
 const colores = ['var(--color-principal)', 'var(--color-secundario)', 'var(--color-terciario)'];
 const inputMonto = document.getElementById('monto');
+let datos = JSON.parse(localStorage.getItem("cuentasLuis")) || [];
 
 // --- FUNCIÓN PARA FORMATEAR NÚMEROS CON PUNTOS DE MILES ---
 function formatearNumero(numero) {
-    // Eliminar todos los caracteres que no sean números
     const numeroLimpio = numero.replace(/\D/g, '');
-    // Aplicar formato con puntos cada 3 dígitos
     return numeroLimpio.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 // --- FUNCIÓN PARA LIMPIAR FORMATO Y DEVOLVER NÚMERO ---
 function limpiarFormato(numeroFormateado) {
-    // Eliminar puntos y convertir a número
-    return parseFloat(numeroFormateado
+    const valor = parseFloat(numeroFormateado.replace(/\./g, ''));
+    return isNaN(valor) ? 0 : valor;
+}
+
+// --- FORMATEO EN TIEMPO REAL DEL INPUT ---
