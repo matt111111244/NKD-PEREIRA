@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Página de Luis - Formato Numérico</title>
+<title>Página de Luis - Interactiva</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -393,7 +393,7 @@ tr:hover{
     </select>
 
     <label>Monto Base ($ COP)</label>
-    <input type="text" id="monto" placeholder="Ingresa el valor sin IVA" inputmode="numeric">
+    <input type="number" id="monto" min="0.01" step="0.01" placeholder="Ingresa el valor sin IVA">
 
     <div class="botones">
         <button class="agregar" onclick="agregar()">Agregar Concepto</button>
@@ -415,22 +415,27 @@ tr:hover{
 </div>
 
 <script>
-// === VARIABLES GLOBALES ===
+// === FUNCIONALIDAD INTERACTIVA ===
 const contenedorElementos = document.getElementById('contenedorElementos');
 const colores = ['var(--color-principal)', 'var(--color-secundario)', 'var(--color-terciario)'];
-const inputMonto = document.getElementById('monto');
-let datos = JSON.parse(localStorage.getItem("cuentasLuis")) || [];
 
-// --- FUNCIÓN PARA FORMATEAR NÚMEROS CON PUNTOS DE MILES ---
-function formatearNumero(numero) {
-    const numeroLimpio = numero.replace(/\D/g, '');
-    return numeroLimpio.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+// Crear estrellas iniciales
+function crearEstrellasIniciales() {
+    for(let i=0; i<50; i++) {
+        crearEstrella(
+            Math.random() * window.innerWidth,
+            Math.random() * window.innerHeight,
+            colores[Math.floor(Math.random() * colores.length)]
+        );
+    }
 }
 
-// --- FUNCIÓN PARA LIMPIAR FORMATO Y DEVOLVER NÚMERO ---
-function limpiarFormato(numeroFormateado) {
-    const valor = parseFloat(numeroFormateado.replace(/\./g, ''));
-    return isNaN(valor) ? 0 : valor;
-}
-
-// --- FORMATEO EN TIEMPO REAL DEL INPUT ---
+// Crear estrella en posición específica
+function crearEstrella(x, y, color) {
+    const estrella = document.createElement('div');
+    estrella.className = 'estrella-interactiva';
+    estrella.style.left = x + 'px';
+    estrella.style.top = y + 'px';
+    estrella.style.width = (3 + Math.random() * 8) + 'px';
+    estrella.style.height = estrella.style.width;
+    estrella.style.borderColor = color
