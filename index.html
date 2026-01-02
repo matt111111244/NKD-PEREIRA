@@ -116,7 +116,7 @@ body{
 }
 
 .onda-fondo:nth-child(3) {
-    background: radial-gradient(circle, rgba(229,255,0,0.05) 0%, rgba(0,0,0,0) 70%);
+    background: radial-gradient(circle, rgba(229,255,0.05) 0%, rgba(0,0,0,0) 70%);
     animation-duration: 100s;
 }
 
@@ -418,22 +418,17 @@ tr:hover{
 // === FUNCIONALIDAD INTERACTIVA ===
 const contenedorElementos = document.getElementById('contenedorElementos');
 const colores = ['var(--color-principal)', 'var(--color-secundario)', 'var(--color-terciario)'];
+const inputMonto = document.getElementById('monto');
 
-// Crear estrellas iniciales
-function crearEstrellasIniciales() {
-    for(let i=0; i<50; i++) {
-        crearEstrella(
-            Math.random() * window.innerWidth,
-            Math.random() * window.innerHeight,
-            colores[Math.floor(Math.random() * colores.length)]
-        );
-    }
+// --- FUNCIÓN PARA FORMATEAR NÚMEROS CON PUNTOS DE MILES ---
+function formatearNumero(numero) {
+    // Eliminar todos los caracteres que no sean números
+    const numeroLimpio = numero.replace(/\D/g, '');
+    // Aplicar formato con puntos cada 3 dígitos
+    return numeroLimpio.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
-// Crear estrella en posición específica
-function crearEstrella(x, y, color) {
-    const estrella = document.createElement('div');
-    estrella.className = 'estrella-interactiva';
-    estrella.style.left = x + 'px';
-    estrella.style.top = y + 'px';
-    estrella.style
+// --- FUNCIÓN PARA LIMPIAR FORMATO Y DEVOLVER NÚMERO ---
+function limpiarFormato(numeroFormateado) {
+    // Eliminar puntos y convertir a número
+    return parseFloat(numeroFormateado
