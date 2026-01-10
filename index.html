@@ -1,252 +1,194 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Página de Luis</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acortador - ¡Síguenos en YouTube!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // Configuración personalizable
+        const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/tu_canal_aqui"; // Reemplaza con tu canal
+        const DESTINO_FINAL_URL = "https://www.tu_link_destino_aqui.com"; // Reemplaza con el link final
 
-<style>
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(180deg,#0f2027,#203a43,#2c5364);
-    overflow-x:hidden;
-    color:#333;
-}
-.estrellas{
-    position:fixed;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-}
-.estrella{
-    position:absolute;
-    width:2px;
-    height:2px;
-    background:white;
-    opacity:.8;
-    animation:caer linear infinite;
-}
-@keyframes caer{
-    from{transform:translateY(-10px)}
-    to{transform:translateY(110vh)}
-}
-h1{
-    text-align:center;
-    color:white;
-    margin:20px;
-}
-.dashboard{
-    max-width:1000px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:15px;
-}
-.card{
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    text-align:center;
-    box-shadow:0 10px 25px rgba(0,0,0,.3);
-}
-.card h3{margin:0;font-size:14px;color:#555}
-.card p{font-size:22px;font-weight:bold;margin-top:10px}
-.contenedor{
-    max-width:1000px;
-    margin:30px auto;
-    background:white;
-    padding:30px;
-    border-radius:20px;
-}
-label{font-weight:bold}
-input,select{
-    width:100%;
-    padding:12px;
-    margin:10px 0 20px;
-    border-radius:8px;
-    border:1px solid #ccc;
-}
-.botones{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-button{
-    padding:14px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:15px;
-}
-.agregar{background:#27ae60;color:white}
-.excel{background:#16a085;color:white}
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:25px;
-}
-th,td{
-    padding:12px;
-    border-bottom:1px solid #ddd;
-    text-align:center;
-}
-th{
-    background:#2c3e50;
-    color:white;
-}
-.acciones button{
-    padding:6px 10px;
-    margin:0 3px;
-    border-radius:5px;
-}
-.editar{background:#f39c12;color:white}
-.borrar{background:#e74c3c;color:white}
-</style>
+        // Configuración de Tailwind para colores llamativos
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF2E63',
+                        secondary: '#08D9D6',
+                        accent: '#FFD23F',
+                        dark: '#252A34',
+                        light: '#EAEAEA',
+                    },
+                    fontFamily: {
+                        display: ['Poppins', 'sans-serif'],
+                        body: ['Roboto', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            }
+            .animate-float {
+                animation: float 3s ease-in-out infinite;
+            }
+            .animate-pulse-slow {
+                animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            .bg-gradient-custom {
+                background: linear-gradient(135deg, #FF2E63 0%, #08D9D6 50%, #FFD23F 100%);
+                background-size: 200% 200%;
+                animation: gradient 8s ease infinite;
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
-
-<body>
-
-<div class="estrellas" id="estrellas"></div>
-
-<h1>Página de Luis</h1>
-
-<div class="dashboard">
-    <div class="card">
-        <h3>Total Base</h3>
-        <p id="totalBase">$ 0</p>
+<body class="bg-dark text-light min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
+    <!-- Fondo decorativo -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute top-10 left-10 w-40 h-40 bg-primary rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
+        <div class="absolute bottom-10 right-10 w-60 h-60 bg-secondary rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
+        <div class="absolute top-1/2 left-1/3 w-52 h-52 bg-accent rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
     </div>
-    <div class="card">
-        <h3>Total IVA</h3>
-        <p id="totalIVA">$ 0</p>
+
+    <!-- Contenido principal -->
+    <div class="container max-w-2xl mx-auto z-10">
+        <!-- Cabecera con animación -->
+        <div class="text-center mb-8 animate-float">
+            <div class="inline-block bg-gradient-custom p-4 rounded-full mb-4">
+                <i class="fa fa-youtube-play text-6xl text-white"></i>
+            </div>
+            <h1 class="font-display text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-shadow mb-2">
+                <span class="text-primary">¡Sigue</span> 
+                <span class="text-secondary">nuestro</span> 
+                <span class="text-accent">Canal!</span>
+            </h1>
+            <p class="font-body text-xl text-light/80">Para acceder al enlace, primero completa el requisito 🚀</p>
+        </div>
+
+        <!-- Tarjeta interactiva -->
+        <div class="bg-dark/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-light/10 transform transition-all duration-500 hover:scale-105 hover:shadow-primary/30">
+            <div class="flex flex-col md:flex-row items-center gap-6 mb-8">
+                <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary animate-float">
+                    <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Icono del canal YouTube" class="w-full h-full object-cover">
+                </div>
+                <div class="text-center md:text-left">
+                    <h2 class="font-display text-2xl font-bold mb-2">Canal Oficial</h2>
+                    <p class="font-body text-light/70 mb-4">¡No te pierdas contenido exclusivo! Suscríbete ahora y accede al enlace</p>
+                    <a href="#!" id="btnIrCanal" class="inline-block bg-primary hover:bg-primary/80 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+                        <i class="fa fa-external-link"></i> Ir al Canal
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sección de verificación -->
+            <div class="border-t border-light/10 pt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fa fa-check-circle text-accent text-xl"></i>
+                    <h3 class="font-display text-xl font-semibold">¿Ya te suscribiste?</h3>
+                </div>
+                <button id="btnVerificar" class="w-full bg-gradient-to-r from-secondary to-accent text-dark font-bold py-4 px-6 rounded-full transition-all duration-300 transform hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent/50">
+                    ¡Hecho! Verificar Acceso
+                </button>
+
+                <!-- Mensajes de estado -->
+                <div id="msgError" class="mt-4 p-3 bg-primary/20 border border-primary/30 rounded-lg text-primary text-center hidden">
+                    <i class="fa fa-exclamation-triangle mr-2"></i> Primero debes seguir el canal para acceder
+                </div>
+                <div id="msgExito" class="mt-4 p-3 bg-secondary/20 border border-secondary/30 rounded-lg text-secondary text-center hidden">
+                    <i class="fa fa-check mr-2"></i> ¡Verificación exitosa! Redirigiendo...
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie de página -->
+        <div class="text-center mt-8 text-light/50 text-sm">
+            <p>© 2026 | Creado con <i class="fa fa-heart text-primary"></i> para demostrar calidad en desarrollo web</p>
+        </div>
     </div>
-    <div class="card">
-        <h3>Total General</h3>
-        <p id="totalGeneral">$ 0</p>
-    </div>
-</div>
 
-<div class="contenedor">
+    <!-- Script de lógica -->
+    <script>
+        // Elementos del DOM
+        const btnIrCanal = document.getElementById('btnIrCanal');
+        const btnVerificar = document.getElementById('btnVerificar');
+        const msgError = document.getElementById('msgError');
+        const msgExito = document.getElementById('msgExito');
 
-<label>Tipo</label>
-<select id="tipo">
-    <option value="material">Material (19%)</option>
-    <option value="mano">Mano de obra (0%)</option>
-    <option value="servicio">Servicio (19%)</option>
-</select>
+        // Redirigir al canal de YouTube
+        btnIrCanal.addEventListener('click', () => {
+            window.open(YOUTUBE_CHANNEL_URL, '_blank');
+            // Ocultar mensajes al ir al canal
+            msgError.classList.add('hidden');
+            msgExito.classList.add('hidden');
+        });
 
-<label>Monto base ($ COP)</label>
-<input type="number" id="monto">
+        // Lógica de verificación (simulada - para producción usar API de YouTube)
+        btnVerificar.addEventListener('click', () => {
+            // Resetear mensajes
+            msgError.classList.add('hidden');
+            msgExito.classList.add('hidden');
 
-<div class="botones">
-    <button class="agregar" onclick="agregar()">Agregar</button>
-    <button class="excel" onclick="exportarExcel()">Exportar Excel</button>
-</div>
+            // En este punto iría la verificación real con la API de Google
+            // Por ahora, simulamos que el usuario debe confirmar manualmente (o tu puedes activar el acceso)
+            
+            // Para pruebas: cambia esta variable a true cuando quieras permitir el acceso
+            const usuarioSeguido = false; // CAMBIA A TRUE CUANDO QUIERAS QUE FUNCIONE
 
-<table>
-<thead>
-<tr>
-    <th>Tipo</th>
-    <th>Base</th>
-    <th>IVA</th>
-    <th>Total</th>
-    <th>Acciones</th>
-</tr>
-</thead>
-<tbody id="tabla"></tbody>
-</table>
+            if(usuarioSeguido) {
+                msgExito.classList.remove('hidden');
+                // Redirigir después de 3 segundos
+                setTimeout(() => {
+                    window.location.href = DESTINO_FINAL_URL;
+                }, 3000);
+            } else {
+                msgError.classList.remove('hidden');
+                // Animar mensaje de error
+                msgError.classList.add('animate-bounce');
+                setTimeout(() => msgError.classList.remove('animate-bounce'), 1000);
+            }
+        });
 
-</div>
+        // Efecto de partículas simples (decorativo)
+        function crearParticulas() {
+            const colores = ['#FF2E63', '#08D9D6', '#FFD23F', '#EAEAEA'];
+            for(let i=0; i<20; i++) {
+                const particula = document.createElement('div');
+                particula.style.position = 'absolute';
+                particula.style.width = `${Math.random()*10 + 5}px`;
+                particula.style.height = particula.style.width;
+                particula.style.backgroundColor = colores[Math.floor(Math.random()*colores.length)];
+                particula.style.opacity = Math.random()*0.5 + 0.1;
+                particula.style.borderRadius = '50%';
+                particula.style.left = `${Math.random()*100}vw`;
+                particula.style.top = `${Math.random()*100}vh`;
+                particula.style.animation = `float ${Math.random()*5 + 3}s ease-in-out infinite`;
+                particula.style.zIndex = '0';
+                document.body.appendChild(particula);
+            }
+        }
 
-<script>
-let datos = JSON.parse(localStorage.getItem("cuentasLuis")) || [];
-
-function f(n){ return n.toLocaleString('es-CO'); }
-
-function guardar(){
-    localStorage.setItem("cuentasLuis", JSON.stringify(datos));
-    recalcular();
-}
-
-function recalcular(){
-    let b=0,i=0,t=0;
-    datos.forEach(d=>{
-        b+=d.base;
-        i+=d.iva;
-        t+=d.total;
-    });
-    totalBase.innerText="$ "+f(b);
-    totalIVA.innerText="$ "+f(i);
-    totalGeneral.innerText="$ "+f(t);
-    render();
-}
-
-function render(){
-    tabla.innerHTML="";
-    datos.forEach((d,idx)=>{
-        tabla.innerHTML+=`
-        <tr>
-            <td>${d.tipo}</td>
-            <td>$ ${f(d.base)}</td>
-            <td>$ ${f(d.iva)}</td>
-            <td>$ ${f(d.total)}</td>
-            <td class="acciones">
-                <button class="editar" onclick="editar(${idx})">✏️</button>
-                <button class="borrar" onclick="borrar(${idx})">❌</button>
-            </td>
-        </tr>`;
-    });
-}
-
-function agregar(){
-    let tipo = document.getElementById("tipo").value;
-    let base = parseFloat(document.getElementById("monto").value);
-    if(!base || base<=0) return alert("Monto inválido");
-
-    let ivaP = (tipo==="mano") ? 0 : 19;
-    let iva = base * ivaP / 100;
-    let total = base + iva;
-
-    datos.push({tipo,base,iva,total});
-    guardar();
-    document.getElementById("monto").value="";
-}
-
-function borrar(i){
-    datos.splice(i,1);
-    guardar();
-}
-
-function editar(i){
-    let nuevo = prompt("Nuevo monto:", datos[i].base);
-    if(!nuevo) return;
-    nuevo = parseFloat(nuevo);
-    let ivaP = (datos[i].tipo==="mano") ? 0 : 19;
-    datos[i].base = nuevo;
-    datos[i].iva = nuevo * ivaP / 100;
-    datos[i].total = datos[i].base + datos[i].iva;
-    guardar();
-}
-
-function exportarExcel(){
-    let html=document.querySelector("table").outerHTML;
-    let blob=new Blob([html],{type:'application/vnd.ms-excel'});
-    let a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);
-    a.download="Pagina_de_Luis.xls";
-    a.click();
-}
-
-for(let i=0;i<70;i++){
-    let s=document.createElement("div");
-    s.className="estrella";
-    s.style.left=Math.random()*100+"vw";
-    s.style.animationDuration=(3+Math.random()*5)+"s";
-    estrellas.appendChild(s);
-}
-
-recalcular();
-</script>
-
+        // Inicializar partículas al cargar la página
+        window.addEventListener('load', crearParticulas);
+    </script>
 </body>
 </html>
