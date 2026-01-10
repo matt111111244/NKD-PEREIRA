@@ -3,192 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acortador - ¡Síguenos en YouTube!</title>
+    <title>ACCESO EXCLUSIVO | SUSCRÍBETE AHORA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <script>
-        // Configuración personalizable
-        const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/tu_canal_aqui"; // Reemplaza con tu canal
-        const DESTINO_FINAL_URL = "https://www.tu_link_destino_aqui.com"; // Reemplaza con el link final
-
-        // Configuración de Tailwind para colores llamativos
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#FF2E63',
-                        secondary: '#08D9D6',
-                        accent: '#FFD23F',
-                        dark: '#252A34',
-                        light: '#EAEAEA',
+                        dark: '#000000',
+                        darkGray: '#1A1A1A',
+                        orange: '#FF7A00',
+                        neonOrange: '#FF9D00',
+                        lightOrange: '#FFC100',
+                        accent: '#FF3D00',
                     },
                     fontFamily: {
-                        display: ['Poppins', 'sans-serif'],
+                        hero: ['Bebas Neue', 'sans-serif'],
                         body: ['Roboto', 'sans-serif'],
                     },
                 }
             }
         }
     </script>
+
     <style type="text/tailwindcss">
         @layer utilities {
-            .text-shadow {
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            .text-glow {
+                text-shadow: 0 0 5px currentColor, 0 0 15px currentColor/70;
             }
-            .animate-float {
-                animation: float 3s ease-in-out infinite;
+            .bg-stripes {
+                background-image: repeating-linear-gradient(45deg, rgba(255,122,0,0.1) 0px, rgba(255,122,0,0.1) 10px, transparent 10px, transparent 20px);
             }
-            .animate-pulse-slow {
-                animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            .bg-dots {
+                background-image: radial-gradient(rgba(255,157,0,0.2) 1px, transparent 1px);
+                background-size: 20px 20px;
             }
-            .bg-gradient-custom {
-                background: linear-gradient(135deg, #FF2E63 0%, #08D9D6 50%, #FFD23F 100%);
-                background-size: 200% 200%;
-                animation: gradient 8s ease infinite;
+            .animate-bounce-custom {
+                animation: bounceCustom 2s ease-in-out infinite;
+            }
+            .animate-shake {
+                animation: shake 3s ease-in-out infinite;
+            }
+            .animate-expand {
+                animation: expand 4s ease-in-out infinite alternate;
+            }
+            .animate-rotate-3d {
+                animation: rotate3d 8s ease-in-out infinite;
+            }
+            .clip-path-hex {
+                clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            }
+            .clip-path-star {
+                clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             }
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+        @keyframes bounceCustom {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px) rotate(2deg); }
         }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
+        }
+        @keyframes expand {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.2); opacity: 0.9; }
+        }
+        @keyframes rotate3d {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            50% { transform: rotateY(180deg) rotateX(10deg); }
+            100% { transform: rotateY(360deg) rotateX(0deg); }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
-<body class="bg-dark text-light min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
-    <!-- Fondo decorativo -->
-    <div class="absolute inset-0 z-0">
-        <div class="absolute top-10 left-10 w-40 h-40 bg-primary rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
-        <div class="absolute bottom-10 right-10 w-60 h-60 bg-secondary rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
-        <div class="absolute top-1/2 left-1/3 w-52 h-52 bg-accent rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
+<body class="bg-dark text-white min-h-screen overflow-x-hidden font-body">
+    <!-- Fondo combinado -->
+    <div class="fixed inset-0 z-0">
+        <div class="absolute inset-0 bg-dots"></div>
+        <div class="absolute inset-0 bg-stripes opacity-50"></div>
+        
+        <!-- Elementos decorativos flotantes -->
+        <div class="absolute top-[10%] left-[5%] w-20 h-20 bg-orange/10 border-2 border-orange/30 clip-path-hex animate-expand z-0"></div>
+        <div class="absolute top-[35%] right-[10%] w-16 h-16 bg-neonOrange/10 border-2 border-neonOrange/40 clip-path-star animate-bounce-custom z-0"></div>
+        <div class="absolute bottom-[20%] left-[25%] w-24 h-24 bg-lightOrange/10 rounded-full border-2 border-lightOrange/30 animate-shake z-0"></div>
+        <div class="absolute bottom-[10%] right-[20%] w-32 h-32 bg-accent/5 rounded-full border border-accent/20 animate-expand z-0" style="animation-delay: 1s;"></div>
+        
+        <!-- Formas 3D rotativas -->
+        <div class="absolute top-[5%] right-[5%] w-16 h-16 bg-orange/20 animate-rotate-3d z-0"></div>
+        <div class="absolute bottom-[5%] left-[10%] w-20 h-20 bg-neonOrange/20 animate-rotate-3d z-0" style="animation-delay: 2s;"></div>
     </div>
 
     <!-- Contenido principal -->
-    <div class="container max-w-2xl mx-auto z-10">
-        <!-- Cabecera con animación -->
-        <div class="text-center mb-8 animate-float">
-            <div class="inline-block bg-gradient-custom p-4 rounded-full mb-4">
-                <i class="fa fa-youtube-play text-6xl text-white"></i>
-            </div>
-            <h1 class="font-display text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-shadow mb-2">
-                <span class="text-primary">¡Sigue</span> 
-                <span class="text-secondary">nuestro</span> 
-                <span class="text-accent">Canal!</span>
-            </h1>
-            <p class="font-body text-xl text-light/80">Para acceder al enlace, primero completa el requisito 🚀</p>
-        </div>
-
-        <!-- Tarjeta interactiva -->
-        <div class="bg-dark/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-light/10 transform transition-all duration-500 hover:scale-105 hover:shadow-primary/30">
-            <div class="flex flex-col md:flex-row items-center gap-6 mb-8">
-                <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary animate-float">
-                    <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Icono del canal YouTube" class="w-full h-full object-cover">
-                </div>
-                <div class="text-center md:text-left">
-                    <h2 class="font-display text-2xl font-bold mb-2">Canal Oficial</h2>
-                    <p class="font-body text-light/70 mb-4">¡No te pierdas contenido exclusivo! Suscríbete ahora y accede al enlace</p>
-                    <a href="#!" id="btnIrCanal" class="inline-block bg-primary hover:bg-primary/80 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
-                        <i class="fa fa-external-link"></i> Ir al Canal
+    <main class="relative z-20">
+        <!-- Cabecera -->
+        <section class="py-16 md:py-24 px-6">
+            <div class="container mx-auto max-w-5xl">
+                <div class="flex flex-col items-center text-center mb-16">
+                    <!-- Logo animado -->
+                    <div class="relative mb-8">
+                        <div class="w-32 h-32 bg-orange rounded-full flex items-center justify-center animate-pulse-fast shadow-lg shadow-orange/30">
+                            <i class="fa fa-youtube-play text-6xl text-dark"></i>
+                        </div>
+                        <div class="absolute inset-0 w-32 h-32 bg-neonOrange rounded-full animate-expand opacity-30"></div>
+                    </div>
+                    
+                    <!-- Títulos con animaciones -->
+                    <h1 class="font-hero text-[clamp(3rem,10vw,6rem)] leading-none mb-4">
+                        <span class="text-orange text-glow block animate-bounce-custom">SUSCRÍBETE</span>
+                        <span class="text-white">Y ACCEDE AHORA</span>
+                    </h1>
+                    <p class="text-[clamp(1.1rem,3vw,1.5rem)] text-white/80 max-w-3xl mb-12">
+                        ¡No pierdas más tiempo! Únete a nuestro canal de YouTube para desbloquear el contenido exclusivo que buscas
+                    </p>
+                    
+                    <!-- Botón al canal -->
+                    <a href="https://www.youtube.com/tu_canal_aqui" target="_blank" class="mb-12 group">
+                        <div class="bg-orange hover:bg-neonOrange text-dark font-bold text-xl py-4 px-12 rounded-full transition-all duration-300 shadow-lg shadow-orange/20 group-hover:shadow-orange/40 transform group-hover:scale-105 flex items-center gap-3">
+                            <i class="fa fa-youtube-play text-2xl group-hover:animate-bounce"></i>
+                            <span>IR AL CANAL DE YOUTUBE</span>
+                        </div>
                     </a>
                 </div>
+
+                <!-- Tarjeta de verificación -->
+                <div class="bg-darkGray/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-orange/30 shadow-xl shadow-orange/10 transform hover:scale-[1.01] transition-all duration-500">
+                    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                        <!-- Imagen del canal -->
+                        <div class="relative">
+                            <div class="w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden border-4 border-orange animate-shake">
+                                <img src="https://images.unsplash.com/photo-1585076964871-071f39313590?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Canal de YouTube" class="w-full h-full object-cover">
+                            </div>
+                            <div class="absolute -bottom-2 -right-2 w-16 h-16 bg-neonOrange rounded-full flex items-center justify-center text-dark font-bold text-xl animate-pulse-fast">
+                                <i class="fa fa-check"></i>
+                            </div>
+                        </div>
+
+                        <!-- Sección de verificación -->
+                        <div class="w-full text-center md:text-left">
+                            <h2 class="font-hero text-[clamp(1.8rem,5vw,3rem)] leading-none mb-4 text-orange text-glow">¿YA TE SUSCRIBISTE?</h2>
+                            <p class="text-white/70 text-lg mb-8 max-w-xl">
+                                Confirma que te has suscrito para obtener acceso inmediato al enlace que esperas. ¡Es rápido y fácil!
+                            </p>
+                            
+                            <!-- Botón de verificación -->
+                            <button id="btnVerificar" class="w-full md:w-auto bg-gradient-to-r from-orange to-accent text-white font-bold text-xl py-4 px-12 rounded-full transition-all duration-300 shadow-lg shadow-orange/30 hover:shadow-orange/50 transform hover:scale-105 flex items-center justify-center gap-3">
+                                <i class="fa fa-unlock-alt hover:animate-spin"></i>
+                                <span>VERIFICAR Y ACCEDER</span>
+                            </button>
+                            
+                            <!-- Mensajes -->
+                            <div id="msgError" class="mt-6 p-4 bg-dark border border-accent/50 rounded-xl text-accent text-center hidden animate-bounce">
+                                <i class="fa fa-exclamation-triangle mr-2 text-2xl"></i>
+                                ¡Primero debes suscribirte al canal para continuar!
+                            </div>
+                            <div id="msgExito" class="mt-6 p-4 bg-dark border border-neonOrange/50 rounded-xl text-neonOrange text-center hidden">
+                                <i class="fa fa-check-circle mr-2 text-2xl"></i>
+                                ¡Verificación exitosa! Redirigiéndote en 3 segundos...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Elementos decorativos en la tarjeta -->
+                    <div class="absolute top-4 right-4 w-12 h-12 bg-lightOrange/10 rounded-full animate-expand"></div>
+                    <div class="absolute bottom-8 left-8 w-8 h-8 bg-orange/10 clip-path-hex animate-bounce-custom"></div>
+                </div>
             </div>
+        </section>
 
-            <!-- Sección de verificación -->
-            <div class="border-t border-light/10 pt-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <i class="fa fa-check-circle text-accent text-xl"></i>
-                    <h3 class="font-display text-xl font-semibold">¿Ya te suscribiste?</h3>
+        <!-- Pie de página decorativo -->
+        <footer class="relative z-20 py-8 px-6 bg-darkGray/50 border-t border-orange/20">
+            <div class="container mx-auto text-center">
+                <div class="flex justify-center gap-6 mb-4">
+                    <a href="#" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 0s;"><i class="fa fa-youtube-play"></i></a>
+                    <a href="#" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 0.5s;"><i class="fa fa-instagram"></i></a>
+                    <a href="#" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 1s;"><i class="fa fa-facebook-square"></i></a>
                 </div>
-                <button id="btnVerificar" class="w-full bg-gradient-to-r from-secondary to-accent text-dark font-bold py-4 px-6 rounded-full transition-all duration-300 transform hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent/50">
-                    ¡Hecho! Verificar Acceso
-                </button>
-
-                <!-- Mensajes de estado -->
-                <div id="msgError" class="mt-4 p-3 bg-primary/20 border border-primary/30 rounded-lg text-primary text-center hidden">
-                    <i class="fa fa-exclamation-triangle mr-2"></i> Primero debes seguir el canal para acceder
-                </div>
-                <div id="msgExito" class="mt-4 p-3 bg-secondary/20 border border-secondary/30 rounded-lg text-secondary text-center hidden">
-                    <i class="fa fa-check mr-2"></i> ¡Verificación exitosa! Redirigiendo...
-                </div>
+                <p class="text-white/50 text-sm">© 2026 | DISEÑO PROFESIONAL - TODO DERECHOS RESERVADOS</p>
             </div>
-        </div>
+        </footer>
+    </main>
 
-        <!-- Pie de página -->
-        <div class="text-center mt-8 text-light/50 text-sm">
-            <p>© 2026 | Creado con <i class="fa fa-heart text-primary"></i> para demostrar calidad en desarrollo web</p>
-        </div>
-    </div>
-
-    <!-- Script de lógica -->
+    <!-- Script de funcionalidad -->
     <script>
-        // Elementos del DOM
-        const btnIrCanal = document.getElementById('btnIrCanal');
         const btnVerificar = document.getElementById('btnVerificar');
         const msgError = document.getElementById('msgError');
         const msgExito = document.getElementById('msgExito');
+        
+        // CONFIGURA TUS LINKS AQUÍ
+        const YOUTUBE_CANAL = "https://www.youtube.com/tu_canal_aqui";
+        const LINK_FINAL = "https://www.tu_link_final_aqui.com";
+        
+        // Cambia a TRUE cuando quieras permitir el acceso
+        const USUARIO_SUSCRITO = false;
 
-        // Redirigir al canal de YouTube
-        btnIrCanal.addEventListener('click', () => {
-            window.open(YOUTUBE_CHANNEL_URL, '_blank');
-            // Ocultar mensajes al ir al canal
-            msgError.classList.add('hidden');
-            msgExito.classList.add('hidden');
-        });
-
-        // Lógica de verificación (simulada - para producción usar API de YouTube)
         btnVerificar.addEventListener('click', () => {
-            // Resetear mensajes
             msgError.classList.add('hidden');
             msgExito.classList.add('hidden');
 
-            // En este punto iría la verificación real con la API de Google
-            // Por ahora, simulamos que el usuario debe confirmar manualmente (o tu puedes activar el acceso)
-            
-            // Para pruebas: cambia esta variable a true cuando quieras permitir el acceso
-            const usuarioSeguido = false; // CAMBIA A TRUE CUANDO QUIERAS QUE FUNCIONE
-
-            if(usuarioSeguido) {
+            if(USUARIO_SUSCRITO) {
                 msgExito.classList.remove('hidden');
-                // Redirigir después de 3 segundos
                 setTimeout(() => {
-                    window.location.href = DESTINO_FINAL_URL;
+                    window.location.href = LINK_FINAL;
                 }, 3000);
             } else {
                 msgError.classList.remove('hidden');
-                // Animar mensaje de error
-                msgError.classList.add('animate-bounce');
-                setTimeout(() => msgError.classList.remove('animate-bounce'), 1000);
+                setTimeout(() => {
+                    window.open(YOUTUBE_CANAL, '_blank');
+                }, 2000);
             }
         });
 
-        // Efecto de partículas simples (decorativo)
-        function crearParticulas() {
-            const colores = ['#FF2E63', '#08D9D6', '#FFD23F', '#EAEAEA'];
-            for(let i=0; i<20; i++) {
+        // Crear partículas adicionales al cargar
+        window.addEventListener('load', () => {
+            for(let i=0; i<15; i++) {
                 const particula = document.createElement('div');
-                particula.style.position = 'absolute';
-                particula.style.width = `${Math.random()*10 + 5}px`;
-                particula.style.height = particula.style.width;
-                particula.style.backgroundColor = colores[Math.floor(Math.random()*colores.length)];
-                particula.style.opacity = Math.random()*0.5 + 0.1;
-                particula.style.borderRadius = '50%';
-                particula.style.left = `${Math.random()*100}vw`;
-                particula.style.top = `${Math.random()*100}vh`;
-                particula.style.animation = `float ${Math.random()*5 + 3}s ease-in-out infinite`;
-                particula.style.zIndex = '0';
+                const size = Math.random()*15 + 5;
+                const posX = Math.random()*100;
+                const posY = Math.random()*100;
+                const delay = Math.random()*5;
+                
+                particula.style.cssText = `
+                    position: fixed;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*100)}, 0, ${Math.random()*0.5+0.2});
+                    border-radius: ${Math.random()>0.5 ? '50%' : '0'};
+                    left: ${posX}vw;
+                    top: ${posY}vh;
+                    animation: float ${Math.random()*5+3}s ease-in-out infinite;
+                    animation-delay: ${delay}s;
+                    z-index: 0;
+                `;
+                
                 document.body.appendChild(particula);
             }
-        }
-
-        // Inicializar partículas al cargar la página
-        window.addEventListener('load', crearParticulas);
+        });
     </script>
 </body>
 </html>
