@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACCESO EXCLUSIVO | SUSCRÍBETE AHORA</title>
+    <title>ACCESO EXCLUSIVO | Matt ARCHIVOS VIP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
@@ -50,14 +50,14 @@
             .animate-expand {
                 animation: expand 4s ease-in-out infinite alternate;
             }
-            .animate-rotate-3d {
-                animation: rotate3d 8s ease-in-out infinite;
+            .animate-countdown {
+                animation: countdownPulse 1s steps(1) infinite;
             }
-            .clip-path-hex {
-                clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            .animate-punch {
+                animation: punch 0.5s ease-in-out infinite alternate;
             }
-            .clip-path-star {
-                clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            .animate-spin-slow {
+                animation: spin 8s linear infinite;
             }
         }
 
@@ -74,10 +74,17 @@
             0% { transform: scale(1); opacity: 0.6; }
             100% { transform: scale(1.2); opacity: 0.9; }
         }
-        @keyframes rotate3d {
-            0% { transform: rotateY(0deg) rotateX(0deg); }
-            50% { transform: rotateY(180deg) rotateX(10deg); }
-            100% { transform: rotateY(360deg) rotateX(0deg); }
+        @keyframes countdownPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        @keyframes punch {
+            0% { transform: scale(1) translateX(0); }
+            100% { transform: scale(1.1) translateX(5px); }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -88,14 +95,9 @@
         <div class="absolute inset-0 bg-stripes opacity-50"></div>
         
         <!-- Elementos decorativos flotantes -->
-        <div class="absolute top-[10%] left-[5%] w-20 h-20 bg-orange/10 border-2 border-orange/30 clip-path-hex animate-expand z-0"></div>
-        <div class="absolute top-[35%] right-[10%] w-16 h-16 bg-neonOrange/10 border-2 border-neonOrange/40 clip-path-star animate-bounce-custom z-0"></div>
+        <div class="absolute top-[10%] left-[5%] w-20 h-20 bg-orange/10 border-2 border-orange/30 rounded-full animate-expand z-0"></div>
+        <div class="absolute top-[35%] right-[10%] w-16 h-16 bg-neonOrange/10 border-2 border-neonOrange/40 rounded-full animate-bounce-custom z-0"></div>
         <div class="absolute bottom-[20%] left-[25%] w-24 h-24 bg-lightOrange/10 rounded-full border-2 border-lightOrange/30 animate-shake z-0"></div>
-        <div class="absolute bottom-[10%] right-[20%] w-32 h-32 bg-accent/5 rounded-full border border-accent/20 animate-expand z-0" style="animation-delay: 1s;"></div>
-        
-        <!-- Formas 3D rotativas -->
-        <div class="absolute top-[5%] right-[5%] w-16 h-16 bg-orange/20 animate-rotate-3d z-0"></div>
-        <div class="absolute bottom-[5%] left-[10%] w-20 h-20 bg-neonOrange/20 animate-rotate-3d z-0" style="animation-delay: 2s;"></div>
     </div>
 
     <!-- Contenido principal -->
@@ -104,25 +106,34 @@
         <section class="py-16 md:py-24 px-6">
             <div class="container mx-auto max-w-5xl">
                 <div class="flex flex-col items-center text-center mb-16">
-                    <!-- Logo animado -->
+                    <!-- Foto de perfil de YouTube animada -->
                     <div class="relative mb-8">
-                        <div class="w-32 h-32 bg-orange rounded-full flex items-center justify-center animate-pulse-fast shadow-lg shadow-orange/30">
-                            <i class="fa fa-youtube-play text-6xl text-dark"></i>
+                        <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-orange animate-shake shadow-lg shadow-orange/30">
+                            <!-- AQUÍ VA TU FOTO DE PERFIL - REEMPLAZA LA URL -->
+                            <img src="https://www.tu-foto-de-perfil-youtube.com/aqui.jpg" alt="Perfil Matt ARCHIVOS VIP" class="w-full h-full object-cover">
                         </div>
-                        <div class="absolute inset-0 w-32 h-32 bg-neonOrange rounded-full animate-expand opacity-30"></div>
+                        <div class="absolute -bottom-2 -right-2 w-16 h-16 bg-neonOrange rounded-full flex items-center justify-center text-dark font-bold text-xl animate-pulse-fast">
+                            <i class="fa fa-youtube-play"></i>
+                        </div>
+                        <div class="absolute inset-0 w-32 h-32 bg-orange/20 rounded-full animate-spin-slow opacity-50"></div>
                     </div>
                     
                     <!-- Títulos con animaciones -->
                     <h1 class="font-hero text-[clamp(3rem,10vw,6rem)] leading-none mb-4">
-                        <span class="text-orange text-glow block animate-bounce-custom">SUSCRÍBETE</span>
-                        <span class="text-white">Y ACCEDE AHORA</span>
+                        <span class="text-orange text-glow block animate-bounce-custom">Matt ARCHIVOS VIP</span>
+                        <span class="text-white">¡SUSCRÍBETE PARA CRECER!</span>
                     </h1>
-                    <p class="text-[clamp(1.1rem,3vw,1.5rem)] text-white/80 max-w-3xl mb-12">
-                        ¡No pierdas más tiempo! Únete a nuestro canal de YouTube para desbloquear el contenido exclusivo que buscas
-                    </p>
+                    
+                    <!-- Mensaje dinámico -->
+                    <div class="text-[clamp(1.1rem,3vw,1.5rem)] text-white/80 max-w-3xl mb-12 font-bold">
+                        <p class="mb-2">Suscríbete si quieres crecer y dame el like si quieres crecer.</p>
+                        <p class="mb-2 text-orange text-glow">Oye tú, maldita la vez, <span class="animate-punch">golpe, golpe, golpe</span>...</p>
+                        <p class="mb-2">No, no, no voy primero este golpe, oh, mi turno, este no.</p>
+                        <p class="text-neonOrange text-glow">¡Sí, este es golpe 1 más y quedas noqueado!</p>
+                    </div>
                     
                     <!-- Botón al canal -->
-                    <a href="https://www.youtube.com/tu_canal_aqui" target="_blank" class="mb-12 group">
+                    <a href="https://www.youtube.com/@MattARCHIVOSVIP" target="_blank" class="mb-12 group">
                         <div class="bg-orange hover:bg-neonOrange text-dark font-bold text-xl py-4 px-12 rounded-full transition-all duration-300 shadow-lg shadow-orange/20 group-hover:shadow-orange/40 transform group-hover:scale-105 flex items-center gap-3">
                             <i class="fa fa-youtube-play text-2xl group-hover:animate-bounce"></i>
                             <span>IR AL CANAL DE YOUTUBE</span>
@@ -130,47 +141,37 @@
                     </a>
                 </div>
 
-                <!-- Tarjeta de verificación -->
-                <div class="bg-darkGray/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-orange/30 shadow-xl shadow-orange/10 transform hover:scale-[1.01] transition-all duration-500">
-                    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                        <!-- Imagen del canal -->
-                        <div class="relative">
-                            <div class="w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden border-4 border-orange animate-shake">
-                                <img src="https://images.unsplash.com/photo-1585076964871-071f39313590?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Canal de YouTube" class="w-full h-full object-cover">
-                            </div>
-                            <div class="absolute -bottom-2 -right-2 w-16 h-16 bg-neonOrange rounded-full flex items-center justify-center text-dark font-bold text-xl animate-pulse-fast">
-                                <i class="fa fa-check"></i>
+                <!-- Tarjeta de espera y enlace -->
+                <div class="bg-darkGray/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-orange/30 shadow-xl shadow-orange/10">
+                    <div class="flex flex-col items-center text-center">
+                        <!-- Contador visual -->
+                        <div id="countdownContainer" class="mb-8">
+                            <h2 class="font-hero text-[clamp(1.8rem,5vw,3rem)] leading-none mb-4 text-orange text-glow">
+                                ENLACE LISTO EN <span id="countdown" class="animate-countdown">10</span> SEGUNDOS
+                            </h2>
+                            <div class="w-full max-w-xs h-4 bg-dark rounded-full overflow-hidden">
+                                <div id="progressBar" class="h-full bg-gradient-to-r from-orange to-neonOrange w-0 transition-all duration-1000"></div>
                             </div>
                         </div>
 
-                        <!-- Sección de verificación -->
-                        <div class="w-full text-center md:text-left">
-                            <h2 class="font-hero text-[clamp(1.8rem,5vw,3rem)] leading-none mb-4 text-orange text-glow">¿YA TE SUSCRIBISTE?</h2>
-                            <p class="text-white/70 text-lg mb-8 max-w-xl">
-                                Confirma que te has suscrito para obtener acceso inmediato al enlace que esperas. ¡Es rápido y fácil!
+                        <!-- Mensaje de espera -->
+                        <div id="waitingMessage" class="mb-8">
+                            <p class="text-white/70 text-lg max-w-xl">
+                                <i class="fa fa-clock-o mr-2 text-orange"></i>
+                                Toma tu tiempo para suscribirte y dar like, el enlace aparecerá automáticamente cuando termine la cuenta regresiva
                             </p>
-                            
-                            <!-- Botón de verificación -->
-                            <button id="btnVerificar" class="w-full md:w-auto bg-gradient-to-r from-orange to-accent text-white font-bold text-xl py-4 px-12 rounded-full transition-all duration-300 shadow-lg shadow-orange/30 hover:shadow-orange/50 transform hover:scale-105 flex items-center justify-center gap-3">
-                                <i class="fa fa-unlock-alt hover:animate-spin"></i>
-                                <span>VERIFICAR Y ACCEDER</span>
-                            </button>
-                            
-                            <!-- Mensajes -->
-                            <div id="msgError" class="mt-6 p-4 bg-dark border border-accent/50 rounded-xl text-accent text-center hidden animate-bounce">
-                                <i class="fa fa-exclamation-triangle mr-2 text-2xl"></i>
-                                ¡Primero debes suscribirte al canal para continuar!
-                            </div>
-                            <div id="msgExito" class="mt-6 p-4 bg-dark border border-neonOrange/50 rounded-xl text-neonOrange text-center hidden">
-                                <i class="fa fa-check-circle mr-2 text-2xl"></i>
-                                ¡Verificación exitosa! Redirigiéndote en 3 segundos...
-                            </div>
+                        </div>
+
+                        <!-- Enlace final (oculto inicialmente) -->
+                        <div id="finalLink" class="hidden mb-8 transform animate-bounce-custom">
+                            <a href="#" id="destinoLink" target="_blank" class="group">
+                                <div class="bg-gradient-to-r from-orange to-accent text-white font-bold text-xl py-4 px-12 rounded-full transition-all duration-300 shadow-lg shadow-orange/30 hover:shadow-orange/50 transform group-hover:scale-105 flex items-center justify-center gap-3">
+                                    <i class="fa fa-link text-2xl"></i>
+                                    <span>¡AQUÍ ESTÁ TU ENLACE!</span>
+                                </div>
+                            </a>
                         </div>
                     </div>
-
-                    <!-- Elementos decorativos en la tarjeta -->
-                    <div class="absolute top-4 right-4 w-12 h-12 bg-lightOrange/10 rounded-full animate-expand"></div>
-                    <div class="absolute bottom-8 left-8 w-8 h-8 bg-orange/10 clip-path-hex animate-bounce-custom"></div>
                 </div>
             </div>
         </section>
@@ -179,70 +180,52 @@
         <footer class="relative z-20 py-8 px-6 bg-darkGray/50 border-t border-orange/20">
             <div class="container mx-auto text-center">
                 <div class="flex justify-center gap-6 mb-4">
-                    <a href="#" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 0s;"><i class="fa fa-youtube-play"></i></a>
+                    <a href="https://www.youtube.com/@MattARCHIVOSVIP" target="_blank" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 0s;"><i class="fa fa-youtube-play"></i></a>
                     <a href="#" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 0.5s;"><i class="fa fa-instagram"></i></a>
                     <a href="#" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 1s;"><i class="fa fa-facebook-square"></i></a>
                 </div>
-                <p class="text-white/50 text-sm">© 2026 | DISEÑO PROFESIONAL - TODO DERECHOS RESERVADOS</p>
+                <p class="text-white/50 text-sm">© 2026 | Matt ARCHIVOS VIP - TODO DERECHOS RESERVADOS</p>
             </div>
         </footer>
     </main>
 
-    <!-- Script de funcionalidad -->
+    <!-- Script de cuenta regresiva -->
     <script>
-        const btnVerificar = document.getElementById('btnVerificar');
-        const msgError = document.getElementById('msgError');
-        const msgExito = document.getElementById('msgExito');
+        // CONFIGURA TU LINK DESTINO AQUÍ
+        const LINK_FINAL = "https://www.tu_link_final_aqui.com"; // <-- REEMPLAZA ESTE LINK
         
-        // CONFIGURA TUS LINKS AQUÍ
-        const YOUTUBE_CANAL = "https://www.youtube.com/tu_canal_aqui";
-        const LINK_FINAL = "https://www.tu_link_final_aqui.com";
-        
-        // Cambia a TRUE cuando quieras permitir el acceso
-        const USUARIO_SUSCRITO = false;
+        // TIEMPO DE ESPERA (en segundos)
+        const TIEMPO_ESPERA = 10;
 
-        btnVerificar.addEventListener('click', () => {
-            msgError.classList.add('hidden');
-            msgExito.classList.add('hidden');
+        // Elementos del DOM
+        const countdownElement = document.getElementById('countdown');
+        const progressBar = document.getElementById('progressBar');
+        const countdownContainer = document.getElementById('countdownContainer');
+        const waitingMessage = document.getElementById('waitingMessage');
+        const finalLink = document.getElementById('finalLink');
+        const destinoLink = document.getElementById('destinoLink');
 
-            if(USUARIO_SUSCRITO) {
-                msgExito.classList.remove('hidden');
-                setTimeout(() => {
-                    window.location.href = LINK_FINAL;
-                }, 3000);
-            } else {
-                msgError.classList.remove('hidden');
-                setTimeout(() => {
-                    window.open(YOUTUBE_CANAL, '_blank');
-                }, 2000);
+        // Asignar el link final
+        destinoLink.href = LINK_FINAL;
+
+        // Iniciar cuenta regresiva cuando cargue la página
+        let tiempoRestante = TIEMPO_ESPERA;
+        const intervalo = setInterval(() => {
+            tiempoRestante--;
+            countdownElement.textContent = tiempoRestante;
+            
+            // Actualizar barra de progreso
+            const porcentaje = ((TIEMPO_ESPERA - tiempoRestante) / TIEMPO_ESPERA) * 100;
+            progressBar.style.width = `${porcentaje}%`;
+
+            // Cuando termine la cuenta regresiva
+            if(tiempoRestante <= 0) {
+                clearInterval(intervalo);
+                countdownContainer.classList.add('hidden');
+                waitingMessage.classList.add('hidden');
+                finalLink.classList.remove('hidden');
             }
-        });
-
-        // Crear partículas adicionales al cargar
-        window.addEventListener('load', () => {
-            for(let i=0; i<15; i++) {
-                const particula = document.createElement('div');
-                const size = Math.random()*15 + 5;
-                const posX = Math.random()*100;
-                const posY = Math.random()*100;
-                const delay = Math.random()*5;
-                
-                particula.style.cssText = `
-                    position: fixed;
-                    width: ${size}px;
-                    height: ${size}px;
-                    background: rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*100)}, 0, ${Math.random()*0.5+0.2});
-                    border-radius: ${Math.random()>0.5 ? '50%' : '0'};
-                    left: ${posX}vw;
-                    top: ${posY}vh;
-                    animation: float ${Math.random()*5+3}s ease-in-out infinite;
-                    animation-delay: ${delay}s;
-                    z-index: 0;
-                `;
-                
-                document.body.appendChild(particula);
-            }
-        });
+        }, 1000);
     </script>
 </body>
 </html>
