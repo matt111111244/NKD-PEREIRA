@@ -87,6 +87,7 @@ header {
     justify-content: center;
     gap: 25px;
     margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 
 .stat {
@@ -145,10 +146,60 @@ header {
     100% { box-shadow: 0 0 45px rgba(0,191,255,.9); }
 }
 
+/* ===== RESEÑAS ===== */
+.reviews {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.reviews h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 34px;
+    margin-bottom: 50px;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.review {
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(14px);
+    border-radius: 22px;
+    padding: 25px;
+    box-shadow: 0 0 30px rgba(0,0,0,.4);
+    transition: transform .3s;
+}
+.review:hover {
+    transform: translateY(-8px);
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.review-header img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 2px solid #00bfff;
+}
+
+.stars {
+    color: gold;
+    font-size: 18px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:600px){
     .hero h1 { font-size: 34px; }
-    .stats { flex-direction: column; }
 }
 </style>
 </head>
@@ -168,8 +219,8 @@ header {
     </h1>
 
     <p>
-        Roleplay callejero real. Bandas activas. Respeto en la calle.
-        Si no aguantas presión, este server no es para ti.
+        Roleplay callejero real, bandas activas y respeto en la ciudad.
+        Aquí se juega serio o no se juega.
     </p>
 
     <div class="stats">
@@ -189,15 +240,66 @@ header {
     </div>
 
     <br>
-    <a class="play-btn" href="samp://188.93.139.96:1111">CONECTAR SA-MP</a>
+    <a class="play-btn" onclick="conectar()">CONECTAR SA-MP</a>
+</section>
+
+<section class="reviews">
+    <h2>Opiniones del servidor</h2>
+
+    <div class="review-grid">
+
+        <div class="review">
+            <div class="review-header">
+                <img src="https://i.pravatar.cc/150?img=12">
+                <div>
+                    <strong>Ryder_OG</strong>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <p>Siempre hay acción, guerras de bandas y buen rol.</p>
+        </div>
+
+        <div class="review">
+            <div class="review-header">
+                <img src="https://i.pravatar.cc/150?img=32">
+                <div>
+                    <strong>CJStreet</strong>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <p>Server muy activo, admins presentes y buen ping.</p>
+        </div>
+
+        <div class="review">
+            <div class="review-header">
+                <img src="https://i.pravatar.cc/150?img=48">
+                <div>
+                    <strong>Smoke_X</strong>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <p>De los mejores SA-MP RP que hay ahora mismo.</p>
+        </div>
+
+    </div>
 </section>
 
 <script>
 function copiarIP() {
     navigator.clipboard.writeText("188.93.139.96:1111");
+    alert("IP copiada");
 }
 
-/* CONTADOR FAKE */
+function conectar() {
+    if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+        navigator.clipboard.writeText("188.93.139.96:1111");
+        alert("Estás en móvil. IP copiada para usar en PC.");
+    } else {
+        window.location.href = "samp://188.93.139.96:1111";
+    }
+}
+
+/* CONTADOR FAKE 15–27 */
 setInterval(() => {
     let players = Math.floor(Math.random() * (27 - 15 + 1)) + 15;
     document.getElementById("players").innerText = players;
