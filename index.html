@@ -6,51 +6,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Poppins:wght@300;400;600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    background: radial-gradient(circle at top, #0c1b2f, #050b14);
-    color: #ffffff;
-    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #050b16, #0a1f3d);
+    color: #fff;
     overflow-x: hidden;
 }
 
-/* Fondo tipo grid */
-body::before {
-    content: "";
+/* ===== FONDO ANIMADO ===== */
+.background {
     position: fixed;
     inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-    background-size: 80px 80px;
-    pointer-events: none;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0,191,255,0.15), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(0,102,255,0.15), transparent 40%);
+    z-index: -1;
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 header {
-    padding: 20px 30px;
+    padding: 25px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .logo {
+    font-family: 'Orbitron', sans-serif;
     font-size: 28px;
-    font-weight: bold;
     letter-spacing: 4px;
 }
 
-/* HERO */
+/* ===== HERO ===== */
 .hero {
     text-align: center;
-    padding: 80px 20px 60px;
+    padding: 90px 20px 60px;
 }
 
 .hero h1 {
-    font-size: 42px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 48px;
     margin-bottom: 15px;
 }
 
@@ -58,25 +61,26 @@ header {
     display: block;
     font-size: 18px;
     color: #00bfff;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .hero p {
-    max-width: 650px;
-    margin: 0 auto 30px;
+    max-width: 700px;
+    margin: 0 auto 35px;
     opacity: 0.9;
-    line-height: 1.5;
 }
 
-/* IP BOX */
+/* ===== IP BOX ===== */
 .ip-box {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    background: rgba(0,0,0,0.55);
-    padding: 14px 20px;
-    border-radius: 10px;
-    margin-bottom: 25px;
+    gap: 15px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    padding: 15px 25px;
+    border-radius: 14px;
+    box-shadow: 0 0 25px rgba(0,191,255,0.2);
+    margin-bottom: 30px;
 }
 
 .ip-box span {
@@ -85,69 +89,99 @@ header {
 }
 
 .ip-box button {
-    background: #00bfff;
+    background: linear-gradient(135deg, #00bfff, #0066ff);
     border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
 }
 
 .ip-box button:hover {
-    background: #009ad6;
+    transform: scale(1.05);
 }
 
-/* BOTÓN JUGAR */
+/* ===== BOTÓN ===== */
 .play-btn {
     display: inline-block;
-    padding: 14px 32px;
-    background: linear-gradient(135deg, #00bfff, #0066ff);
-    color: #fff;
+    padding: 16px 40px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #00bfff, #004cff);
+    color: white;
     text-decoration: none;
-    border-radius: 40px;
     font-weight: bold;
     letter-spacing: 1px;
+    box-shadow: 0 0 35px rgba(0,191,255,0.5);
 }
 
-/* RESEÑAS */
+/* ===== RESEÑAS ===== */
 .reviews {
-    padding: 60px 20px;
-    text-align: center;
+    padding: 80px 20px;
 }
 
 .reviews h2 {
-    font-size: 30px;
-    margin-bottom: 40px;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 34px;
+    margin-bottom: 50px;
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    max-width: 1100px;
+    margin: auto;
 }
 
 .review {
-    max-width: 600px;
-    margin: 0 auto 30px;
-    background: rgba(0,0,0,0.45);
-    padding: 20px;
-    border-radius: 14px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.4);
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.review-header img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 2px solid #00bfff;
+}
+
+.review-header h3 {
+    font-size: 16px;
+}
+
+.stars {
+    color: gold;
+    margin: 12px 0;
 }
 
 .review p {
-    margin: 12px 0;
-    font-style: italic;
-}
-
-.review span {
     font-size: 14px;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
-/* RESPONSIVE */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
     .hero h1 {
-        font-size: 32px;
+        font-size: 34px;
     }
 }
 </style>
 </head>
 
 <body>
+
+<div class="background"></div>
 
 <header>
     <div class="logo">CAJA SECA</div>
@@ -160,9 +194,8 @@ header {
     </h1>
 
     <p>
-        Un servidor lleno de bandas, calle, acción y respeto.
-        Aquí no sobrevives por suerte, sobrevives por actitud.
-        ¿Estás listo para dominar la ciudad?
+        El servidor donde mandan las bandas, la calle y el respeto.
+        Acción constante, roleplay pesado y jugadores reales.
     </p>
 
     <div class="ip-box">
@@ -172,28 +205,41 @@ header {
 
     <br>
 
-    <a href="#" class="play-btn">Entrar a jugar</a>
+    <a class="play-btn">ENTRAR A JUGAR</a>
 </section>
 
 <section class="reviews">
-    <h2>Lo que dicen los jugadores</h2>
+    <h2>Opiniones del servidor</h2>
 
-    <div class="review">
-        ⭐⭐⭐⭐⭐
-        <p>"Servidor muy activo, las bandas están bien organizadas."</p>
-        <span>- ElMalo_77</span>
-    </div>
+    <div class="review-grid">
 
-    <div class="review">
-        ⭐⭐⭐⭐⭐
-        <p>"Mucho roleplay callejero, peleas, negocios y respeto."</p>
-        <span>- Ghost_RP</span>
-    </div>
+        <div class="review">
+            <div class="review-header">
+                <img src="https://i.pravatar.cc/150?img=12">
+                <h3>Ryder_OG</h3>
+            </div>
+            <div class="stars">★★★★★</div>
+            <p>Server muy activo, siempre hay guerras de bandas y buen rol.</p>
+        </div>
 
-    <div class="review">
-        ⭐⭐⭐⭐⭐
-        <p>"Uno de los mejores servers que he probado en SA-MP."</p>
-        <span>- CJStreet</span>
+        <div class="review">
+            <div class="review-header">
+                <img src="https://i.pravatar.cc/150?img=33">
+                <h3>CJStreet</h3>
+            </div>
+            <div class="stars">★★★★★</div>
+            <p>El mejor SA-MP que jugué en años, administración seria.</p>
+        </div>
+
+        <div class="review">
+            <div class="review-header">
+                <img src="https://i.pravatar.cc/150?img=47">
+                <h3>Smoke_X</h3>
+            </div>
+            <div class="stars">★★★★★</div>
+            <p>Buen ping, buen rol y mucha gente conectada siempre.</p>
+        </div>
+
     </div>
 </section>
 
