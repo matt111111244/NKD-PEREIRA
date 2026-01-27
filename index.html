@@ -1,231 +1,209 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACCESO EXCLUSIVO | Matt ARCHIVOS VIP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: '#000000',
-                        darkGray: '#1A1A1A',
-                        orange: '#FF7A00',
-                        neonOrange: '#FF9D00',
-                        lightOrange: '#FFC100',
-                        accent: '#FF3D00',
-                    },
-                    fontFamily: {
-                        hero: ['Bebas Neue', 'sans-serif'],
-                        body: ['Roboto', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<title>Caja Seca | SA-MP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .text-glow {
-                text-shadow: 0 0 5px currentColor, 0 0 15px currentColor/70;
-            }
-            .bg-stripes {
-                background-image: repeating-linear-gradient(45deg, rgba(255,122,0,0.1) 0px, rgba(255,122,0,0.1) 10px, transparent 10px, transparent 20px);
-            }
-            .bg-dots {
-                background-image: radial-gradient(rgba(255,157,0,0.2) 1px, transparent 1px);
-                background-size: 20px 20px;
-            }
-            .animate-bounce-custom {
-                animation: bounceCustom 2s ease-in-out infinite;
-            }
-            .animate-shake {
-                animation: shake 3s ease-in-out infinite;
-            }
-            .animate-expand {
-                animation: expand 4s ease-in-out infinite alternate;
-            }
-            .animate-countdown {
-                animation: countdownPulse 1s steps(1) infinite;
-            }
-            .animate-punch {
-                animation: punch 0.5s ease-in-out infinite alternate;
-            }
-            .animate-spin-slow {
-                animation: spin 8s linear infinite;
-            }
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-        @keyframes bounceCustom {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: rotate(0); }
-            25% { transform: rotate(-2deg); }
-            75% { transform: rotate(2deg); }
-        }
-        @keyframes expand {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.2); opacity: 0.9; }
-        }
-        @keyframes countdownPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        @keyframes punch {
-            0% { transform: scale(1) translateX(0); }
-            100% { transform: scale(1.1) translateX(5px); }
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-    </style>
+body {
+    background: radial-gradient(circle at top, #0c1b2f, #050b14);
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Fondo tipo grid */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+}
+
+/* HEADER */
+header {
+    padding: 20px 30px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 4px;
+}
+
+/* HERO */
+.hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.hero h1 span {
+    display: block;
+    font-size: 18px;
+    color: #00bfff;
+    margin-top: 8px;
+}
+
+.hero p {
+    max-width: 650px;
+    margin: 0 auto 30px;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+/* IP BOX */
+.ip-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,0,0,0.55);
+    padding: 14px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+.ip-box span {
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.ip-box button {
+    background: #00bfff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ip-box button:hover {
+    background: #009ad6;
+}
+
+/* BOTÓN JUGAR */
+.play-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #00bfff, #0066ff);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 40px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* RESEÑAS */
+.reviews {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.reviews h2 {
+    font-size: 30px;
+    margin-bottom: 40px;
+}
+
+.review {
+    max-width: 600px;
+    margin: 0 auto 30px;
+    background: rgba(0,0,0,0.45);
+    padding: 20px;
+    border-radius: 14px;
+}
+
+.review p {
+    margin: 12px 0;
+    font-style: italic;
+}
+
+.review span {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .hero h1 {
+        font-size: 32px;
+    }
+}
+</style>
 </head>
-<body class="bg-dark text-white min-h-screen overflow-x-hidden font-body">
-    <!-- Fondo combinado -->
-    <div class="fixed inset-0 z-0">
-        <div class="absolute inset-0 bg-dots"></div>
-        <div class="absolute inset-0 bg-stripes opacity-50"></div>
-        
-        <!-- Elementos decorativos flotantes -->
-        <div class="absolute top-[10%] left-[5%] w-20 h-20 bg-orange/10 border-2 border-orange/30 rounded-full animate-expand z-0"></div>
-        <div class="absolute top-[35%] right-[10%] w-16 h-16 bg-neonOrange/10 border-2 border-neonOrange/40 rounded-full animate-bounce-custom z-0"></div>
-        <div class="absolute bottom-[20%] left-[25%] w-24 h-24 bg-lightOrange/10 rounded-full border-2 border-lightOrange/30 animate-shake z-0"></div>
+
+<body>
+
+<header>
+    <div class="logo">CAJA SECA</div>
+</header>
+
+<section class="hero">
+    <h1>
+        CAJA SECA
+        <span>San Andreas Multiplayer</span>
+    </h1>
+
+    <p>
+        Un servidor lleno de bandas, calle, acción y respeto.
+        Aquí no sobrevives por suerte, sobrevives por actitud.
+        ¿Estás listo para dominar la ciudad?
+    </p>
+
+    <div class="ip-box">
+        <span id="serverIP">188.93.139.96:1111</span>
+        <button onclick="copiarIP()">Copiar IP</button>
     </div>
 
-    <!-- Contenido principal -->
-    <main class="relative z-20">
-        <!-- Cabecera -->
-        <section class="py-16 md:py-24 px-6">
-            <div class="container mx-auto max-w-5xl">
-                <div class="flex flex-col items-center text-center mb-16">
-                    <!-- Foto de perfil de YouTube animada -->
-                    <div class="relative mb-8">
-                        <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-orange animate-shake shadow-lg shadow-orange/30">
-                            <!-- AQUÍ VA TU FOTO DE PERFIL - REEMPLAZA LA URL -->
-                            <img src="https://www.tu-foto-de-perfil-youtube.com/aqui.jpg" alt="Perfil Matt ARCHIVOS VIP" class="w-full h-full object-cover">
-                        </div>
-                        <div class="absolute -bottom-2 -right-2 w-16 h-16 bg-neonOrange rounded-full flex items-center justify-center text-dark font-bold text-xl animate-pulse-fast">
-                            <i class="fa fa-youtube-play"></i>
-                        </div>
-                        <div class="absolute inset-0 w-32 h-32 bg-orange/20 rounded-full animate-spin-slow opacity-50"></div>
-                    </div>
-                    
-                    <!-- Títulos con animaciones -->
-                    <h1 class="font-hero text-[clamp(3rem,10vw,6rem)] leading-none mb-4">
-                        <span class="text-orange text-glow block animate-bounce-custom">Matt ARCHIVOS VIP</span>
-                        <span class="text-white">¡SUSCRÍBETE PARA CRECER!</span>
-                    </h1>
-                    
-                    <!-- Mensaje dinámico -->
-                    <div class="text-[clamp(1.1rem,3vw,1.5rem)] text-white/80 max-w-3xl mb-12 font-bold">
-                        <p class="mb-2">Suscríbete si quieres crecer y dame el like si quieres crecer.</p>
-                        <p class="mb-2 text-orange text-glow">Oye tú, maldita la vez, <span class="animate-punch">golpe, golpe, golpe</span>...</p>
-                        <p class="mb-2">No, no, no voy primero este golpe, oh, mi turno, este no.</p>
-                        <p class="text-neonOrange text-glow">¡Sí, este es golpe 1 más y quedas noqueado!</p>
-                    </div>
-                    
-                    <!-- Botón al canal -->
-                    <a href="https://www.youtube.com/@MattARCHIVOSVIP" target="_blank" class="mb-12 group">
-                        <div class="bg-orange hover:bg-neonOrange text-dark font-bold text-xl py-4 px-12 rounded-full transition-all duration-300 shadow-lg shadow-orange/20 group-hover:shadow-orange/40 transform group-hover:scale-105 flex items-center gap-3">
-                            <i class="fa fa-youtube-play text-2xl group-hover:animate-bounce"></i>
-                            <span>IR AL CANAL DE YOUTUBE</span>
-                        </div>
-                    </a>
-                </div>
+    <br>
 
-                <!-- Tarjeta de espera y enlace -->
-                <div class="bg-darkGray/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-orange/30 shadow-xl shadow-orange/10">
-                    <div class="flex flex-col items-center text-center">
-                        <!-- Contador visual -->
-                        <div id="countdownContainer" class="mb-8">
-                            <h2 class="font-hero text-[clamp(1.8rem,5vw,3rem)] leading-none mb-4 text-orange text-glow">
-                                ENLACE LISTO EN <span id="countdown" class="animate-countdown">10</span> SEGUNDOS
-                            </h2>
-                            <div class="w-full max-w-xs h-4 bg-dark rounded-full overflow-hidden">
-                                <div id="progressBar" class="h-full bg-gradient-to-r from-orange to-neonOrange w-0 transition-all duration-1000"></div>
-                            </div>
-                        </div>
+    <a href="#" class="play-btn">Entrar a jugar</a>
+</section>
 
-                        <!-- Mensaje de espera -->
-                        <div id="waitingMessage" class="mb-8">
-                            <p class="text-white/70 text-lg max-w-xl">
-                                <i class="fa fa-clock-o mr-2 text-orange"></i>
-                                Toma tu tiempo para suscribirte y dar like, el enlace aparecerá automáticamente cuando termine la cuenta regresiva
-                            </p>
-                        </div>
+<section class="reviews">
+    <h2>Lo que dicen los jugadores</h2>
 
-                        <!-- Enlace final (oculto inicialmente) -->
-                        <div id="finalLink" class="hidden mb-8 transform animate-bounce-custom">
-                            <a href="#" id="destinoLink" target="_blank" class="group">
-                                <div class="bg-gradient-to-r from-orange to-accent text-white font-bold text-xl py-4 px-12 rounded-full transition-all duration-300 shadow-lg shadow-orange/30 hover:shadow-orange/50 transform group-hover:scale-105 flex items-center justify-center gap-3">
-                                    <i class="fa fa-link text-2xl"></i>
-                                    <span>¡AQUÍ ESTÁ TU ENLACE!</span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <div class="review">
+        ⭐⭐⭐⭐⭐
+        <p>"Servidor muy activo, las bandas están bien organizadas."</p>
+        <span>- ElMalo_77</span>
+    </div>
 
-        <!-- Pie de página decorativo -->
-        <footer class="relative z-20 py-8 px-6 bg-darkGray/50 border-t border-orange/20">
-            <div class="container mx-auto text-center">
-                <div class="flex justify-center gap-6 mb-4">
-                    <a href="https://www.youtube.com/@MattARCHIVOSVIP" target="_blank" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 0s;"><i class="fa fa-youtube-play"></i></a>
-                    <a href="#" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 0.5s;"><i class="fa fa-instagram"></i></a>
-                    <a href="#" class="text-orange hover:text-neonOrange transition-colors duration-300 text-2xl animate-bounce-custom" style="animation-delay: 1s;"><i class="fa fa-facebook-square"></i></a>
-                </div>
-                <p class="text-white/50 text-sm">© 2026 | Matt ARCHIVOS VIP - TODO DERECHOS RESERVADOS</p>
-            </div>
-        </footer>
-    </main>
+    <div class="review">
+        ⭐⭐⭐⭐⭐
+        <p>"Mucho roleplay callejero, peleas, negocios y respeto."</p>
+        <span>- Ghost_RP</span>
+    </div>
 
-    <!-- Script de cuenta regresiva -->
-    <script>
-        // CONFIGURA TU LINK DESTINO AQUÍ
-        const LINK_FINAL = "https://www.tu_link_final_aqui.com"; // <-- REEMPLAZA ESTE LINK
-        
-        // TIEMPO DE ESPERA (en segundos)
-        const TIEMPO_ESPERA = 10;
+    <div class="review">
+        ⭐⭐⭐⭐⭐
+        <p>"Uno de los mejores servers que he probado en SA-MP."</p>
+        <span>- CJStreet</span>
+    </div>
+</section>
 
-        // Elementos del DOM
-        const countdownElement = document.getElementById('countdown');
-        const progressBar = document.getElementById('progressBar');
-        const countdownContainer = document.getElementById('countdownContainer');
-        const waitingMessage = document.getElementById('waitingMessage');
-        const finalLink = document.getElementById('finalLink');
-        const destinoLink = document.getElementById('destinoLink');
+<script>
+function copiarIP() {
+    const ip = document.getElementById("serverIP").innerText;
+    navigator.clipboard.writeText(ip);
+    alert("IP copiada: " + ip);
+}
+</script>
 
-        // Asignar el link final
-        destinoLink.href = LINK_FINAL;
-
-        // Iniciar cuenta regresiva cuando cargue la página
-        let tiempoRestante = TIEMPO_ESPERA;
-        const intervalo = setInterval(() => {
-            tiempoRestante--;
-            countdownElement.textContent = tiempoRestante;
-            
-            // Actualizar barra de progreso
-            const porcentaje = ((TIEMPO_ESPERA - tiempoRestante) / TIEMPO_ESPERA) * 100;
-            progressBar.style.width = `${porcentaje}%`;
-
-            // Cuando termine la cuenta regresiva
-            if(tiempoRestante <= 0) {
-                clearInterval(intervalo);
-                countdownContainer.classList.add('hidden');
-                waitingMessage.classList.add('hidden');
-                finalLink.classList.remove('hidden');
-            }
-        }, 1000);
-    </script>
 </body>
 </html>
